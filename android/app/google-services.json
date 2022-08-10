@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "830504583698",
+    "project_id": "a-ulor",
+    "storage_bucket": "a-ulor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:830504583698:android:08e2efe6da86fac8d60ecb",
+        "android_client_info": {
+          "package_name": "com.a_ulor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "830504583698-knbhhlc149opga7nch5sed9pfl4pf6rr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.a_ulor",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "830504583698-s22m80e8l6m7ibqev0bav718qaets4k7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2mAbiNCKOSMHXjHDJWL2H5iyc4KCI-KQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "830504583698-s22m80e8l6m7ibqev0bav718qaets4k7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
