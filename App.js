@@ -6,107 +6,60 @@
  * @flow strict-local
  */
 
-import React from 'react';
-import type {Node} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
-
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
-
-export default App;
+ import React, { useEffect } from 'react';
+ import { StyleSheet, } from 'react-native';
+ import { NavigationContainer } from '@react-navigation/native';
+ import { createNativeStackNavigator } from '@react-navigation/native-stack';
+ import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+ import MainScreen from './src/screens/Main/Main'
+ import SelectLocation from './src/screens/SelectLocation/SelectLocation'
+ import CurrentLocation from './src/screens/CurrentLocation/CurrentLocation'
+ 
+ 
+ 
+ const theme = {
+   ...DefaultTheme,
+   colors: {
+     ...DefaultTheme.colors,
+     primary: '#85DEDC',
+     accent: '#8AB5E6',
+   },
+ };
+ 
+ // useEffect(() => {
+ 
+ // });
+ 
+ const App = () => {
+ 
+   const Stack = createNativeStackNavigator();
+ 
+   return (
+     <PaperProvider theme={theme}>
+       <NavigationContainer>
+         <Stack.Navigator initialRouteName="Main">
+           <Stack.Screen
+             name="Main"
+             component={MainScreen}
+           />
+           <Stack.Screen
+             name="CurrentLocation"
+             component={CurrentLocation}
+           />
+           <Stack.Screen
+             name="SelectLocation"
+             component={SelectLocation}
+           />
+         </Stack.Navigator>
+       </NavigationContainer>
+     </PaperProvider>
+ 
+   );
+ };
+ 
+ const styles = StyleSheet.create({
+ 
+ });
+ 
+ export default App;
+ 
