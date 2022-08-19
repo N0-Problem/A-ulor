@@ -4,8 +4,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'; 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import CurrentLocation from '../CurrentLocation/CurrentLocation';
-import SelectLocation from '../SelectLocation/SelectLocation';
 
 
 function Main({navigation}) {
@@ -24,7 +22,7 @@ function Main({navigation}) {
                         activeOpacity={0.7}
                         onPress={() => navigation.navigate('BottomNav',{screen : 'CurrentLocation'})}>
                         <View style={styles.box1}>
-                            <Ionicons name="location" color='#FFDA36' size={100} />
+                            <Ionicons name="location" color='#FFDA36' size={80} />
                             <Text>내 주변 센터 찾기</Text>
                         </View>
                     </TouchableOpacity>
@@ -34,7 +32,7 @@ function Main({navigation}) {
                         activeOpacity={0.7}
                         onPress={() => navigation.navigate('BottomNav',{screen : 'SelectLocation'})}>
                         <View style={styles.box2}>
-                            <MaterialCommunityIcons name="table-search" color='#FFDA36' size={100} />
+                            <MaterialCommunityIcons name="table-search" color='#FFDA36' size={80} />
                             <Text>원하는 센터 찾기</Text>
                         </View>
                     </TouchableOpacity>
@@ -42,7 +40,7 @@ function Main({navigation}) {
                         activeOpacity={0.7}
                         onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark'})}>
                         <View style={styles.box3}>
-                            <Ionicons name="ios-bookmarks" color='#FFDA36' size={100} />
+                            <Ionicons name="ios-bookmarks" color='#FFDA36' size={80} />
                             <Text>자주 사용하는 센터</Text>
                         </View>
                     </TouchableOpacity>
@@ -80,9 +78,9 @@ const styles = StyleSheet.create({
         alignItems : 'center',
         paddingTop : 38,
         marginTop : 25,
-        width : 200,
-        height : 200,
-        borderRadius : 200 / 2
+        width : 180,
+        height : 180,
+        borderRadius : 180 / 2
     },
     div2 :{
         flex : 1,
@@ -93,18 +91,18 @@ const styles = StyleSheet.create({
     box2 :{
         backgroundColor : "#ffffff",
         alignItems : 'center',
-        paddingTop : 38,
-        width : 200,
-        height : 200,
-        borderRadius : 200 / 2
+        paddingTop : 44,
+        width : 180,
+        height : 180,
+        borderRadius : 180 / 2,
     },
     box3 :{
         backgroundColor : "#ffffff",
         alignItems : 'center',
-        paddingTop : 38,
-        width : 200,
-        height : 200,
-        borderRadius : 200 / 2
+        paddingTop : 44,
+        width : 180,
+        height : 180,
+        borderRadius : 180 / 2
     }
 });
 
