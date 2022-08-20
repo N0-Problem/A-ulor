@@ -9,6 +9,7 @@ import SelectLocation from '../../screens/SelectLocation/SelectLocation';
 import Mypage from '../../screens/Mypage/Mypage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import BookMark from '../../screens/BookMark/BookMark';
 
 function BottomNav({navigation}) {
   const Tab = createBottomTabNavigator();
@@ -19,21 +20,6 @@ function BottomNav({navigation}) {
         headerShown: false,
         tabBarActiveTintColor: '#FFB236',
         tabBarInactiveTintColor: '#242424',
-        // tabBarIcon: ({focused, color, size}) => {
-        //   let iconName;
-
-        //   if (route.name === 'Main') {
-        //     iconName = focused ? 'ios-home' : 'ios-home-outline';
-        //   } else if (route.name === 'CurrentLocation') {
-        //     iconName = focused ? 'ios-location' : 'ios-location-outline';
-        //   } else if (route.name === 'SelectLocation') {
-        //     iconName = focused ? 'md-search' : 'md-search-outline';
-        //   } else if (route.name === 'BookMark') {
-        //     iconName = focused ? 'ios-bookmarks' : 'ios-bookmarks-outline';
-        //   }
-
-        //   return <Ionicons name={iconName} size={size} color={color} />;
-        // },
       })}>
       <Tab.Screen
         name="Main"
@@ -73,7 +59,7 @@ function BottomNav({navigation}) {
       />
       <Tab.Screen
         name="BookMark"
-        component={Mypage}
+        component={BookMark}
         options={{
           tabBarLabel: '즐겨찾기',
           tabBarIcon: ({ color, size }) => (
