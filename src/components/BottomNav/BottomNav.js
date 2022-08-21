@@ -10,6 +10,7 @@ import Mypage from '../../screens/Mypage/Mypage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import BookMark from '../../screens/BookMark/BookMark';
+import StackNav3 from '../StackNav/StackNav3';
 
 function BottomNav({navigation}) {
   const Tab = createBottomTabNavigator();
@@ -49,7 +50,7 @@ function BottomNav({navigation}) {
       />
       <Tab.Screen
         name="SelectLocation"
-        component={SelectLocation}
+        component={StackNav3}
         options={{
           tabBarLabel: '원하는 센터',
           tabBarIcon: ({ color, size }) => (

@@ -129,7 +129,7 @@ function SelectLocation({navigation}) {
                                         </Modal>
                                     </Portal>
                                     <View style={{ flexDirection: 'row' }}>
-                                        <Button style={{ marginLeft: -20, marginRight: 20 }} mode="contained" color="#FFB236" onPress={() => moveScreen('ShowInfo')}>
+                                        <Button style={{ marginLeft: -20, marginRight: 20 }} mode="contained" color="#FFB236" onPress={() => navigation.navigate('CenterInfo')}>
                                             세부정보 보기
                                         </Button>
                                         <Button mode="contained" color="#FFB236" onPress={showModal}>
