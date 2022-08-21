@@ -14,6 +14,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { color } from 'react-native-reanimated';
+import StackNav2 from '../StackNav/StackNav2';
 
 const Drawer = createDrawerNavigator();
 
@@ -45,7 +46,7 @@ function DrawerMenu({navigation}) {
         <Drawer.Navigator
             useLegacyImplementation
             screenOptions={{
-                headerTitle: 'Aluor',
+                headerTitle: 'Aulor',
                 headerTitleAlign : 'center',
                 headerTintColor : '#FFB236',
                 headerStyle: {
@@ -77,7 +78,7 @@ function DrawerMenu({navigation}) {
             />
             <Drawer.Screen 
                 name='Mypage' 
-                component={Mypage}
+                component={StackNav2}
                 options ={{
                     drawerIcon: ({ color, size }) => (
                         <FontAwesome name="user-circle-o" color={color} size={size} />

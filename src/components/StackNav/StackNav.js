@@ -5,6 +5,7 @@ import Main from '../../screens/Main/Main';
 import BottomNav from '../BottomNav/BottomNav';
 import Login from '../../screens/Login/Login';
 import BookMark from '../../screens/BookMark/BookMark';
+import Mypage from '../../screens/Mypage/Mypage';
 
 
 const StackNav = () => {
@@ -26,7 +27,7 @@ const StackNav = () => {
                     headerShown:false,
                 }}
             />
-            <Stack.Screen
+            {/* <Stack.Screen
                 name="Login"
                 component={Login}
                 options={{
@@ -34,12 +35,12 @@ const StackNav = () => {
                 }}
             />
             <Stack.Screen
-                name="BookMark"
-                component={BookMark}
+                name="Mypage"
+                component={Mypage}
                 options={{
                     headerShown:false,
                 }}
-            />
+            /> */}
         </Stack.Navigator>
     );
 };

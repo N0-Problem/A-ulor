@@ -12,7 +12,7 @@ function Main({navigation}) {
             <View style={styles.main_header}>
                 <View style={styles.header_textbox}>
                     {/* <Image></Image> */}
-                    <Text>Aluor</Text>
+                    <Text>Aulor</Text>
                     <Text>전국 교통약자 이동지원센터(콜택시 서비스) 정보 통합 앱</Text>
                 </View>
             </View>
