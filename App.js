@@ -11,25 +11,19 @@ import { StyleSheet, } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import MainScreen from './src/screens/Main/Main'
-import SelectLocation from './src/screens/SelectLocation/SelectLocation'
-import CurrentLocation from './src/screens/CurrentLocation/CurrentLocation'
 import SplashScreen from 'react-native-splash-screen';
-
-
+import DrawerMenu from './src/components/DrawerMenu/DrawerMenu';
 
 const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#85DEDC',
-    accent: '#8AB5E6',
+    primary: '#FFDA36',
+    accent: '#FFB236',
   },
 };
 
 const App = () => {
-  const Stack = createNativeStackNavigator();
-
   useEffect(() => {
     try {
       setTimeout(() => {
@@ -43,20 +37,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Main">
-          <Stack.Screen
-            name="Main"
-            component={MainScreen}
-          />
-          <Stack.Screen
-            name="CurrentLocation"
-            component={CurrentLocation}
-          />
-          <Stack.Screen
-            name="SelectLocation"
-            component={SelectLocation}
-          />
-        </Stack.Navigator>
+        <DrawerMenu/>
       </NavigationContainer>
     </PaperProvider>
 
