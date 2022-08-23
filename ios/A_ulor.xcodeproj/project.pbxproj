@@ -14,6 +14,10 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-A_ulor-A_ulorTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-A_ulor-A_ulorTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		E0A9311F01084F799C136766 /* NanumSquare.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7C21191BA4C84D489B89D614 /* NanumSquare.ttf */; };
+		249F9C6BC85C4A9B8ACBB169 /* NanumSquare_0.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2120A80CC7F74C998E9B54A5 /* NanumSquare_0.ttf */; };
+		A9BC3B78D4D84347A5C1FD40 /* NanumSquare_acL.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 12650565F3E943BA9EFE4FB5 /* NanumSquare_acL.ttf */; };
+		CAE689202D9247DBA4ABF56A /* NanumSquare_acR.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3C56F8305E5044448F2E91AB /* NanumSquare_acR.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +48,10 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = A_ulor/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-A_ulor-A_ulorTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-A_ulor-A_ulorTests.release.xcconfig"; path = "Target Support Files/Pods-A_ulor-A_ulorTests/Pods-A_ulor-A_ulorTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		7C21191BA4C84D489B89D614 /* NanumSquare.ttf */ = {isa = PBXFileReference; name = "NanumSquare.ttf"; path = "../src/assets/fonts/NanumSquare.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		2120A80CC7F74C998E9B54A5 /* NanumSquare_0.ttf */ = {isa = PBXFileReference; name = "NanumSquare_0.ttf"; path = "../src/assets/fonts/NanumSquare_0.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		12650565F3E943BA9EFE4FB5 /* NanumSquare_acL.ttf */ = {isa = PBXFileReference; name = "NanumSquare_acL.ttf"; path = "../src/assets/fonts/NanumSquare_acL.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		3C56F8305E5044448F2E91AB /* NanumSquare_acR.ttf */ = {isa = PBXFileReference; name = "NanumSquare_acR.ttf"; path = "../src/assets/fonts/NanumSquare_acR.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +130,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				508D25E5AC6B4E8FB0CC56AE /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -147,6 +156,18 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		508D25E5AC6B4E8FB0CC56AE /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				7C21191BA4C84D489B89D614 /* NanumSquare.ttf */,
+				2120A80CC7F74C998E9B54A5 /* NanumSquare_0.ttf */,
+				12650565F3E943BA9EFE4FB5 /* NanumSquare_acL.ttf */,
+				3C56F8305E5044448F2E91AB /* NanumSquare_acR.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -244,6 +265,10 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				E0A9311F01084F799C136766 /* NanumSquare.ttf in Resources */,
+				249F9C6BC85C4A9B8ACBB169 /* NanumSquare_0.ttf in Resources */,
+				A9BC3B78D4D84347A5C1FD40 /* NanumSquare_acL.ttf in Resources */,
+				CAE689202D9247DBA4ABF56A /* NanumSquare_acR.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
