@@ -1,7 +1,10 @@
-import React, { useEffect, useState, ActivityIndicator } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, Platform, PermissionsAndroid } from 'react-native';
+import { Button } from 'react-native-paper';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
+import firestore from '@react-native-firebase/firestore';
+import { firebase } from '@react-native-firebase/auth';
 
 async function requestPermission() {
     try {
@@ -15,13 +18,39 @@ async function requestPermission() {
     }
 }
 
+let centers;
+let queries = []
+
+// firestore에서 이동지원센터 데이터 읽기
+// firestore()
+//     .collection('Centers')
+//     .get()
+//     .then(querySnapshot => {
+//         centers = querySnapshot;
+//     });
+
+// for batch write
+// const db = firebase.firestore();
+// const batch = firestore().batch();
+
+// function batchWrite() {
+//     let docref = db.collection('Centers').doc();
+//     queries.forEach((doc) => {
+//         batch.set(docref, doc);
+//     });
+//     console.log("ready to commit!");
+// }
+
+// function batchCommit() {
+//     batch.commit().then(() => console.log("Success."));
+// }
+
 function CurrentLocation() {
     const [location, setLocation] = useState();
-    const [middle, setMiddle] = useState();
 
     useEffect(() => {
         requestPermission().then(result => {
-          // console.log({result});
+          console.log({result});
           if (result === 'granted') {
             Geolocation.getCurrentPosition(
               pos => {
@@ -60,24 +89,24 @@ function CurrentLocation() {
                                 latitude: region.latitude,
                                 longitude: region.longitude,
                             });
-                            setMiddle({
-                                latitude: region.latitude,
-                                longitude: region.longitude,
-                            });
                         }}
                         onRegionChangeComplete={region => {
                             setLocation({
                                 latitude: region.latitude,
                                 longitude: region.longitude,
                             });
-                            setMiddle({
-                                latitude: region.latitude,
-                                longitude: region.longitude,
-                            });
-                        // console.log(middle.latitude, middle.longitude);
                         // console.log(region.latitude, region.longitude);
                         }}>
+                        <Marker
+                            coordinate={{
+                                latitude: location.latitude,
+                                longitude: location.longitude,
+                            }}
+                        />
                     </MapView>
+                    <Button>
+
+                    </Button>
                 </View>
             ) : (
                 <View
@@ -86,7 +115,7 @@ function CurrentLocation() {
                         alignItems: 'center',
                         justifyContent: 'center',
                     }}>
-                    <Text></Text>
+                    <Text>Waiting</Text>
                 </View>
             )}
         </>
