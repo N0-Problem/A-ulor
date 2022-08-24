@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Button, Card, Title, Paragraph } from 'react-native-paper';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import Geolocation from 'react-native-geolocation-service';
 import firestore from '@react-native-firebase/firestore';
 
 function CenterInfo() {
@@ -15,7 +16,27 @@ function CenterInfo() {
                             <Title style={styles.titleDesign}>의정부시시설관리공단 이동지원센터</Title>
                             <Text style={styles.titleDesign}>🏬</Text>
                         </Card.Content>
-                        <Card.Cover source={{ uri: 'https://picsum.photos/500'}}/>
+                        {/* 센터 위치 중심으로 구글맵 띄우기 */}
+                        <View style={styles.container}>
+                            <MapView
+                                style={styles.mapDesign}
+                                provider={PROVIDER_GOOGLE}
+                                initialRegion={{
+                                    latitude: 37.557773,
+                                    longitude: 126.999968,
+                                    latitudeDelta: 0.005,
+                                    longitudeDelta: 0.005,
+                                }}
+                                showsUserLocation={true}
+                                showsMyLocationButton={false}>
+                                <Marker
+                                    coordinate={{
+                                        latitude: 37.557773,
+                                        longitude: 126.999968,
+                                    }}
+                                />
+                            </MapView>
+                        </View>
                         <Paragraph style={styles.paragraphDesign}>주소 :</Paragraph>
                         <Paragraph style={styles.paragraphDesign}>전화번호 :</Paragraph>
                         <Paragraph style={styles.paragraphDesign}>예약가능시간 :</Paragraph>
@@ -34,28 +55,8 @@ function CenterInfo() {
                         </View>
                     </Card>                      
                 </View>
-                {/* 센터 위치 중심으로 구글맵 띄우기 */}
-                <View style={styles.mapDesign}>
-                    <MapView
-                        style={{flex: 1}}
-                        provider={PROVIDER_GOOGLE}
-                        initialRegion={{
-                            latitude: 37.557773,
-                            longitude: 126.999968,
-                            latitudeDelta: 0.005,
-                            longitudeDelta: 0.005,
-                        }}>
-                        <Marker
-                            coordinate={{
-                                latitude: 37.557773,
-                                longitude: 126.999968,
-                            }}
-                        />
-                    </MapView>
-                </View>
             </View>
         </ScrollView>
-
     )
 }
 
@@ -87,10 +88,10 @@ const styles = StyleSheet.create({
     },
 
     mapDesign: {
-        width: 380,
-        height: 300,
+        width: 320,
+        height: 200,
         padding: 2,
-        borderWidth: 2,
+        borderWidth: 1,
         borderColor: 'gray'
     }
 });
