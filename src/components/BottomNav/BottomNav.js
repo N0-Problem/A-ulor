@@ -5,7 +5,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Button} from 'react-native-paper';
 import Main from '../../screens/Main/Main';
 import CurrentLocation from '../../screens/CurrentLocation/CurrentLocation';
-import SelectLocation from '../../screens/SelectLocation/SelectLocation';
+import SelectCenter from '../../screens/SelectLocation/SelectCenter';
 import Mypage from '../../screens/Mypage/Mypage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -49,7 +49,7 @@ function BottomNav({navigation}) {
         }}
       />
       <Tab.Screen
-        name="SelectLocation"
+        name="SelectProvince"
         component={StackNav3}
         options={{
           tabBarLabel: '원하는 센터',
