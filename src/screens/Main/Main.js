@@ -12,8 +12,8 @@ function Main({navigation}) {
             <View style={styles.main_header}>
                 <View style={styles.header_textbox}>
                     {/* <Image></Image> */}
-                    <Text>Aulor</Text>
-                    <Text>전국 교통약자 이동지원센터(콜택시 서비스) 정보 통합 앱</Text>
+                    <Text style={{fontFamily:'NanumSquare'}}>Aulor</Text>
+                    <Text style={{fontFamily:'NanumSquare'}}>전국 교통약자 이동지원센터(콜택시 서비스) 정보 통합 앱</Text>
                 </View>
             </View>
             <View style={styles.boxes}>
@@ -23,7 +23,12 @@ function Main({navigation}) {
                         onPress={() => navigation.navigate('BottomNav',{screen : 'CurrentLocation'})}>
                         <View style={styles.box1}>
                             <Ionicons name="location" color='#FFDA36' size={80} />
-                            <Text>내 주변 센터 찾기</Text>
+                            <Text style={{
+                                fontFamily:'NanumSquare_0',
+                                marginTop: 5
+                            }}>
+                                내 주변 센터 찾기
+                            </Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -33,15 +38,25 @@ function Main({navigation}) {
                         onPress={() => navigation.navigate('BottomNav',{screen : 'SelectLocation'})}>
                         <View style={styles.box2}>
                             <MaterialCommunityIcons name="table-search" color='#FFDA36' size={80} />
-                            <Text>원하는 센터 찾기</Text>
+                            <Text style={{
+                                fontFamily:'NanumSquare_0',
+                                marginTop: 5
+                            }}>
+                                원하는 센터 찾기
+                            </Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity 
                         activeOpacity={0.7}
                         onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark'})}>
                         <View style={styles.box3}>
-                            <Ionicons name="ios-bookmarks" color='#FFDA36' size={80} />
-                            <Text>자주 사용하는 센터</Text>
+                            <Ionicons name="ios-bookmarks" color='#FFDA36' size={75} />
+                            <Text style={{
+                                fontFamily:'NanumSquare_0',
+                                marginTop: 7
+                            }}>
+                                자주 사용하는 센터
+                            </Text>
                         </View>
                     </TouchableOpacity>
                 </View>

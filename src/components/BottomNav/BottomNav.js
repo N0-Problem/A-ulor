@@ -30,6 +30,9 @@ function BottomNav({navigation}) {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" color={color} size={size} />
           ),
+          tabBarLabelStyle : {
+            fontFamily : 'NanumSquare'
+          }
         }}
         listeners={() => ({ //Main에서는 BottomNav를 띄우지 않기 위해
           tabPress: e => {
@@ -46,6 +49,9 @@ function BottomNav({navigation}) {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="location" color={color} size={size} />
           ),
+          tabBarLabelStyle : {
+            fontFamily : 'NanumSquare'
+          }
         }}
       />
       <Tab.Screen
@@ -56,6 +62,9 @@ function BottomNav({navigation}) {
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="table-search" color={color} size={size} />
           ),
+          tabBarLabelStyle : {
+            fontFamily : 'NanumSquare'
+          }
         }}
       />
       <Tab.Screen
@@ -66,6 +75,9 @@ function BottomNav({navigation}) {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="ios-bookmarks" color={color} size={size} />
           ),
+          tabBarLabelStyle : {
+            fontFamily : 'NanumSquare'
+          }
         }}
       />
     </Tab.Navigator>
