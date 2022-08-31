@@ -2,6 +2,8 @@
   package="com.a_ulor">
 
     <uses-permission android:name="android.permission.INTERNET" />
+     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
       android:name=".MainApplication"
@@ -10,12 +12,18 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
       android:theme="@style/AppTheme">
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
       <meta-data 
         android:name="com.google.android.geo.API_KEY" 
         android:value="${googleMapApiKey}"
       />
+<<<<<<< HEAD
       
+=======
+>>>>>>> main
       <activity
           android:name=".SplashActivity"
           android:theme="@style/SplashTheme"
