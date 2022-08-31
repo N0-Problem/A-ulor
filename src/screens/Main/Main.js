@@ -1,12 +1,24 @@
-import React from 'react'
-import { View, Text, StyleSheet, Image, Button, TouchableOpacity } from 'react-native';
+import React, {useState, useEffect} from 'react'
+import { View, Text, StyleSheet, Image, Button, TouchableOpacity, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native'; 
 import { createNativeStackNavigator } from '@react-navigation/native-stack'; 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import auth from '@react-native-firebase/auth';
 
 function Main({navigation}) {
+    const [loggedIn, setLoggedIn] = useState(false);
+
+    useEffect(() => {
+        auth().onAuthStateChanged(user => {
+            if (user) {
+            setLoggedIn(true);
+            } else {
+            setLoggedIn(false);
+            }
+        });
+    }, []);
+    
     return (
         <View style={styles.container}>
             <View style={styles.main_header}>
@@ -46,6 +58,7 @@ function Main({navigation}) {
                             </Text>
                         </View>
                     </TouchableOpacity>
+                    {loggedIn ? (
                     <TouchableOpacity 
                         activeOpacity={0.7}
                         onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark'})}>
@@ -59,6 +72,37 @@ function Main({navigation}) {
                             </Text>
                         </View>
                     </TouchableOpacity>
+                    ):(
+                    <TouchableOpacity 
+                        activeOpacity={0.7}
+                        onPress={() =>  
+                            Alert.alert(
+                            '로그인 후 이용가능합니다. 로그인 페이지로 이동합니다.',
+                            '',
+                            [{
+                                    text: '취소',
+                                    onPress: () => navigation.navigate('Main'),
+                                    style: 'cancel',
+                                    },
+                                    {
+                                    text: '확인',
+                                    onPress: () =>
+                                        navigation.navigate('Login', {
+                                        param: 'login',
+                                    }),
+                            },],
+                        )}>
+                        <View style={styles.box3}>
+                            <Ionicons name="ios-bookmarks" color='#d2d2d2' size={75} />
+                            <Text style={{
+                                fontFamily:'NanumSquare_0',
+                                marginTop: 7
+                            }}>
+                                자주 사용하는 센터
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                    )}
                 </View>
             </View>
         </View>

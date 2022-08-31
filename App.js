@@ -13,6 +13,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import SplashScreen from 'react-native-splash-screen';
 import DrawerMenu from './src/components/DrawerMenu/DrawerMenu';
+import auth from '@react-native-firebase/auth';
 
 const theme = {
   ...DefaultTheme,
@@ -32,7 +33,7 @@ const App = () => {
     } catch (e) {
       console.log(e.message);
     }
-  });
+  },[]);
 
   return (
     <PaperProvider theme={theme}>
@@ -40,7 +41,6 @@ const App = () => {
         <DrawerMenu/>
       </NavigationContainer>
     </PaperProvider>
-
   );
 };
 
