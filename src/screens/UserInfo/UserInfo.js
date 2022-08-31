@@ -5,12 +5,9 @@ import { Button, TextInput } from 'react-native-paper';
 export default function UserInfo({navigation}) {
     return (
         <View style={styles.container}>
-            <Text>개인 정보 수정</Text>
+            {/* <Text>개인 정보 수정</Text> */}
             <TextInput
                 label='이름'
-                // value = {'none'}
-                // onChangeText={text => setUsername(text)}
-                // autoComplete='username'
                 defaultValue = 'username'
                 mode="flat"
                 style={styles.text_input}
@@ -19,9 +16,6 @@ export default function UserInfo({navigation}) {
             />
             <TextInput
                 label='생년월일'
-                // value = {'none'}
-                // onChangeText={text => setUsername(text)}
-                // autoComplete='username'
                 defaultValue = '1998-10-04'
                 mode="flat"
                 style={styles.text_input}
@@ -30,28 +24,15 @@ export default function UserInfo({navigation}) {
             />
             <TextInput
                 label='주소'
-                // value = {'none'}
-                // onChangeText={text => setUsername(text)}
-                // autoComplete='username'
                 defaultValue = 'address'
                 mode="flat"
                 style={styles.text_input}
                 disabled={false}
                 // editable = {true}
             />
-            <RNPickerSelect
-                onValueChange={value => setMedicineType(value)}
-                items={types}
-                placeholder={{}}
-                value={medicineType}
-                useNativeAndroidPickerStyle={false}
-            />
             <TextInput
                 label='장애 등급'
-                // value = {'none'}
-                // onChangeText={text => setUsername(text)}
-                // autoComplete='username'
-                defaultValue = ''
+                defaultValue = '노인, 임산부, 1급'
                 mode="flat"
                 style={styles.text_input}
                 disabled={false}
