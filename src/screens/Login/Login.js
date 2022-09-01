@@ -37,7 +37,6 @@ export default function Login({route}) {
         //         }
         //     });
         // });
-
         if (checkLoggedIn) {
             Alert.alert('로그인 되었습니다.');
             navigation.navigate('Main');
@@ -46,6 +45,7 @@ export default function Login({route}) {
         }
         return res;
     };
+    
     const checkLoggedIn = () => {
         let loggedIn = false;
 
