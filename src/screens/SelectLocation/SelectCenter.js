@@ -44,9 +44,6 @@ function SelectCenter({ navigation, route }) {
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
 
-    const moveScreen = path => {
-        navigation.navigate(path);
-    };
 
     return (
         <View style={styles.container}>

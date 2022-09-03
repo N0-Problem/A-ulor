@@ -1,8 +1,16 @@
-import React from 'react'
-import { View, Text, StyleSheet, ScrollView, Pressable, TouchableOpacity } from 'react-native';
-import { Button, Card, Title } from 'react-native-paper';
+import React, { useState } from 'react'
+import { View, Text, StyleSheet, ScrollView, Pressable, TouchableOpacity, Image } from 'react-native';
+import { Button, Card, Title, Modal, Portal } from 'react-native-paper';
 
-function CenterInfo() {
+function CenterInfo({navigation}) {
+
+    const [visible, setVisible] = React.useState(false);
+
+    const showModal = () => setVisible(true);
+    const hideModal = () => setVisible(false);
+
+    const centerName = "의정부시시설관리공단 이동지원센터"
+
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.container}>
@@ -10,15 +18,17 @@ function CenterInfo() {
                     <Card style={styles.cardDesign}>
                         <Card.Content style={{ justifyContent: 'center', alignItems: 'center', flexDirection: "row" }}>
                             <Text style={styles.titleDesign}>🏬</Text>
-                            <Title style={styles.titleDesign}>의정부시시설관리공단 이동지원센터</Title>
+                            <Title style={styles.titleDesign}>{centerName}</Title>
                             <Text style={styles.titleDesign}>🏬</Text>
                         </Card.Content>
                         <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
                         <View style={styles.paragraphDesign}>
                             <Text style={styles.textDesign}>주소 : </Text>
+                            <Text></Text>
                         </View>
                         <View style={styles.paragraphDesign}>
                             <Text style={styles.textDesign}>전화번호 : </Text>
+                            <Text></Text>
                             <Text>
                                 <Pressable>
                                     {({ pressed }) => (
@@ -31,20 +41,53 @@ function CenterInfo() {
                             </Text>
                         </View>
                         <View style={styles.paragraphDesign}>
-                            <Text style={styles.textDesign}>예약가능시간 : </Text>
+                            <Text style={styles.textDesign}>사전예약기간 : </Text>
+                            <Text></Text>
                         </View>
                         <View style={styles.paragraphDesign}>
-                            <Text style={styles.textDesign}>운행시간 : </Text>
+                            <Text style={styles.textDesign}>준수사항 : </Text>
+                            <Text></Text>
                         </View>
-                        <View style={styles.paragraphDesign}><Text style={styles.textDesign}>...</Text></View>
-                        <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center', }}>
-                            {/* <Button style={styles.buttonDesign} mode="text" color="#FFB236" onPress={() => console.log("1 pressed!")}>
-                                전화하기
-                            </Button> */}
-                            <Button style={styles.buttonDesign} mode="text" color="#FFB236" onPress={() => console.log("2 pressed!")}>
+                        <View style={styles.paragraphDesign}>
+                            <Text style={styles.textDesign}>이용가능대상 : </Text>
+                            <Text></Text>
+                        </View>
+                        <View style={styles.paragraphDesign}>
+                            <Text style={styles.textDesign}>요금 : </Text>
+                            <Text></Text>
+                        </View>
+                        <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center', marginTop: 10}}>
+                            <Portal>
+                                <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalDesign}>
+                                    <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
+                                        <TouchableOpacity onPress={()=>console.log("전화!")}>
+                                            <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', borderWidth: 2, borderColor: '#2B2B2B', padding: 20, borderRadius: 30, justifyContent: 'center', alignItems: 'center', width: 110 }}>
+                                                <Image style={styles.imageDesign} source={require('../../assets/images/call.png')} />
+                                                <Text style={styles.modalTextDesign}>전화로</Text>
+                                                <Text style={styles.modalTextDesign}>예약</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={()=>console.log("앱!")}>
+                                            <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', marginLeft: 15, marginRight: 15, borderWidth: 2, borderColor: '#2B2B2B', padding: 20, borderRadius: 30, justifyContent: 'center', alignItems: 'center', width: 110 }}>
+                                                <Image style={styles.imageDesign} source={require('../../assets/images/app_store.png')} />
+                                                <Text style={styles.modalTextDesign} >앱으로</Text>
+                                                <Text style={styles.modalTextDesign}>예약</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={()=>console.log("웹사이트!")}>
+                                            <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', borderWidth: 2, borderColor: '#2B2B2B', padding: 20, borderRadius: 30, justifyContent: 'center', alignItems: 'center', width: 110 }}>
+                                                <Image style={styles.imageDesign} source={require('../../assets/images/internet.png')} />
+                                                <Text style={styles.modalTextDesign}>웹사이트로</Text>
+                                                <Text style={styles.modalTextDesign}>예약</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                </Modal>
+                            </Portal>
+                            <Button style={styles.buttonDesign} mode="text" color="#FFB236" onPress={showModal}>
                                 예약하러 하기
                             </Button>
-                            <Button style={styles.buttonDesign} mode="text" color="#FFB236" onPress={() => console.log("3 pressed!")}>
+                            <Button style={styles.buttonDesign} mode="text" color="#FFB236" onPress={() => navigation.navigate('AddReview',{selectedCenter : centerName})}>
                                 후기 작성
                             </Button>
                         </View>
@@ -142,6 +185,27 @@ const styles = StyleSheet.create({
         borderColor: "#FFB236",
         marginTop: 10,
         width: 380
+    },
+
+    modalDesign : {
+        backgroundColor: '#FF000000',
+        padding: 20,
+        alignItems:'center',
+        justifyContent:'center',
+        paddingTop: 50,
+        paddingBottom: 50 
+    },
+
+    imageDesign : {
+        width: 50,
+        height: 50,
+        marginBottom: 8
+    },
+
+    modalTextDesign: {
+        fontWeight:'bold',
+        color: 'black',
+        fontSize: 12
     }
 
 });

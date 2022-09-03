@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SelectProvince from '../../screens/SelectLocation/SelectProvince';
 import SelectCenter from '../../screens/SelectLocation/SelectCenter';
 import CenterInfo from '../../screens/CenterInfo/CenterInfo';
+import AddReview from '../../screens/AddReview/AddReview';
 
 
 const StackNav3 = ({ navigation }) => {
@@ -28,6 +29,13 @@ const StackNav3 = ({ navigation }) => {
             <Stack.Screen
                 name="CenterInfo"
                 component={CenterInfo}
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name="AddReview"
+                component={AddReview}
                 options={{
                     headerShown: false,
                 }}
