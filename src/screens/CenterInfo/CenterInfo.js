@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet, ScrollView, Pressable, TouchableOpacity, Image } from 'react-native';
 import { Button, Card, Title, Modal, Portal } from 'react-native-paper';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import Geolocation from 'react-native-geolocation-service';
+import firestore from '@react-native-firebase/firestore';
 
 function CenterInfo({navigation}) {
 
@@ -21,7 +24,26 @@ function CenterInfo({navigation}) {
                             <Title style={styles.titleDesign}>{centerName}</Title>
                             <Text style={styles.titleDesign}>🏬</Text>
                         </Card.Content>
-                        <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
+                        <View style={styles.container}>
+                            <MapView
+                                style={styles.mapDesign}
+                                provider={PROVIDER_GOOGLE}
+                                initialRegion={{
+                                    latitude: 37.557773,
+                                    longitude: 126.999968,
+                                    latitudeDelta: 0.005,
+                                    longitudeDelta: 0.005,
+                                }}
+                                showsUserLocation={true}
+                                showsMyLocationButton={false}>
+                                <Marker
+                                    coordinate={{
+                                        latitude: 37.557773,
+                                        longitude: 126.999968,
+                                    }}
+                                />
+                            </MapView>
+                        </View>
                         <View style={styles.paragraphDesign}>
                             <Text style={styles.textDesign}>주소 : </Text>
                             <Text></Text>
@@ -142,7 +164,6 @@ function CenterInfo({navigation}) {
                 </View>
             </View>
         </ScrollView>
-
     )
 }
 
@@ -207,7 +228,16 @@ const styles = StyleSheet.create({
         color: 'black',
         fontSize: 12
     }
-
+    
+    mapDesign: {
+        width: 320,
+        height: 200,
+        padding: 2,
+        borderWidth: 1,
+        borderColor: 'gray'
+    }
 });
 
 export default CenterInfo
+
+

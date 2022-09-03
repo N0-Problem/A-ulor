@@ -49,12 +49,14 @@ const styles = StyleSheet.create({
         paddingLeft : 20,
         paddingTop : 20,
         fontSize : 20,
+        fontFamily:'NanumSquare_0',
     },
     text2 : {
         paddingLeft : 20,
         paddingTop : 10,
         fontSize : 12,
-        textDecorationLine : 'underline'
+        textDecorationLine : 'underline',
+        fontFamily:'NanumSquare_acR',
     },
     profilebox : {
         flex : 1,
