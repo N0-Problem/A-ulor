@@ -47,7 +47,7 @@ function Main({navigation}) {
                 <View style={styles.div2}>
                     <TouchableOpacity
                         activeOpacity={0.7}
-                        onPress={() => navigation.navigate('BottomNav',{screen : 'SelectLocation'})}>
+                        onPress={() => navigation.navigate('BottomNav',{screen : 'SelectProvince'})}>
                         <View style={styles.box2}>
                             <MaterialCommunityIcons name="table-search" color='#FFDA36' size={80} />
                             <Text style={{

@@ -21,7 +21,7 @@ const province = [
     { label: '강원도', value: '강원도' },
 ]
 
-function SelectLocation({navigation}) {
+function SelectCenter({ navigation, route }) {
 
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
@@ -29,6 +29,8 @@ function SelectLocation({navigation}) {
         { label: 'Apple', value: 'apple' },
         { label: 'Banana', value: 'banana' }
     ]);
+
+    const userProvince = route.params;        // 사용자가 앞 화면에서 선택한 도 or 시
 
     const [openProvince, setProvinceOpen] = useState(false);
     const [provinceValue, setProvinceValue] = useState(null);
@@ -42,9 +44,6 @@ function SelectLocation({navigation}) {
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
 
-    const moveScreen = path => {
-        navigation.navigate(path);
-    };
 
     return (
         <View style={styles.container}>
@@ -56,7 +55,8 @@ function SelectLocation({navigation}) {
                     <DropDownPicker
                         style={styles.provincePickerDesign}
                         containerStyle={{ width: 170, marginRight: 10 }}
-                        placeholder="ex) 경기도"
+                        disabled = {true}
+                        placeholder={userProvince.selectedProvince}
                         placeholderStyle={{ color: 'gray' }}
                         open={openProvince}
                         value={provinceValue}
@@ -76,7 +76,7 @@ function SelectLocation({navigation}) {
                         containerStyle={{
                             width: 190,
                         }}
-                        placeholder="ex) 의정부시"
+                        placeholder=""
                         placeholderStyle={{ color: 'gray' }}
                         open={open}
                         value={value}
@@ -109,7 +109,7 @@ function SelectLocation({navigation}) {
                                         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalDesign}>
                                             <Text>선택하신 이동지원센터를 즐겨찾기에 추가하시겠습니까?</Text>
                                             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                                
+
                                                 <Text style={{ marginTop: 10 }}>
                                                     <Button
                                                         mode="text"
@@ -129,10 +129,10 @@ function SelectLocation({navigation}) {
                                         </Modal>
                                     </Portal>
                                     <View style={{ flexDirection: 'row' }}>
-                                        <Button style={{ marginLeft: -20, marginRight: 20 }} mode="contained" color="#FFB236" onPress={() => navigation.navigate('CenterInfo')}>
+                                        <Button style={{marginRight: 25, marginLeft:-15}} mode="contained" color="#FFB236" onPress={() => navigation.navigate('CenterInfo')}>
                                             세부정보 보기
                                         </Button>
-                                        <Button mode="contained" color="#FFB236" onPress={showModal}>
+                                        <Button style={{}} mode="contained" color="#FFB236" onPress={showModal}>
                                             즐겨찾기에 추가
                                         </Button>
                                     </View>
@@ -196,4 +196,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default SelectLocation;
+export default SelectCenter;

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@react-native-community/cli-platform-android": "^8.0.5",
+    "@react-native-community/slider": "^4.3.1",
     "@react-native-firebase/app": "^15.4.0",
     "@react-native-firebase/auth": "^15.4.0",
     "@react-native-firebase/firestore": "^15.4.0",
@@ -20,8 +21,10 @@
     "@react-navigation/drawer": "^6.4.3",
     "@react-navigation/native": "^6.0.11",
     "@react-navigation/native-stack": "^6.7.0",
+    "date-fns": "^2.29.2",
     "react": "17.0.2",
     "react-native": "0.68.2",
+    "react-native-calendars": "^1.1288.2",
     "react-native-cli": "^2.0.1",
     "react-native-dropdown-picker": "^5.4.2",
     "react-native-geolocation-service": "^5.3.0",
