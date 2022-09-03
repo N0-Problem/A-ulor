@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import auth from '@react-native-firebase/auth';
-import LogoImg from '../../assets/images/logo.png'
+import LogoImg from '../../assets/images/logo.png';
 
 function Main({navigation}) {
     const [loggedIn, setLoggedIn] = useState(false);
