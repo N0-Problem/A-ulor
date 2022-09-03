@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
         fontWeight:'bold',
         color: 'black',
         fontSize: 12
-    }
+    },
     
     mapDesign: {
         width: 320,
