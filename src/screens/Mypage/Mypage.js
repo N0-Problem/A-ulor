@@ -1,31 +1,68 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-paper';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import auth from '@react-native-firebase/auth';
 
 export default function Mypage({navigation}) {
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [userName, setUserName] = useState("");
+
+    useEffect(() => {
+        auth().onAuthStateChanged(user => {
+            if (user) {
+            setLoggedIn(true);
+            setUserName(user.displayName);
+            } else {
+            setLoggedIn(false);
+            }
+        });
+    }, []);
+
     return (
         <View style={styles.container}>
             <View style={styles.userinfo}>
                 <View style={styles.textbox}>
-                    <Text style={styles.text1}>
-                        User 님, 안녕하세요!
-                    </Text>
-                    <TouchableOpacity
-                        activeOpacity={0.7}
-                        onPress={() => navigation.navigate('UserInfo')}>
-                        <Text style={styles.text2}>
-                            개인 정보 수정 
+                    {loggedIn ? (
+                        <Text style={styles.text1}>
+                            {userName}님, 안녕하세요!
+                        </Text>):(
+                        <Text style={styles.text1}>
+                            로그인이 필요합니다.
                         </Text>
-                    </TouchableOpacity>
+                    )}
+                    {loggedIn ? (
+                        <TouchableOpacity
+                            activeOpacity={0.7}
+                            onPress={() => navigation.navigate('UserInfo')}>
+                            <Text style={styles.text2}>
+                                개인 정보 수정 
+                            </Text>
+                        </TouchableOpacity>):(
+                        <TouchableOpacity
+                            activeOpacity={0.7}
+                            onPress={() => navigation.navigate('Login')}>
+                            <Text style={styles.text2}>
+                                로그인 하러 가기 
+                            </Text>
+                        </TouchableOpacity>
+                    )}
                 </View>
                 <View style={styles.profilebox}>
                     <FontAwesome5 name="user-circle" color='#fff' size={80} />
                 </View>
             </View>
             <View style={styles.listbox}>
-                <Text style={styles.list} onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark'})}>Bookmark</Text>
-                <Text style={styles.list} onPress={() => navigation.navigate('BookMark')}>Review</Text>
+                {loggedIn ? (
+                    <Text style={styles.list} onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark'})}>Bookmark</Text>
+                ):(
+                    <Text style={styles.list_disable} disabled={true}>Bookmark</Text>
+                )}
+                {loggedIn ? (
+                    <Text style={styles.list} onPress={() => navigation.navigate('BookMark')}>Review</Text>
+                ):(
+                    <Text style={styles.list_disable} disabled={true}>Review</Text>
+                )}
             </View>
         </View>
     )
@@ -75,8 +112,18 @@ const styles = StyleSheet.create({
         marginHorizontal : 7,
         color : '#020202', 
         fontSize : 17,
-        // backgroundColor : '#f3f3f3',
         borderBottomWidth : 0.3, 
-        borderBottomColor : '#757575'
+        borderBottomColor : '#757575',
+    }, 
+    list_disable : {
+        alignSelf : 'stretch',
+        height : 50,
+        padding : 15,
+        marginTop : 2,
+        marginHorizontal : 7,
+        color : '#b1b1b1', 
+        fontSize : 17,
+        borderBottomWidth : 0.3, 
+        borderBottomColor : '#757575',
     }
 });

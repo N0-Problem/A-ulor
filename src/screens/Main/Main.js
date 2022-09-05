@@ -5,12 +5,14 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import auth from '@react-native-firebase/auth';
+import LogoImg from '../../assets/images/logo.png';
 
 function Main({navigation}) {
     const [loggedIn, setLoggedIn] = useState(false);
 
     useEffect(() => {
         auth().onAuthStateChanged(user => {
+            console.log(user);
             if (user) {
             setLoggedIn(true);
             } else {
@@ -23,9 +25,8 @@ function Main({navigation}) {
         <View style={styles.container}>
             <View style={styles.main_header}>
                 <View style={styles.header_textbox}>
-                    {/* <Image></Image> */}
-                    <Text style={{fontFamily:'NanumSquare'}}>Aulor</Text>
-                    <Text style={{fontFamily:'NanumSquare'}}>전국 교통약자 이동지원센터(콜택시 서비스) 정보 통합 앱</Text>
+                    <Image style={styles.logo} source={LogoImg}/>
+                    <Text style={{fontFamily:'NanumSquare'}}>{'Aulor \n 전국 교통약자 이동지원센터(콜택시 서비스) 정보 통합 앱'}</Text>
                 </View>
             </View>
             <View style={styles.boxes}>
@@ -118,9 +119,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFDA36',
     },
     header_textbox: {
-        paddingTop: 50,
-        paddingLeft: 140,
+        paddingTop: 30,
+        paddingLeft: 20,
         paddingRight : 20,
+        flexDirection :'row',
+    },
+    logo : {
+        width : 100,
+        height : 100,
     },
     boxes :{
         height : '75%',
