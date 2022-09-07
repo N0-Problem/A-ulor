@@ -3,9 +3,8 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { List, Modal, Portal, Button } from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
-import { createIconSetFromFontello } from 'react-native-vector-icons';
 
-// 행정구역 도 && 시
+// 행정구역 도
 const province = [
     { label: '강원도', value: '강원도' },
     { label: '경기도', value: '경기도' },
@@ -25,45 +24,38 @@ const province = [
     { label: '제주특별자치도', value: '제주특별자치도' },
 ]
 
+let city = []
+let centers = ""
+
 
 function SelectCenter({ navigation, route }) {
 
     const userProvince = route.params;        // 사용자가 앞 화면에서 선택한 도 or 시
 
-    const [centerAddress, setCenterAddress] = useState();
     const [centerName, setCenterName] = useState();
-
-    let tempAddress = [];
-    let blankIndexArray = []
-
-    useEffect(() => {
-        // 서버에서 모든 센터 정보 조회
-        firestore().collection('Centers').get()
-            .then(querySnapshot => {
-
-                let centers = querySnapshot.docs.map(doc => doc.data());
-                centers = centers.filter((centers) => centers.address.toLowerCase().includes(userProvince.selectedProvince));
-                setCenterName(centers);
-
-            });
-
-        // setCenterName(tempName);
-        // setCenterAddress(tempAddress);
-        // console.log(centerName[0]);
-        // console.log(centerAddress[0]);
-    }, [])
-
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
-    const [items, setItems] = useState([
-        { label: 'Apple', value: 'apple' },
-        { label: 'Banana', value: 'banana' }
-    ]);
-
 
     const [openProvince, setProvinceOpen] = useState(false);
     const [provinceValue, setProvinceValue] = useState(null);
     const [provinces, setProvinces] = useState(province);
+
+    const [openCity, setCityOpen] = useState(false);
+    const [cityValue, setCityValue] = useState(null);
+    const [cities, setCities] = useState();
+
+    firestore().collection('Centers').get()
+    .then(querySnapshot => {
+        centers = querySnapshot.docs.map(doc => doc.data());
+        centers = centers.filter((centers) => centers.address.toLowerCase().includes(userProvince.selectedProvince));
+
+        // for (let i = 0; i < centers.length; i++) {
+        //     let tempBox = centers[i].address.split(" ");
+        //     let tempObject = {};
+        //     tempObject.label = tempBox[1];
+        //     tempObject.value = tempBox[1];
+        //     city.push(tempObject);
+        // }
+        
+    });
 
     const [expanded, setExpanded] = React.useState(false);
     const handlePress = () => setExpanded(!expanded);
@@ -72,7 +64,6 @@ function SelectCenter({ navigation, route }) {
 
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
-
 
     return (
         <View style={styles.container}>
@@ -108,17 +99,21 @@ function SelectCenter({ navigation, route }) {
                         }}
                         placeholder=""
                         placeholderStyle={{ color: 'black' }}
-                        open={open}
-                        value={value}
-                        items={items}
-                        setOpen={setOpen}
-                        setValue={setValue}
-                        setItems={setItems}
-                        onChangeValue={(value) => {
-                            console.log(value);
-                        }}
-                        onSelectItem={(item) => {
-                            console.log(item);
+                        open={openCity}
+                        value={cityValue}
+                        items={cities}
+                        setOpen={setCityOpen}
+                        setValue={setCityValue}
+                        setItems={setCities}
+                        onSelectItem={(cityValue) => {
+                            if(cityValue != null) {
+                                let addressStr = userProvince.selectedProvince + ' ' + cityValue;
+                                centers = centers.filter((centers) => centers.address.toLowerCase().includes(addressStr));
+                                setCenterName(centers);
+                            }
+                            else {
+                                setCenterName(centers);
+                            }
                         }}
                     />
 
@@ -131,12 +126,14 @@ function SelectCenter({ navigation, route }) {
                         {centerName && centerName.map((item, idx) => {
                             return (
                                 <List.Accordion
-                                    key={idx}
-                                    style={{ marginLeft: 5, }}
+                                    style={{ marginLeft: 5 }}
                                     title={item.name}
                                     titleStyle={{ fontFamily: 'NanumSquare_acR' }}
                                     expanded={expanded}
-                                    onPress={handlePress}>
+                                    key={idx}
+
+                                    onPress={handlePress}
+                                >
                                     <List.Item title={() => (
                                         <View>
                                             <Portal style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -151,7 +148,6 @@ function SelectCenter({ navigation, route }) {
                                                                 <Text style={{ fontFamily: 'NanumSquare_0' }}>
                                                                     예
                                                                 </Text>
-
                                                             </Button>
                                                             <Button
                                                                 mode="text"
@@ -180,7 +176,6 @@ function SelectCenter({ navigation, route }) {
                                 </List.Accordion>
                             )
                         })}
-
                     </List.Section>
                 </ScrollView>
             </View>

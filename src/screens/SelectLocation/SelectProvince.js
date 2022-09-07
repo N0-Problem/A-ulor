@@ -75,7 +75,8 @@ const styles = StyleSheet.create({
     title: {
         marginTop: 30,
         marginBottom: 10,
-        fontFamily:'NanumSquare'
+        fontFamily:'NanumSquare',
+        color:'black'
     },
 
     btnDesign: {
