@@ -59,9 +59,13 @@ function DrawerMenu({navigation}) {
         <Drawer.Navigator
             useLegacyImplementation
             screenOptions={{
-                headerTitle: 'Aulor',
+                headerTitle: '아울러',
                 headerTitleAlign : 'center',
                 headerTintColor : '#FFB236',
+                headerTitleStyle: {
+                    fontFamily : 'NanumSquare',
+                    fontSize : 27
+                },
                 headerStyle: {
                     backgroundColor: '#FFFFFF',
                 },

@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import auth from '@react-native-firebase/auth';
-import LogoImg from '../../assets/images/logo.png';
+import LogoImg from '../../assets/images/logo2.png';
 
 function Main({navigation}) {
     const [loggedIn, setLoggedIn] = useState(false);
@@ -26,7 +26,12 @@ function Main({navigation}) {
             <View style={styles.main_header}>
                 <View style={styles.header_textbox}>
                     <Image style={styles.logo} source={LogoImg}/>
-                    <Text style={{fontFamily:'NanumSquare'}}>{'Aulor \n 전국 교통약자 이동지원센터(콜택시 서비스) 정보 통합 앱'}</Text>
+                    <View>
+                        <Text style={styles.header_text}>아울러</Text>
+                        <Text style={styles.header_text2}>{'전국 교통약자 이동지원센터 정보 통합 앱'}</Text>
+                        <Text style={styles.header_text3}>{'인간으로서의 존엄과 가치 및 행복을'}</Text>
+                        <Text style={styles.header_text3}>{'추구할 권리를 보장받기 위해 !'}</Text>
+                    </View>
                 </View>
             </View>
             <View style={styles.boxes}>
@@ -35,7 +40,7 @@ function Main({navigation}) {
                         activeOpacity={0.7}
                         onPress={() => navigation.navigate('BottomNav',{screen : 'CurrentLocation'})}>
                         <View style={styles.box1}>
-                            <Ionicons name="location" color='#FFDA36' size={80} />
+                            <Ionicons name="location" color='#000' size={80} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
                                 marginTop: 5
@@ -50,7 +55,7 @@ function Main({navigation}) {
                         activeOpacity={0.7}
                         onPress={() => navigation.navigate('BottomNav',{screen : 'SelectProvince'})}>
                         <View style={styles.box2}>
-                            <MaterialCommunityIcons name="table-search" color='#FFDA36' size={80} />
+                            <MaterialCommunityIcons name="table-search" color='#000' size={80} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
                                 marginTop: 5
@@ -64,7 +69,7 @@ function Main({navigation}) {
                         activeOpacity={0.7}
                         onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark'})}>
                         <View style={styles.box3}>
-                            <Ionicons name="ios-bookmarks" color='#FFDA36' size={75} />
+                            <Ionicons name="ios-bookmarks" color='#000' size={75} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
                                 marginTop: 7
@@ -117,16 +122,35 @@ const styles = StyleSheet.create({
     main_header: {
         height: '25%',
         backgroundColor: '#FFDA36',
+        alignItems : 'center'
     },
     header_textbox: {
-        paddingTop: 30,
+        paddingTop: 35,
         paddingLeft: 20,
         paddingRight : 20,
         flexDirection :'row',
     },
     logo : {
         width : 100,
-        height : 100,
+        height : 85,
+        marginLeft : 5,
+    },
+    header_text:{
+        fontFamily:'NanumSquare',
+        fontSize : 20,
+        paddingLeft: 20,
+        paddingBottom : 5
+    },
+    header_text2 : {
+        fontFamily:'NanumSquare_0',
+        fontSize : 15,
+        paddingLeft: 20,
+        paddingVertical: 3
+    },
+    header_text3 : {
+        fontFamily:'NanumSquare_0',
+        paddingLeft: 20,
+        // color : '#6e6e6e'
     },
     boxes :{
         height : '75%',
@@ -134,11 +158,11 @@ const styles = StyleSheet.create({
     },
     div1 : {
         flex : 0.8,
-        backgroundColor : "lightyellow",
+        backgroundColor : "#4e4e4e",
         justifyContent : 'space-around'
     },
     box1 :{
-        backgroundColor : "#ffffff",
+        backgroundColor : "#FFDA36",
         alignSelf : 'center',
         alignItems : 'center',
         paddingTop : 38,
@@ -149,12 +173,12 @@ const styles = StyleSheet.create({
     },
     div2 :{
         flex : 1,
-        backgroundColor : "lightyellow",
+        backgroundColor : "#4e4e4e",
         flexDirection :'row', 
         justifyContent : 'space-evenly',
     },
     box2 :{
-        backgroundColor : "#ffffff",
+        backgroundColor : "#FFDA36",
         alignItems : 'center',
         paddingTop : 44,
         width : 180,
@@ -162,7 +186,7 @@ const styles = StyleSheet.create({
         borderRadius : 180 / 2,
     },
     box3 :{
-        backgroundColor : "#ffffff",
+        backgroundColor : "#FFDA36",
         alignItems : 'center',
         paddingTop : 44,
         width : 180,

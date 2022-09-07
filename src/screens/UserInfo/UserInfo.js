@@ -21,7 +21,6 @@ export default function UserInfo({navigation}) {
         {label: '기타', value: '기타'}
     ]);
 
-
     useEffect(() => {
         auth().onAuthStateChanged(user => {
             setUserName(user.displayName);
@@ -85,12 +84,11 @@ export default function UserInfo({navigation}) {
                 value={'기타 입력'}
                 mode="flat"
                 style={styles.text_input}
-                // editable = {false}
             />):(<></>)}
             <Button 
                 style={styles.button}
-                onPress={()=>navigation.navigate('Mypage')}>
-                저장
+                onPress={()=>navigation.navigate('Mypage')}
+            >저장
             </Button>
         </View>
     )
