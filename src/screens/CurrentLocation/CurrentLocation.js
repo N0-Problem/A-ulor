@@ -88,7 +88,7 @@ function getNearest(current_latitude, current_longitude) {
     console.log(nearest_n);
 }
 
-function CurrentLocation() {
+function CurrentLocation({navigation}) {
     const [location, setLocation] = useState();
     const mapView = useRef(null);
 
@@ -102,10 +102,20 @@ function CurrentLocation() {
                     longitude: center.longitude,
                 }}
                 title={center.name}
-                description={center.address}
+                description='빨간 핀을 누르면 센터 정보로 이동합니다.'
+                onPress={() => showCenterInfo(center)}
             >
             </Marker>
         ));
+    }
+
+    let clicked = false;
+    const showCenterInfo = (center) => {
+        if (clicked) {
+            
+        } else {
+            clicked = true;
+        }
     }
 
     const listCenters = () => {
