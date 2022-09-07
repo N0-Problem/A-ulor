@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { List, Modal, Portal, Button } from 'react-native-paper';
+import firestore from '@react-native-firebase/firestore';
+import { createIconSetFromFontello } from 'react-native-vector-icons';
 
 // 행정구역 도 && 시
 const province = [
@@ -23,7 +25,33 @@ const province = [
     { label: '제주특별자치도', value: '제주특별자치도' },
 ]
 
+
 function SelectCenter({ navigation, route }) {
+
+    const userProvince = route.params;        // 사용자가 앞 화면에서 선택한 도 or 시
+
+    const [centerAddress, setCenterAddress] = useState();
+    const [centerName, setCenterName] = useState();
+
+    let tempAddress = [];
+    let blankIndexArray = []
+
+    useEffect(() => {
+        // 서버에서 모든 센터 정보 조회
+        firestore().collection('Centers').get()
+            .then(querySnapshot => {
+
+                let centers = querySnapshot.docs.map(doc => doc.data());
+                centers = centers.filter((centers) => centers.address.toLowerCase().includes(userProvince.selectedProvince));
+                setCenterName(centers);
+
+            });
+
+        // setCenterName(tempName);
+        // setCenterAddress(tempAddress);
+        // console.log(centerName[0]);
+        // console.log(centerAddress[0]);
+    }, [])
 
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
@@ -32,7 +60,6 @@ function SelectCenter({ navigation, route }) {
         { label: 'Banana', value: 'banana' }
     ]);
 
-    const userProvince = route.params;        // 사용자가 앞 화면에서 선택한 도 or 시
 
     const [openProvince, setProvinceOpen] = useState(false);
     const [provinceValue, setProvinceValue] = useState(null);
@@ -101,53 +128,59 @@ function SelectCenter({ navigation, route }) {
             <View style={styles.listDesign}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <List.Section>
-                        <List.Accordion
-                            style={{ marginLeft: 5, }}
-                            title="의정부시시설관리공단 이동지원센터"
-                            titleStyle={{ fontFamily: 'NanumSquare_acR' }}
-                            expanded={expanded}
-                            onPress={handlePress}>
-                            <List.Item title={() => (
-                                <View>
-                                    <Portal style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                        <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalDesign}>
-                                            <Text style={{ fontFamily: 'NanumSquare_0' }}>선택하신 이동지원센터를 즐겨찾기에 추가하시겠습니까?</Text>
-                                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                                <Text style={{ marginTop: 10 }}>
-                                                    <Button
-                                                        mode="text"
-                                                        color="#FFB236"
-                                                    >
-                                                        <Text style={{ fontFamily: 'NanumSquare_0' }}>
-                                                            예
-                                                        </Text>
+                        {centerName && centerName.map((item, idx) => {
+                            return (
+                                <List.Accordion
+                                    key={idx}
+                                    style={{ marginLeft: 5, }}
+                                    title={item.name}
+                                    titleStyle={{ fontFamily: 'NanumSquare_acR' }}
+                                    expanded={expanded}
+                                    onPress={handlePress}>
+                                    <List.Item title={() => (
+                                        <View>
+                                            <Portal style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                                <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalDesign}>
+                                                    <Text style={{ fontFamily: 'NanumSquare_0' }}>선택하신 이동지원센터를 즐겨찾기에 추가하시겠습니까?</Text>
+                                                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                                        <Text style={{ marginTop: 10 }}>
+                                                            <Button
+                                                                mode="text"
+                                                                color="#FFB236"
+                                                            >
+                                                                <Text style={{ fontFamily: 'NanumSquare_0' }}>
+                                                                    예
+                                                                </Text>
 
-                                                    </Button>
-                                                    <Button
-                                                        mode="text"
-                                                        color="#FFB236"
-                                                        onPress={() => setVisible(false)}>
-                                                        <Text style={{ fontFamily: 'NanumSquare_0' }}>
-                                                            아니오
-                                                        </Text>
+                                                            </Button>
+                                                            <Button
+                                                                mode="text"
+                                                                color="#FFB236"
+                                                                onPress={() => setVisible(false)}>
+                                                                <Text style={{ fontFamily: 'NanumSquare_0' }}>
+                                                                    아니오
+                                                                </Text>
 
-                                                    </Button>
-                                                </Text>
+                                                            </Button>
+                                                        </Text>
+                                                    </View>
+
+                                                </Modal>
+                                            </Portal>
+                                            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingLeft: 30, paddingRight: 30 }}>
+                                                <Button style={{ flex: 1, marginRight: 30 }} mode="contained" color="#FFB236" onPress={() => navigation.navigate('CenterInfo')}>
+                                                    <Text style={{ fontFamily: 'NanumSquare_0' }}>세부정보 보기</Text>
+                                                </Button>
+                                                <Button style={{ flex: 1 }} mode="contained" color="#FFB236" onPress={showModal}>
+                                                    <Text style={{ fontFamily: 'NanumSquare_0' }}>즐겨찾기에 추가</Text>
+                                                </Button>
                                             </View>
+                                        </View>
+                                    )} />
+                                </List.Accordion>
+                            )
+                        })}
 
-                                        </Modal>
-                                    </Portal>
-                                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingLeft: 30, paddingRight: 30 }}>
-                                        <Button style={{ flex: 1, marginRight: 30 }} mode="contained" color="#FFB236" onPress={() => navigation.navigate('CenterInfo')}>
-                                            <Text style={{ fontFamily: 'NanumSquare_0' }}>세부정보 보기</Text>
-                                        </Button>
-                                        <Button style={{ flex: 1 }} mode="contained" color="#FFB236" onPress={showModal}>
-                                            <Text style={{ fontFamily: 'NanumSquare_0' }}>즐겨찾기에 추가</Text>
-                                        </Button>
-                                    </View>
-                                </View>
-                            )} />
-                        </List.Accordion>
                     </List.Section>
                 </ScrollView>
             </View>
@@ -182,8 +215,8 @@ const styles = StyleSheet.create({
         width: 150,
         margin: 10,
         borderColor: '#FFB236',
-        backgroundColor:'#E6E6E6'
-        
+        backgroundColor: '#E6E6E6'
+
 
     },
 
