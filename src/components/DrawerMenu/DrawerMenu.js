@@ -15,6 +15,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { color } from 'react-native-reanimated';
 import StackNav2 from '../StackNav/StackNav2';
+import auth from '@react-native-firebase/auth';
 
 const Drawer = createDrawerNavigator();
 
@@ -22,26 +23,38 @@ function CustomDrawerContent(props) {
     return (
         <DrawerContentScrollView {...props}>
             <DrawerItemList {...props} />
-            <DrawerItem
-                label="close"
-                onPress={() => props.navigation.toggleDrawer()}
+            {props.isloggedIn ? (
+                <DrawerItem
+                label="logout"
+                onPress={() => 
+                    auth().signOut().then(() => {
+                    Alert.alert('로그아웃 되었습니다.');
+                    props.navigation.navigate('Main');
+                })}
                 activeTintColor='#FFB236'
                 activeBackgroundColor='f5f5f5'
-                icon = {({color, size}) => <Ionicons name="ios-close" color={color} size={size} />}
-                
-                // options ={{
-                //     drawerIcon: ({ color, size }) => (
-                //         <Ionicons name="close" color={color} size={size} />
-                //     ),
-                //     drawerActiveTintColor :'#FFB236',
-                //     drawerActiveBackgroundColor : '#f5f5f5',
-                // }}
+                icon = {({color, size}) => <AntDesign name="logout" color={color} size={size} />}
             />
+            ) : 
+            (<></>)}
+            
         </DrawerContentScrollView>
     );
 }
 
 function DrawerMenu({navigation}) {
+    const [loggedIn, setLoggedIn] = useState(false);
+
+    useEffect(() => {
+        auth().onAuthStateChanged(user => {
+            if (user) {
+            setLoggedIn(true);
+            } else {
+            setLoggedIn(false);
+            }
+        });
+    }, []);
+
     return (
         <Drawer.Navigator
             useLegacyImplementation
@@ -57,7 +70,7 @@ function DrawerMenu({navigation}) {
                     width: 200,
                 },
             }}
-            drawerContent={(props) => <CustomDrawerContent {...props} />}>
+            drawerContent={(props) => <CustomDrawerContent {...props} isloggedIn = {loggedIn} />}>
             <Drawer.Screen 
                 name='StackNav' 
                 component={StackNav}
@@ -87,18 +100,19 @@ function DrawerMenu({navigation}) {
                     drawerActiveBackgroundColor : '#f5f5f5',
                 }}
             />
-            <Drawer.Screen 
+            {loggedIn ? (<></>) : (
+                <Drawer.Screen 
                 name='Login' 
                 component={Login}
                 options ={{
                     drawerIcon: ({ color, size }) => (
                         <AntDesign name="login" color={color} size={size} />
-                        // <Ionicons name="logout" color={color} size={size} />
                     ),
                     drawerActiveTintColor :'#FFB236',
                     drawerActiveBackgroundColor : '#f5f5f5',
                 }}
-            />
+            />)
+            }
         </Drawer.Navigator>
     );
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import { View, Text, StyleSheet, Alert, Image } from 'react-native';
 import {
     GoogleSignin,
     GoogleSigninButton,
@@ -7,6 +7,7 @@ import {
 import auth from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
+import LogoImg from '../../assets/images/logo.png';
 
 export default function Login({route}) {
     const navigation = useNavigation();
@@ -52,7 +53,6 @@ export default function Login({route}) {
                 }
             });
         });
-
         if (checkLoggedIn) {
             Alert.alert('로그인 되었습니다.');
             // 새로 가입한 유저일 때
@@ -78,20 +78,11 @@ export default function Login({route}) {
                 loggedIn = false;
             }
         });
-
-        // if (!!param && param === 'logout') {
-        //     auth()
-        //     .signOut()
-        //     .then(() => {
-        //     Alert.alert('로그아웃 되었습니다.');
-        //     navigation.navigate('Main');
-        //     });
-        // }
     });
 
     return (
         <View style={styles.container}>
-            <Text>Aulor 로고 띄우기!!</Text>
+            <Image style={styles.logo} source={LogoImg}/>
             <GoogleSigninButton
                 onPress={() => onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}
             />
@@ -104,5 +95,9 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    logo : {
+        width:150,
+        height : 150
     },
 });
