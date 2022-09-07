@@ -29,28 +29,26 @@ export default function Login({navigation,route}) {
         // user 중복 체크
         auth().onAuthStateChanged(user => {
             let userDoc = null;
-            if (authFlag) {
+            if (authFlag && user) {
                 authFlag = false;
-                if (user) {
-                    userDoc = userCollection.doc(user.uid).get()
-                    .then(docSnapshot => {
-                        if (docSnapshot.exists) {
-                            navigation.navigate('Main');
-                        } else {
-                            console.log("새로 가입한 사용자입니다.");
-                            const data = {
-                                user_id: user.uid,
-                                name: user.displayName,
-                                address: '',
-                                birthdate: '',
-                                type: '',
-                                liked: {},
-                            };
-                            userCollection.doc(user.uid).set(data);
-                            navigation.navigate('Mypage', {screen:'UserInfo'});
-                        }
-                    });
-                } else {}
+                userDoc = userCollection.doc(user.uid).get()
+                .then(docSnapshot => {
+                    if (docSnapshot.exists) {
+                        navigation.navigate('Main');
+                    } else {
+                        console.log("새로 가입한 사용자입니다.");
+                        const data = {
+                            user_id: user.uid,
+                            name: user.displayName,
+                            address: '',
+                            birthdate: '',
+                            type: '',
+                            liked: {},
+                        };
+                        userCollection.doc(user.uid).set(data);
+                        navigation.navigate('Mypage', {screen:'UserInfo'});
+                    }
+                });
                 return res;
             }
         });
