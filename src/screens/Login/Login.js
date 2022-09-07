@@ -9,8 +9,8 @@ import {useNavigation} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import LogoImg from '../../assets/images/logo.png';
 
-export default function Login({route}) {
-    const navigation = useNavigation();
+export default function Login({navigation,route}) {
+    // const navigation = useNavigation();
 
     //구글 로그인 기능 사용 위해 webClientId 가져오는 함수
     const googleSigninConfigure = () => {
@@ -19,52 +19,42 @@ export default function Login({route}) {
         });
     };
 
+    let authFlag = true;
     // 로그인 하는 함수
     const onGoogleButtonPress = async () => {
         const {idToken} = await GoogleSignin.signIn(); // Get the users ID token
         const googleCredential = auth.GoogleAuthProvider.credential(idToken);  // Create a Google credential with the token
         const res = auth().signInWithCredential(googleCredential);
         const userCollection = firestore().collection('Users');
-
-        const checkLoggedIn = () => {
-            let loggedIn = false;
-            auth().onAuthStateChanged(user => {
-                if (user) {
-                    loggedIn = true;
-                    console.log("loggedIn");
-                } else {
-                    loggedIn = false;
-                    console.log("loggedOut");
-                }
-            });
-            return loggedIn;
-        };
-
-        const [isNew, setIsNew] = useState(false);
-        // user 중복체크
-        auth().onAuthStateChanged(user => { 
+        // user 중복 체크
+        auth().onAuthStateChanged(user => {
             let userDoc = null;
-            userDoc = userCollection.doc(user.uid).get()
-            .then(docSnapshot => {
-                if (docSnapshot.exists) {
-                } else {
-                    userCollection.doc(user.uid).set({userInfo: []});
-                    setIsNew(true);
-                }
-            });
-        });
-        if (checkLoggedIn) {
-            Alert.alert('로그인 되었습니다.');
-            // 새로 가입한 유저일 때
-            if (isNew) {
-                // 여기서 유저 정보 입력 화면으로 이동하면 됩니다
-            } else {
-                navigation.navigate('Main');
+            if (authFlag) {
+                authFlag = false;
+                if (user) {
+                    userDoc = userCollection.doc(user.uid).get()
+                    .then(docSnapshot => {
+                        if (docSnapshot.exists) {
+                            navigation.navigate('Main');
+                        } else {
+                            console.log("새로 가입한 사용자입니다.");
+                            const data = {
+                                user_id: user.uid,
+                                name: user.displayName,
+                                address: '',
+                                birthdate: '',
+                                type: '',
+                                liked: {},
+                            };
+                            userCollection.doc(user.uid).set(data);
+                            navigation.navigate('Mypage', {screen:'UserInfo'});
+                        }
+                    });
+                } else {}
+                return res;
             }
-        } else {
-            Alert.alert('로그인에 실패하였습니다.');
-        }
-        return res;
+        });
+
     };
     
     useEffect(() => {
@@ -73,7 +63,7 @@ export default function Login({route}) {
         auth().onAuthStateChanged(user => {
             if (user) {
                 loggedIn = true;
-                console.log(user);
+                // console.log(user);
             } else {
                 loggedIn = false;
             }
