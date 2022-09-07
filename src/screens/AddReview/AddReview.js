@@ -37,8 +37,8 @@ function AddReview({ route }) {
     return (
         <View>
             <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={{justifyContent:'center', alignItems:'center', marginTop:30}}>
-                    <Text style={{fontWeight:'bold', fontSize:17, color:'black'}}>{reviewCenter.selectedCenter}</Text>
+                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 30 }}>
+                    <Text style={{ fontFamily: 'NanumSquare', fontSize: 17, color: 'black' }}>{reviewCenter.selectedCenter}</Text>
                 </View>
                 <View>
                     <Text style={styles.textDesign}>이용 일자를 입력해주세요.</Text>
@@ -97,13 +97,13 @@ function AddReview({ route }) {
                             placeholder='여기에 후기를 작성해주세요!'
                             activeOutlineColor='#FFB236'
                             multiline={true}
-                            style={{ width: 380, height: 380 }}
+                            style={{ width: 380, height: 380, fontFamily: 'NanumSquare_0', }}
                         />
                     </View>
                 </View>
                 <View style={{ justifyContent: 'center', alignItems: 'center', margin: 20 }}>
                     <Button mode="contained" onPress={() => console.log('Pressed')} style={{ width: 130, backgroundColor: "#FFB236" }}>
-                        완료
+                        <Text style={{ fontFamily: 'NanumSquare_0' }}>완료</Text>
                     </Button>
                 </View>
             </ScrollView>
@@ -120,7 +120,8 @@ const styles = StyleSheet.create({
     textDesign: {
         marginTop: 30,
         marginLeft: 10,
-        color: "black"
+        color: "black",
+        fontFamily: 'NanumSquare_0',
     }
 
 });

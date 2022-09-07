@@ -5,20 +5,22 @@ import { List, Modal, Portal, Button } from 'react-native-paper';
 
 // 행정구역 도 && 시
 const province = [
+    { label: '강원도', value: '강원도' },
     { label: '경기도', value: '경기도' },
-    { label: '경상남도', value: '경상남도' },
-    { label: '경상북도', value: '경상북도' },
+    { label: '서울특별시', value: '서울특별시' },
+    { label: '인천광역시', value: '인천광역시' },
     { label: '대구광역시', value: '대구광역시' },
     { label: '대전광역시', value: '대전광역시' },
-    { label: '서울특별시', value: '서울특별시' },
+    { label: '광주광역시', value: '광주광역시' },
+    { label: '울산광역시', value: '울산광역시' },
     { label: '세종특별자치시', value: '세종특별자치시' },
-    { label: '인천광역시', value: '인천광역시' },
-    { label: '전라남도', value: '전라남도' },
-    { label: '전라북도', value: '전라북도' },
-    { label: '제주특별자치도', value: '제주특별자치도' },
-    { label: '충청남도', value: '충청남도' },
     { label: '충청북도', value: '충청북도' },
-    { label: '강원도', value: '강원도' },
+    { label: '충청남도', value: '충청남도' },
+    { label: '경상북도', value: '경상북도' },
+    { label: '경상남도', value: '경상남도' },
+    { label: '전라북도', value: '전라북도' },
+    { label: '전라남도', value: '전라남도' },
+    { label: '제주특별자치도', value: '제주특별자치도' },
 ]
 
 function SelectCenter({ navigation, route }) {
@@ -55,9 +57,9 @@ function SelectCenter({ navigation, route }) {
                     <DropDownPicker
                         style={styles.provincePickerDesign}
                         containerStyle={{ width: 170, marginRight: 10 }}
-                        disabled = {true}
+                        disabled={true}
                         placeholder={userProvince.selectedProvince}
-                        placeholderStyle={{ color: 'gray' }}
+                        placeholderStyle={{ color: 'black' }}
                         open={openProvince}
                         value={provinceValue}
                         items={provinces}
@@ -77,7 +79,7 @@ function SelectCenter({ navigation, route }) {
                             width: 190,
                         }}
                         placeholder=""
-                        placeholderStyle={{ color: 'gray' }}
+                        placeholderStyle={{ color: 'black' }}
                         open={open}
                         value={value}
                         items={items}
@@ -94,46 +96,52 @@ function SelectCenter({ navigation, route }) {
 
                 </View>
             </View>
-            <Text style={{ marginLeft: 20, marginTop: 10 }}>검색 결과</Text>
+            <Text style={{ marginLeft: 20, marginTop: 10, fontFamily: 'NanumSquare_0' }}>검색 결과</Text>
             <View style={styles.listDesign}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <List.Section>
                         <List.Accordion
+                            style={{ marginLeft: 5, }}
                             title="의정부시시설관리공단 이동지원센터"
-                            left={props => <List.Icon {...props} icon="check" />}
+                            titleStyle={{ fontFamily: 'NanumSquare_acR' }}
                             expanded={expanded}
                             onPress={handlePress}>
                             <List.Item title={() => (
                                 <View>
                                     <Portal style={{ justifyContent: 'center', alignItems: 'center' }}>
                                         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalDesign}>
-                                            <Text>선택하신 이동지원센터를 즐겨찾기에 추가하시겠습니까?</Text>
+                                            <Text style={{ fontFamily: 'NanumSquare_0' }}>선택하신 이동지원센터를 즐겨찾기에 추가하시겠습니까?</Text>
                                             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-
                                                 <Text style={{ marginTop: 10 }}>
                                                     <Button
                                                         mode="text"
                                                         color="#FFB236"
                                                     >
-                                                        예
+                                                        <Text style={{ fontFamily: 'NanumSquare_0' }}>
+                                                            예
+                                                        </Text>
+
                                                     </Button>
                                                     <Button
                                                         mode="text"
                                                         color="#FFB236"
                                                         onPress={() => setVisible(false)}>
-                                                        아니오
+                                                        <Text style={{ fontFamily: 'NanumSquare_0' }}>
+                                                            아니오
+                                                        </Text>
+
                                                     </Button>
                                                 </Text>
                                             </View>
 
                                         </Modal>
                                     </Portal>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Button style={{marginRight: 25, marginLeft:-15}} mode="contained" color="#FFB236" onPress={() => navigation.navigate('CenterInfo')}>
-                                            세부정보 보기
+                                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingLeft: 30, paddingRight: 30 }}>
+                                        <Button style={{ flex: 1, marginRight: 30 }} mode="contained" color="#FFB236" onPress={() => navigation.navigate('CenterInfo')}>
+                                            <Text style={{ fontFamily: 'NanumSquare_0' }}>세부정보 보기</Text>
                                         </Button>
-                                        <Button style={{}} mode="contained" color="#FFB236" onPress={showModal}>
-                                            즐겨찾기에 추가
+                                        <Button style={{ flex: 1 }} mode="contained" color="#FFB236" onPress={showModal}>
+                                            <Text style={{ fontFamily: 'NanumSquare_0' }}>즐겨찾기에 추가</Text>
                                         </Button>
                                     </View>
                                 </View>
@@ -166,12 +174,14 @@ const styles = StyleSheet.create({
     textDesign: {
         margin: 10,
         marginBottom: 0,
+        fontFamily: 'NanumSquare_0'
     },
 
     provincePickerDesign: {
         width: 150,
         margin: 10,
         borderColor: '#FFB236',
+
     },
 
     cityPickerDesign: {

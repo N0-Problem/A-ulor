@@ -49,10 +49,10 @@ function SelectProvince({navigation}) {
                         return (
                             <View key={index} style={{ flexDirection: 'row' }}>
                                 <Button style={styles.btnDesign} mode="contained" onPress={() => updateProvince(2 * index)} onTouchEnd={() => navigation.navigate('SelectCenter', {selectedProvince: province})}>
-                                    {provinceData[2 * index].value}
+                                    <Text style={{fontFamily:'NanumSquare_0'}}>{provinceData[2 * index].value}</Text>
                                 </Button>
                                 <Button style={styles.btnDesign} mode="contained" onPress={() => updateProvince(2 * index + 1)} onTouchEnd={() => navigation.navigate('SelectCenter', {selectedProvince: province})}>
-                                    {provinceData[2 * index + 1].value}
+                                    <Text style={{fontFamily:'NanumSquare_0'}}>{provinceData[2 * index + 1].value}</Text>
                                 </Button>
                             </View>
 
@@ -75,9 +75,9 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        fontWeight: 'bold',
         marginTop: 30,
         marginBottom: 10,
+        fontFamily:'NanumSquare'
     },
 
     btnDesign: {
