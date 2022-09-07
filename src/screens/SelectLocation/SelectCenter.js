@@ -57,6 +57,7 @@ function SelectCenter({ navigation, route }) {
                     <DropDownPicker
                         style={styles.provincePickerDesign}
                         containerStyle={{ width: 170, marginRight: 10 }}
+                        showArrowIcon={false}
                         disabled={true}
                         placeholder={userProvince.selectedProvince}
                         placeholderStyle={{ color: 'black' }}

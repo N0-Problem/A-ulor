@@ -42,8 +42,6 @@ function SelectProvince({navigation}) {
                 <View>
                     <Text style={styles.title}>원하시는 행정구역을 선택해주세요.</Text>
                 </View>
-                <View>
-                </View>
                 <View style={{ flexDirection: "column" }}>
                     {tempbox06.map((item, index) => {
                         return (
