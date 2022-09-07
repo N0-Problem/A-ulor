@@ -56,7 +56,7 @@ function SelectCenter({ navigation, route }) {
                 <View style={{ flexDirection: 'row' }}>
                     <DropDownPicker
                         style={styles.provincePickerDesign}
-                        containerStyle={{ width: 170, marginRight: 10 }}
+                        containerStyle={{ width: 170, marginRight: 10, }}
                         showArrowIcon={false}
                         disabled={true}
                         placeholder={userProvince.selectedProvince}
@@ -182,6 +182,8 @@ const styles = StyleSheet.create({
         width: 150,
         margin: 10,
         borderColor: '#FFB236',
+        backgroundColor:'#E6E6E6'
+        
 
     },
 
