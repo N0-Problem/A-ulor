@@ -3,9 +3,9 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { List, Modal, Portal, Button } from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
-import { createIconSetFromFontello } from 'react-native-vector-icons';
+import {cityData} from '../../assets/data/cities'
 
-// 행정구역 도 && 시
+// 행정구역 도
 const province = [
     { label: '강원도', value: '강원도' },
     { label: '경기도', value: '경기도' },
@@ -26,53 +26,38 @@ const province = [
 ]
 
 
+let centers = ""
+
 function SelectCenter({ navigation, route }) {
 
     const userProvince = route.params;        // 사용자가 앞 화면에서 선택한 도 or 시
 
-    const [centerAddress, setCenterAddress] = useState();
-    const [centerName, setCenterName] = useState();
-
-    let tempAddress = [];
-    let blankIndexArray = []
-
-    useEffect(() => {
-        // 서버에서 모든 센터 정보 조회
-        firestore().collection('Centers').get()
-            .then(querySnapshot => {
-
-                let centers = querySnapshot.docs.map(doc => doc.data());
-                centers = centers.filter((centers) => centers.address.toLowerCase().includes(userProvince.selectedProvince));
-                setCenterName(centers);
-
-            });
-
-        // setCenterName(tempName);
-        // setCenterAddress(tempAddress);
-        // console.log(centerName[0]);
-        // console.log(centerAddress[0]);
-    }, [])
-
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
-    const [items, setItems] = useState([
-        { label: 'Apple', value: 'apple' },
-        { label: 'Banana', value: 'banana' }
-    ]);
-
+    const [centerName, setCenterName] = useState();     // 화면에 띄울 센터 이름 관리
 
     const [openProvince, setProvinceOpen] = useState(false);
     const [provinceValue, setProvinceValue] = useState(null);
     const [provinces, setProvinces] = useState(province);
 
+    const [openCity, setCityOpen] = useState(false);        // 두 번째 dropdown picker의 선택지 관리
+    const [cityValue, setCityValue] = useState(null);
+    const [cities, setCities] = useState(cityData[userProvince.provinceIndex]);
+
+    firestore().collection('Centers').get()
+    .then(querySnapshot => {
+        centers = querySnapshot.docs.map(doc => doc.data());
+        centers = centers.filter((centers) => centers.address.toLowerCase().includes(userProvince.selectedProvince));
+    });
+
+
+
+    /// accordion 관련 코드
     const [expanded, setExpanded] = React.useState(false);
     const handlePress = () => setExpanded(!expanded);
-
     const [visible, setVisible] = React.useState(false);
 
+    // modal 관련 코드
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
-
 
     return (
         <View style={styles.container}>
@@ -82,24 +67,18 @@ function SelectCenter({ navigation, route }) {
                 </Text>
                 <View style={{ flexDirection: 'row' }}>
                     <DropDownPicker
-                        style={styles.provincePickerDesign}
-                        containerStyle={{ width: 170, marginRight: 10, }}
-                        showArrowIcon={false}
-                        disabled={true}
-                        placeholder={userProvince.selectedProvince}
-                        placeholderStyle={{ color: 'black' }}
                         open={openProvince}
                         value={provinceValue}
                         items={provinces}
                         setOpen={setProvinceOpen}
                         setValue={setProvinceValue}
                         setItems={setProvinces}
-                        onChangeValue={(provinceValue) => {
-                            console.log(provinceValue);
-                        }}
-                        onSelectItem={(provinces) => {
-                            console.log(provinces);
-                        }}
+                        style={styles.provincePickerDesign}
+                        containerStyle={{ width: 170, marginRight: 10, }}
+                        showArrowIcon={false}
+                        disabled={true}
+                        placeholder={userProvince.selectedProvince}
+                        placeholderStyle={{ color: 'black', fontFamily:'NanumSquare_0' }}
                     />
                     <DropDownPicker
                         style={styles.cityPickerDesign}
@@ -108,17 +87,18 @@ function SelectCenter({ navigation, route }) {
                         }}
                         placeholder=""
                         placeholderStyle={{ color: 'black' }}
-                        open={open}
-                        value={value}
-                        items={items}
-                        setOpen={setOpen}
-                        setValue={setValue}
-                        setItems={setItems}
-                        onChangeValue={(value) => {
-                            console.log(value);
-                        }}
-                        onSelectItem={(item) => {
-                            console.log(item);
+                        open={openCity}
+                        value={cityValue}
+                        items={cities}
+                        setOpen={setCityOpen}
+                        setValue={setCityValue}
+                        setItems={setCities}
+                        onSelectItem={(cityValue) => {
+                            if(cityValue != null) {
+                                let addressStr = userProvince.selectedProvince + ' ' + cityValue.value;
+                                centers = centers.filter((centers) => centers.address.toLowerCase().includes(addressStr));
+                                setCenterName(centers);
+                            }
                         }}
                     />
 
@@ -131,12 +111,13 @@ function SelectCenter({ navigation, route }) {
                         {centerName && centerName.map((item, idx) => {
                             return (
                                 <List.Accordion
-                                    key={idx}
-                                    style={{ marginLeft: 5, }}
+                                    style={{ marginLeft: 5 }}
                                     title={item.name}
                                     titleStyle={{ fontFamily: 'NanumSquare_acR' }}
                                     expanded={expanded}
-                                    onPress={handlePress}>
+                                    key={idx}
+                                    onPress={handlePress}
+                                >
                                     <List.Item title={() => (
                                         <View>
                                             <Portal style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -151,7 +132,6 @@ function SelectCenter({ navigation, route }) {
                                                                 <Text style={{ fontFamily: 'NanumSquare_0' }}>
                                                                     예
                                                                 </Text>
-
                                                             </Button>
                                                             <Button
                                                                 mode="text"
@@ -180,7 +160,6 @@ function SelectCenter({ navigation, route }) {
                                 </List.Accordion>
                             )
                         })}
-
                     </List.Section>
                 </ScrollView>
             </View>
