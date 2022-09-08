@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { List, Modal, Portal, Button } from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
+import {cityData} from '../../assets/data/cities'
 
 // 행정구역 도
 const province = [
@@ -24,44 +25,37 @@ const province = [
     { label: '제주특별자치도', value: '제주특별자치도' },
 ]
 
-let city = []
-let centers = ""
 
+let centers = ""
 
 function SelectCenter({ navigation, route }) {
 
     const userProvince = route.params;        // 사용자가 앞 화면에서 선택한 도 or 시
 
-    const [centerName, setCenterName] = useState();
+    const [centerName, setCenterName] = useState();     // 화면에 띄울 센터 이름 관리
 
     const [openProvince, setProvinceOpen] = useState(false);
     const [provinceValue, setProvinceValue] = useState(null);
     const [provinces, setProvinces] = useState(province);
 
-    const [openCity, setCityOpen] = useState(false);
+    const [openCity, setCityOpen] = useState(false);        // 두 번째 dropdown picker의 선택지 관리
     const [cityValue, setCityValue] = useState(null);
-    const [cities, setCities] = useState();
+    const [cities, setCities] = useState(cityData[userProvince.provinceIndex]);
 
     firestore().collection('Centers').get()
     .then(querySnapshot => {
         centers = querySnapshot.docs.map(doc => doc.data());
         centers = centers.filter((centers) => centers.address.toLowerCase().includes(userProvince.selectedProvince));
-
-        // for (let i = 0; i < centers.length; i++) {
-        //     let tempBox = centers[i].address.split(" ");
-        //     let tempObject = {};
-        //     tempObject.label = tempBox[1];
-        //     tempObject.value = tempBox[1];
-        //     city.push(tempObject);
-        // }
-        
     });
 
+
+
+    /// accordion 관련 코드
     const [expanded, setExpanded] = React.useState(false);
     const handlePress = () => setExpanded(!expanded);
-
     const [visible, setVisible] = React.useState(false);
 
+    // modal 관련 코드
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
 
@@ -73,24 +67,18 @@ function SelectCenter({ navigation, route }) {
                 </Text>
                 <View style={{ flexDirection: 'row' }}>
                     <DropDownPicker
-                        style={styles.provincePickerDesign}
-                        containerStyle={{ width: 170, marginRight: 10, }}
-                        showArrowIcon={false}
-                        disabled={true}
-                        placeholder={userProvince.selectedProvince}
-                        placeholderStyle={{ color: 'black' }}
                         open={openProvince}
                         value={provinceValue}
                         items={provinces}
                         setOpen={setProvinceOpen}
                         setValue={setProvinceValue}
                         setItems={setProvinces}
-                        onChangeValue={(provinceValue) => {
-                            console.log(provinceValue);
-                        }}
-                        onSelectItem={(provinces) => {
-                            console.log(provinces);
-                        }}
+                        style={styles.provincePickerDesign}
+                        containerStyle={{ width: 170, marginRight: 10, }}
+                        showArrowIcon={false}
+                        disabled={true}
+                        placeholder={userProvince.selectedProvince}
+                        placeholderStyle={{ color: 'black', fontFamily:'NanumSquare_0' }}
                     />
                     <DropDownPicker
                         style={styles.cityPickerDesign}
@@ -107,11 +95,8 @@ function SelectCenter({ navigation, route }) {
                         setItems={setCities}
                         onSelectItem={(cityValue) => {
                             if(cityValue != null) {
-                                let addressStr = userProvince.selectedProvince + ' ' + cityValue;
+                                let addressStr = userProvince.selectedProvince + ' ' + cityValue.value;
                                 centers = centers.filter((centers) => centers.address.toLowerCase().includes(addressStr));
-                                setCenterName(centers);
-                            }
-                            else {
                                 setCenterName(centers);
                             }
                         }}
@@ -131,7 +116,6 @@ function SelectCenter({ navigation, route }) {
                                     titleStyle={{ fontFamily: 'NanumSquare_acR' }}
                                     expanded={expanded}
                                     key={idx}
-
                                     onPress={handlePress}
                                 >
                                     <List.Item title={() => (

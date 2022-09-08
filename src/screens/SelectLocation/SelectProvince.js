@@ -46,10 +46,10 @@ function SelectProvince({navigation}) {
                     {tempbox06.map((item, index) => {
                         return (
                             <View key={index} style={{ flexDirection: 'row' }}>
-                                <Button style={styles.btnDesign} mode="contained" onPress={() => updateProvince(2 * index)} onTouchEnd={() => navigation.navigate('SelectCenter', {selectedProvince: province})}>
+                                <Button style={styles.btnDesign} mode="contained" onPress={() => updateProvince(2 * index)} onTouchEnd={() => navigation.navigate('SelectCenter', {selectedProvince: province, provinceIndex : 2*index})}>
                                     <Text style={{fontFamily:'NanumSquare_0'}}>{provinceData[2 * index].value}</Text>
                                 </Button>
-                                <Button style={styles.btnDesign} mode="contained" onPress={() => updateProvince(2 * index + 1)} onTouchEnd={() => navigation.navigate('SelectCenter', {selectedProvince: province})}>
+                                <Button style={styles.btnDesign} mode="contained" onPress={() => updateProvince(2 * index + 1)} onTouchEnd={() => navigation.navigate('SelectCenter', {selectedProvince: province, provinceIndex : 2*index+1})}>
                                     <Text style={{fontFamily:'NanumSquare_0'}}>{provinceData[2 * index + 1].value}</Text>
                                 </Button>
                             </View>
