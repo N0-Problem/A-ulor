@@ -4,6 +4,8 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { Calendar } from "react-native-calendars";
 import { TextInput, Button } from 'react-native-paper';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
 const stars = ["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"]
 
@@ -32,6 +34,41 @@ function AddReview({ route }) {
             selected: true,
             marked: markedDates[selectedDate]?.marked,
         }
+    }
+
+    async function addReview() {
+        let user_id;
+
+        // 현재 유저 정보 가져오기
+        auth().onAuthStateChanged(user => {
+            user_id = user.uid;
+        });
+        // review_id 생성 및 중복 확인
+        let review_id = Math.random().toString(36).substring(2, 16);
+        let doc;
+        do {
+            const ref = firestore().collection('Review').doc(review_id);
+            doc = await ref.get();
+            review_id = Math.random().toString(36).substring(2, 16);
+        } while (doc.exists);
+
+        // 오늘 날짜 가져오기
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = ('0' + (today.getMonth()+1)).slice(-2);
+        const day = ('0' + today.getDate()).slice(-2);
+        const now_date = year + '-' + month + '-' + day;
+
+        let review = {
+            user_id: user_id,
+            center_id: '000',
+            used_date: selectedDate,
+            posted_date: now_date,
+            rate: myValue,
+            feedback: text, 
+        };
+        console.log(review);
+        firestore().collection('Review').doc(review_id).set(review);
     }
 
     return (
@@ -102,7 +139,7 @@ function AddReview({ route }) {
                     </View>
                 </View>
                 <View style={{ justifyContent: 'center', alignItems: 'center', margin: 20 }}>
-                    <Button mode="contained" onPress={() => console.log('Pressed')} style={{ width: 130, backgroundColor: "#FFB236" }}>
+                    <Button mode="contained" onPress={() => addReview()} style={{ width: 130, backgroundColor: "#FFB236" }}>
                         <Text style={{ fontFamily: 'NanumSquare_0' }}>완료</Text>
                     </Button>
                 </View>
