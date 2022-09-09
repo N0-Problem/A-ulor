@@ -12,7 +12,7 @@ const stars = ["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"]
 
 function AddReview({ route }) {
 
-    const reviewCenter = route.params;
+    const reviewCenter = route.params.selectedCenter;
 
     const [myValue, setMyValue] = useState(0);
 
@@ -52,7 +52,7 @@ function AddReview({ route }) {
             review_id = Math.random().toString(36).substring(2, 16);
         } while (doc.exists);
 
-        // 오늘 날짜 가져오기
+        // 오늘 날짜 가져와 포맷에 맞게 편집
         const today = new Date();
         const year = today.getFullYear();
         const month = ('0' + (today.getMonth()+1)).slice(-2);
@@ -61,7 +61,7 @@ function AddReview({ route }) {
 
         let review = {
             user_id: user_id,
-            center_id: '000',
+            center_id: reviewCenter.id,
             used_date: selectedDate,
             posted_date: now_date,
             rate: myValue,
@@ -75,7 +75,7 @@ function AddReview({ route }) {
         <View>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 30 }}>
-                    <Text style={{ fontFamily: 'NanumSquare', fontSize: 17, color: 'black' }}>{reviewCenter.selectedCenter}</Text>
+                    <Text style={{ fontFamily: 'NanumSquare', fontSize: 17, color: 'black' }}>{reviewCenter.name}</Text>
                 </View>
                 <View>
                     <Text style={styles.textDesign}>이용 일자를 입력해주세요.</Text>
