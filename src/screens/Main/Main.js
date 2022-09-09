@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import auth from '@react-native-firebase/auth';
-import LogoImg from '../../assets/images/logo2.png';
+import LogoImg from '../../assets/images/logo3.png';
 
 function Main({navigation}) {
     const [loggedIn, setLoggedIn] = useState(false);
@@ -40,10 +40,11 @@ function Main({navigation}) {
                         activeOpacity={0.7}
                         onPress={() => navigation.navigate('BottomNav',{screen : 'CurrentLocation'})}>
                         <View style={styles.box1}>
-                            <Ionicons name="location" color='#000' size={80} />
+                            <Ionicons name="location" color='#414141' size={80} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
-                                marginTop: 5
+                                marginTop: 5,
+                                color: '#414141'
                             }}>
                                 내 주변 센터 찾기
                             </Text>
@@ -55,10 +56,11 @@ function Main({navigation}) {
                         activeOpacity={0.7}
                         onPress={() => navigation.navigate('BottomNav',{screen : 'SelectProvince'})}>
                         <View style={styles.box2}>
-                            <MaterialCommunityIcons name="table-search" color='#000' size={80} />
+                            <MaterialCommunityIcons name="table-search" color='#414141' size={80} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
-                                marginTop: 5
+                                marginTop: 5,
+                                color: '#414141'
                             }}>
                                 원하는 센터 찾기
                             </Text>
@@ -69,10 +71,11 @@ function Main({navigation}) {
                         activeOpacity={0.7}
                         onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark'})}>
                         <View style={styles.box3}>
-                            <Ionicons name="ios-bookmarks" color='#000' size={75} />
+                            <Ionicons name="ios-bookmarks" color='#414141' size={75} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
-                                marginTop: 7
+                                marginTop: 7,
+                                color: '#414141'
                             }}>
                                 자주 사용하는 센터
                             </Text>
@@ -121,7 +124,7 @@ const styles = StyleSheet.create({
     },
     main_header: {
         height: '25%',
-        backgroundColor: '#FFDA36',
+        backgroundColor: '#4E4E4E',
         alignItems : 'center'
     },
     header_textbox: {
@@ -139,26 +142,28 @@ const styles = StyleSheet.create({
         fontFamily:'NanumSquare',
         fontSize : 20,
         paddingLeft: 20,
-        paddingBottom : 5
+        paddingBottom : 5,
+        color: '#fff'
     },
     header_text2 : {
         fontFamily:'NanumSquare_0',
         fontSize : 15,
         paddingLeft: 20,
-        paddingVertical: 3
+        paddingVertical: 3,
+        color: '#fff'
     },
     header_text3 : {
         fontFamily:'NanumSquare_0',
         paddingLeft: 20,
-        // color : '#6e6e6e'
+        color: '#fff'
     },
     boxes :{
         height : '75%',
         flexDirection :'column',
     },
     div1 : {
-        flex : 0.8,
-        backgroundColor : "#4e4e4e",
+        flex : 0.9,
+        backgroundColor : "#fff",
         justifyContent : 'space-around'
     },
     box1 :{
@@ -169,11 +174,12 @@ const styles = StyleSheet.create({
         marginTop : 25,
         width : 180,
         height : 180,
-        borderRadius : 180 / 2
+        borderRadius : 180 / 2,
+        elevation: 5,
     },
     div2 :{
         flex : 1,
-        backgroundColor : "#4e4e4e",
+        backgroundColor : "#fff",
         flexDirection :'row', 
         justifyContent : 'space-evenly',
     },
@@ -184,6 +190,7 @@ const styles = StyleSheet.create({
         width : 180,
         height : 180,
         borderRadius : 180 / 2,
+        elevation: 5,
     },
     box3 :{
         backgroundColor : "#FFDA36",
@@ -191,7 +198,8 @@ const styles = StyleSheet.create({
         paddingTop : 44,
         width : 180,
         height : 180,
-        borderRadius : 180 / 2
+        borderRadius : 180 / 2,
+        elevation: 5,
     }
 });
 
