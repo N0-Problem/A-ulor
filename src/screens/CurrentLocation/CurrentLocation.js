@@ -195,7 +195,11 @@ function CurrentLocation({ navigation }) {
                 </View>
             ) : (
                 <View
-                    style={styles.container}>
+                    style={{
+                        flex: 1,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
                     <ActivityIndicator size="large" color="#85DEDC" />
                 </View>
             )}
