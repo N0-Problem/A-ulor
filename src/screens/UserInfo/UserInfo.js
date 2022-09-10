@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, KeyboardAwareScrollView } from 'react-native';
 import { Button, TextInput, RadioButton } from 'react-native-paper';
 import DatePicker from 'react-native-date-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -29,108 +29,150 @@ export default function UserInfo({navigation}) {
     }, []);
 
     return (
-        <View style={styles.container}>
-            <View style={styles.input_container}>
-                <Text style={styles.text_title}>이름</Text>
-                <Text style={styles.text_input}>{userName}</Text>
+        // <KeyboardAwareScrollView
+        //     behavior={'height'}
+        //     enabled = {true}>
+            <View style={styles.container}>
+                <View style={styles.input_container}>
+                    <Text style={styles.text_title}>이름</Text>
+                    <Text style={styles.text_input}>{userName}</Text>
+                </View>
+                <View style={styles.input_container}>
+                    <Text style={styles.text_title}>생년월일</Text>
+                    {isNewUser ? (
+                        <TouchableOpacity
+                            onPress={() => setOpen(true)}>
+                            <Text style={styles.text_input}>{date.toDateString()}</Text>
+                        </TouchableOpacity>
+                    ):(
+                        <TouchableOpacity
+                            onPress={() => setOpen(true)}>
+                            <Text style={styles.text_input}>{date.toDateString()}</Text>
+                        </TouchableOpacity>
+                    )}
+                </View>
+                <DatePicker
+                    modal
+                    mode={"date"}
+                    open={open}
+                    date={date}
+                    maximumDate={date}
+                    onConfirm={(date) => {
+                        setOpen(false)
+                        setDate(date)
+                    }}
+                    onCancel={() => {
+                        setOpen(false)
+                    }}
+                />
+                <View style={styles.drop_container}>
+                    <Text style={styles.drop_title}>특이사항</Text>
+                    <DropDownPicker
+                        style={styles.dropdown}
+                        open={dropopen}
+                        value={dropvalue}
+                        items={dropitems}
+                        setOpen={setdropOpen}
+                        setValue={setdropValue}
+                        setItems={setdropItems}
+                        onSelectItem={(item) => {
+                            if (item.label === "기타"){
+                                setextraInput(true);
+                            }else {
+                                setextraInput(false);
+                            }
+                        }}
+                    />
+                    {extraInput ? (
+                    <TextInput
+                        label=''
+                        placeholder='기타 특이사항을 입력하세요.'
+                        // value={'입력받기'}
+                        style={styles.extra_input}
+                    />):(<></>)}
+                </View>
+                <Button 
+                    style={styles.button}
+                    color={'#2d2d2d'}
+                    onPress={()=>navigation.navigate('Mypage')}
+                >저장
+                </Button>
             </View>
-            <View style={styles.input_container}>
-                <Text style={styles.text_title}>생년월일</Text>
-                {isNewUser ? (
-                    <TouchableOpacity
-                        onPress={() => setOpen(true)}>
-                        <Text style={styles.text_input}>{date.toDateString()}</Text>
-                    </TouchableOpacity>
-                ):(
-                    <TouchableOpacity
-                        onPress={() => setOpen(true)}>
-                        <Text style={styles.text_input}>{date.toDateString()}</Text>
-                    </TouchableOpacity>
-                )}
-            </View>
-            <DatePicker
-                modal
-                mode={"date"}
-                open={open}
-                date={date}
-                maximumDate={date}
-                onConfirm={(date) => {
-                    setOpen(false)
-                    setDate(date)
-                }}
-                onCancel={() => {
-                    setOpen(false)
-                }}
-            />
-            <DropDownPicker
-                style={styles.dropdown}
-                open={dropopen}
-                value={dropvalue}
-                items={dropitems}
-                setOpen={setdropOpen}
-                setValue={setdropValue}
-                setItems={setdropItems}
-                onSelectItem={(item) => {
-                    if (item.label === "기타"){
-                        setextraInput(true);
-                    }else {
-                        setextraInput(false);
-                    }
-                }}
-            />
-            {extraInput ? (
-            <TextInput
-                label=''
-                value={'기타 입력'}
-                mode="flat"
-                style={styles.text_input}
-            />):(<></>)}
-            <Button 
-                style={styles.button}
-                onPress={()=>navigation.navigate('Mypage')}
-            >저장
-            </Button>
-        </View>
+        // </KeyboardAwareScrollView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // justifyContent: 'center',
+        backgroundColor : '#fff'
     },
     input_container: {
         height: 80,
         justifyContent : 'center',
-        paddingLeft : 10,
+        paddingLeft : 13,
         backgroundColor : '#fff',
-        borderBottomColor : '#000',
-        borderRadius : 10,
-        borderColor : '#000'
+        borderBottomColor : '#FFB236',
+        borderBottomWidth : 1,
     },
     text_title: {
-        // backgroundColor: '#fff',
-        // fontFamily : 'NanumSquare_0',
+        color : '#FFB236',
+        fontFamily : 'NanumSquare_0',
         fontSize : 16,
-        // // height : 30,
-        // paddingVertical : 5, 
+        top: -3,
     },
     text_input: {
-        // backgroundColor: '#fff',
-        // fontFamily : 'NanumSquare_0',
+        backgroundColor: '#d4d4d4',
+        color : '#454545',
+        fontFamily : 'NanumSquare_0',
         fontSize : 22, 
-        // // height : 45,
-        // paddingVertical : 5,
+        height : 40,
+        marginRight : 10,
+        marginTop : 3,
+        textAlignVertical : 'center',
+        paddingLeft: 5, 
+        borderRadius : 7
+    },
+    drop_container : {
+        justifyContent : 'center',
+        paddingLeft : 13,
+        paddingTop : 5,
+        paddingBottom : 12,
+        backgroundColor : '#fff',
+        borderBottomColor : '#FFB236',
+        borderBottomWidth : 1,
+    },
+    drop_title: {
+        color : '#FFB236',
+        fontFamily : 'NanumSquare_0',
+        fontSize : 16,
+        marginTop: 5,
     },
     dropdown : {
-        borderColor : '#e2e2e2',
+        backgroundColor : '#d4d4d4',
+        borderColor : '#fff',
+        height : 43,
+        right : 3,
+        marginTop : 4,
+        width : '99%',
+    },
+    extra_input : {
+        backgroundColor: '#d4d4d4',
+        color : '#454545',
+        fontFamily : 'NanumSquare_0',
+        textAlignVertical : 'center',
+        fontSize : 18, 
+        height : 40,
+        marginRight : 10,
+        marginTop : 10,
+        marginBottom : -3,
+        borderRadius : 7
     },
     button : {
         backgroundColor : '#FFDA36',
+        width: '100%',
+        height : 40,
         bottom: 0,
         position: 'absolute',
-        width: '100%',
-        height: 50,
-        color : '#000'
     }
 });
