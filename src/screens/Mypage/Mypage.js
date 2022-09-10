@@ -55,14 +55,14 @@ export default function Mypage({navigation}) {
             </View>
             <View style={styles.listbox}>
                 {loggedIn ? (
-                    <Text style={styles.list} onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark'})}>즐겨찾기</Text>
+                    <Text style={styles.list} onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark'})}>자주 사용하는 센터</Text>
                 ):(
-                    <Text style={styles.list_disable} disabled={true}>즐겨찾기</Text>
+                    <Text style={styles.list_disable} disabled={true}>자주 사용하는 센터</Text>
                 )}
                 {loggedIn ? (
-                    <Text style={styles.list} onPress={() => navigation.navigate('BookMark')}>후기</Text>
+                    <Text style={styles.list} onPress={() => navigation.navigate('BookMark')}>내가 쓴 후기</Text>
                 ):(
-                    <Text style={styles.list_disable} disabled={true}>후기</Text>
+                    <Text style={styles.list_disable} disabled={true}>내가 쓴 후기</Text>
                 )}
             </View>
         </View>
