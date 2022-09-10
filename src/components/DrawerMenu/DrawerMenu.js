@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Image, StyleSheet, Alert} from 'react-native';
+import {View, Text, Image, StyleSheet, Alert} from 'react-native';
 import {
     createDrawerNavigator,
     DrawerContentScrollView,
@@ -56,15 +56,16 @@ function DrawerMenu({navigation}) {
     }, []);
 
     return (
-        <Drawer.Navigator
+        <Drawer.Navigator {...navigation}
             useLegacyImplementation
+            drawerContent={(props) => <CustomDrawerContent {...props} isloggedIn = {loggedIn} />}
             screenOptions={{
-                headerTitle: '아울러',
+                headerTitle: '아 울 러',
                 headerTitleAlign : 'center',
                 headerTintColor : '#FFB236',
                 headerTitleStyle: {
                     fontFamily : 'NanumSquare',
-                    fontSize : 27
+                    fontSize : 25
                 },
                 headerStyle: {
                     backgroundColor: '#FFFFFF',
@@ -73,8 +74,7 @@ function DrawerMenu({navigation}) {
                 drawerStyle: {
                     width: 200,
                 },
-            }}
-            drawerContent={(props) => <CustomDrawerContent {...props} isloggedIn = {loggedIn} />}>
+            }}>
             <Drawer.Screen 
                 name='StackNav' 
                 component={StackNav}
@@ -94,7 +94,7 @@ function DrawerMenu({navigation}) {
                 }}
             />
             <Drawer.Screen 
-                name='Mypage' 
+                name='Mypage'
                 component={StackNav2}
                 options ={{
                     drawerIcon: ({ color, size }) => (

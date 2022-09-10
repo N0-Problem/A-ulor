@@ -9,8 +9,10 @@ import SelectCenter from '../../screens/SelectLocation/SelectCenter';
 import Mypage from '../../screens/Mypage/Mypage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import BookMark from '../../screens/BookMark/BookMark';
 import StackNav3 from '../StackNav/StackNav3';
+import StackNav2 from '../StackNav/StackNav2';
 import auth from '@react-native-firebase/auth';
 
 function BottomNav({navigation}) {
@@ -29,12 +31,12 @@ function BottomNav({navigation}) {
 
   return (
     <Tab.Navigator
-      screenOptions={({route}) => ({ //route prop [name, path, param ...]
+      screenOptions={({route}) => ( { //route prop [name, path, param ...]
         headerShown: false,
         tabBarActiveTintColor: '#FFB236',
         tabBarInactiveTintColor: '#242424',
       })}>
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Main"
         component={Main}
         options={{
@@ -52,7 +54,7 @@ function BottomNav({navigation}) {
             navigation.navigate('Main');
           },
         })}
-      />
+      /> */}
       <Tab.Screen
         name="CurrentLocation"
         component={CurrentLocation}
@@ -67,7 +69,7 @@ function BottomNav({navigation}) {
         }}
       />
       <Tab.Screen
-        name="SelectProvince"
+        name="StackNav3"
         component={StackNav3}
         options={{
           tabBarLabel: '원하는 센터',
@@ -84,7 +86,7 @@ function BottomNav({navigation}) {
         name="BookMark"
         component={BookMark}
         options={{
-          tabBarLabel: '즐겨찾기',
+          tabBarLabel: '자주 찾는 센터',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="ios-bookmarks" color={color} size={size} />
           ),
@@ -101,25 +103,22 @@ function BottomNav({navigation}) {
           tabPress : (e) => {
             e.preventDefault(); //이벤트 취소
             Alert.alert(
-              '로그인 후 이용가능합니다. 로그인 페이지로 이동합니다.',
+              '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
               '',
               [{
-                      text: '취소',
-                      // onPress: () => navigation.navigate('Main'),
-                      style: 'cancel',
-                      },
-                      {
-                      text: '확인',
-                      onPress: () =>
-                          navigation.navigate('Login', {
-                          param: 'login',
-                      }),
-              },],
-          )
+                text: '확인',
+                onPress: () =>navigation.navigate('Login', {param: 'login',}),
+              },
+              {
+                text: '취소',
+                style: 'cancel',
+              },
+              ],
+            )
           }
         }}
         options={{
-          tabBarLabel: '즐겨찾기',
+          tabBarLabel: '자주 찾는 센터',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="ios-bookmarks" color={'#b6b6b6'} size={size} />
           ),
@@ -130,7 +129,60 @@ function BottomNav({navigation}) {
         }}
         />
       )}
-      
+      {loggedIn ? (
+        <Tab.Screen
+        name="StackNav2"
+        component={StackNav2}
+        options={{
+          tabBarLabel: '마이페이지',
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome5 name="user-alt" color={color} size={size} />
+          ),
+          tabBarLabelStyle : {
+            fontFamily : 'NanumSquare'
+          }
+        }}
+        listeners={() => ({ //Mypage에서는 BottomNav를 띄우지 않기 위해
+          tabPress: e => {
+            e.preventDefault(); // Prevent default behavior
+            navigation.navigate('Mypage');
+          },
+        })}
+        />
+      ) : (
+        <Tab.Screen
+        name="StackNav2"
+        component={StackNav2}
+        listeners={{
+          tabPress : (e) => {
+            e.preventDefault(); //이벤트 취소
+            Alert.alert(
+              '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
+              '',
+              [{
+                text: '확인',
+                onPress: () =>navigation.navigate('Login', {param: 'login',}),
+              },
+              {
+                text: '취소',
+                style: 'cancel',
+              },
+              ],
+            )
+          }
+        }}
+        options={{
+          tabBarLabel: '마이페이지',
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome5 name="user-alt" color={'#b6b6b6'} size={size} />
+          ),
+          tabBarLabelStyle : {
+            fontFamily : 'NanumSquare',
+            color : '#b6b6b6'
+          }
+        }}
+        />
+      )}
     </Tab.Navigator>
   );
 }
