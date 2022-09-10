@@ -55,7 +55,7 @@ function Main({navigation}) {
                     </TouchableOpacity>
                     <TouchableOpacity 
                         activeOpacity={0.7}
-                        onPress={() => navigation.navigate('BottomNav',{screen : 'SelectProvince'})}>
+                        onPress={() => navigation.navigate('StackNav3',{screen : 'SelectProvince'})}>
                         <View style={styles.box1}>
                             <MaterialCommunityIcons name="table-search" color='#414141' size={80} />
                             <Text style={{
@@ -70,53 +70,6 @@ function Main({navigation}) {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.div2}>
-                    {loggedIn ? (
-                        <TouchableOpacity
-                        activeOpacity={0.7}
-                        onPress={() => navigation.navigate('Mypage')}>
-                        <View style={styles.box2}>
-                            <FontAwesome5 name="user-alt" color='#414141' size={75} />
-                            <Text style={{
-                                fontFamily:'NanumSquare_0',
-                                bottom: -18,
-                                color: '#414141',
-                                fontSize: 18
-                            }}> 
-                                마이 페이지
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-                    ): (
-                        <TouchableOpacity
-                        activeOpacity={0.7}
-                        onPress={() =>  
-                            Alert.alert(
-                            '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
-                            '',
-                            [{
-                                text: '확인',
-                                onPress: () => navigation.navigate('Login'),
-                            },
-                            {
-                                text: '취소',
-                                onPress: () => navigation.navigate('Main'),
-                                style: 'cancel',
-                            },
-                            ],
-                        )}>
-                        <View style={styles.box2}>
-                            <FontAwesome5 name="user-alt" color='#E0B01D' size={75} />
-                            <Text style={{
-                                fontFamily:'NanumSquare_0',
-                                bottom: -18,
-                                color: '#E0B01D',
-                                fontSize: 18
-                            }}>
-                                마이 페이지
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-                    )}
                     {loggedIn ? (
                     <TouchableOpacity 
                         activeOpacity={0.7}
@@ -160,6 +113,53 @@ function Main({navigation}) {
                                 fontSize: 18
                             }}>
                                 자주 사용하는 센터
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                    )}
+                    {loggedIn ? (
+                        <TouchableOpacity
+                        activeOpacity={0.7}
+                        onPress={() => navigation.navigate('Mypage')}>
+                        <View style={styles.box2}>
+                            <FontAwesome5 name="user-alt" color='#414141' size={77} />
+                            <Text style={{
+                                fontFamily:'NanumSquare_0',
+                                bottom: -16,
+                                color: '#414141',
+                                fontSize: 18
+                            }}> 
+                                마이 페이지
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                    ): (
+                        <TouchableOpacity
+                        activeOpacity={0.7}
+                        onPress={() =>  
+                            Alert.alert(
+                            '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
+                            '',
+                            [{
+                                text: '확인',
+                                onPress: () => navigation.navigate('Login'),
+                            },
+                            {
+                                text: '취소',
+                                onPress: () => navigation.navigate('Main'),
+                                style: 'cancel',
+                            },
+                            ],
+                        )}>
+                        <View style={styles.box2}>
+                            <FontAwesome5 name="user-alt" color='#E0B01D' size={77} />
+                            <Text style={{
+                                fontFamily:'NanumSquare_0',
+                                bottom: -16,
+                                color: '#E0B01D',
+                                fontSize: 18
+                            }}>
+                                마이 페이지
                             </Text>
                         </View>
                     </TouchableOpacity>
