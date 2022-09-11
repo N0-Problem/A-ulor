@@ -37,7 +37,7 @@ export default function Mypage({navigation}) {
                     {loggedIn ? (
                         <TouchableOpacity
                             activeOpacity={0.7}
-                            onPress={() => navigation.navigate('UserInfo')}>
+                            onPress={() => navigation.navigate('UserInfo', {user_id: userId, user_name: userName})}>
                             <Text style={styles.text2}>
                                 개인 정보 수정 
                             </Text>
