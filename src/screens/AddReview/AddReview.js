@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { format } from "date-fns";
+import { format, startOfSecond } from "date-fns";
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { Calendar } from "react-native-calendars";
@@ -8,14 +8,22 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
-const stars = ["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"]
+const stars = [[1], [1, 1], [1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1, 1]]
+let tempValue;
 
-
-function AddReview({ route }) {
+function AddReview({ navigation, route }) {
 
     const reviewCenter = route.params.reviewedCenter;
 
-    const [myValue, setMyValue] = useState(0);
+    const [myValue, setMyValue] = useState(1);
+
+    const [countStars, setCountStars] = useState(stars[0]);
+
+    function setRateValues(value) {
+        setMyValue(value);
+        tempValue = value;
+        setCountStars(stars[value - 1]);
+    }
 
     const [text, setText] = React.useState("");
 
@@ -39,10 +47,12 @@ function AddReview({ route }) {
 
     async function addReview() {
         let user_id;
+        let user_name;
 
         // 현재 유저 정보 가져오기
         auth().onAuthStateChanged(user => {
             user_id = user.uid;
+            user_name = user.displayName;
         });
         // review_id 생성 및 중복 확인
         let review_id = Math.random().toString(36).substring(2, 16);
@@ -54,28 +64,39 @@ function AddReview({ route }) {
         } while (doc.exists);
 
         // 오늘 날짜 가져와 포맷에 맞게 편집
-        const today = new Date();
+        const curr = new Date();
+        const utc = curr.getTime() + (curr.getTimezoneOffset() * 60 * 1000);
+        const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+        const today = new Date(utc + (KR_TIME_DIFF));
+
         const year = today.getFullYear();
-        const month = ('0' + (today.getMonth()+1)).slice(-2);
+        const month = ('0' + (today.getMonth() + 1)).slice(-2);
         const day = ('0' + today.getDate()).slice(-2);
         const now_date = year + '-' + month + '-' + day;
+        
+        setMyValue(tempValue);
 
         let review = {
+            review_id: review_id,
             user_id: user_id,
+            user_name: user_name,
             center_id: reviewCenter.id,
+            center_name: reviewCenter.name,
             used_date: selectedDate,
             posted_date: now_date,
             rate: myValue,
-            feedback: text, 
+            feedback: text,
         };
-        console.log(review);
+
         firestore().collection('Review').doc(review_id).set(review);
+
+        navigation.navigate('CenterInfo', {selectedCenter : reviewCenter})
     }
 
     return (
-        <View style={{backgroundColor:'white'}}>
+        <View style={{ backgroundColor: 'white' }}>
             <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 0, paddingTop:20, paddingBottom: 15 ,backgroundColor:'#FFDA36' }}>
+                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 0, paddingTop: 20, paddingBottom: 15, backgroundColor: '#FFDA36' }}>
                     <Text style={{ fontFamily: 'NanumSquare', fontSize: 20, color: '#4E4E4E', marginBottom: 10 }}>후기 작성</Text>
                     <Text style={{ fontFamily: 'NanumSquare_0', fontSize: 13, color: '#4E4E4E' }}>{reviewCenter.name}</Text>
                 </View>
@@ -86,7 +107,6 @@ function AddReview({ route }) {
                             style={{ marginTop: 10, padding: 10 }}
                             onDayPress={(day) => {
                                 setSelectedDate(day.dateString);
-                                console.log(day.dateString)
                             }}
                             monthFormat={'yyyy MM'}
                             onMonthChange={month => {
@@ -101,7 +121,6 @@ function AddReview({ route }) {
                             theme={{
                                 selectedDayBackgroundColor: '#FFB236',
                                 arrowColor: '#FFDA36',
-                                //   dotColor: '#009688',
                                 todayTextColor: '#FFB236',
                             }}
                         />
@@ -112,14 +131,20 @@ function AddReview({ route }) {
                         평점을 매겨주세요.
                     </Text>
                     <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
-                        <FontAwesome name="star" color='#FFC021' size={25} />
-                        <Text> {stars[myValue - 1]} </Text>
+                        <View style={{ flexDirection: 'row' }}>
+                            {countStars.map((item, idx) => {
+                                return (
+                                    <FontAwesome name="star" color='#FFC021' size={25} style={{ marginLeft: 5, marginRight: 5 }} key={idx} />
+                                )
+                            })}
+
+                        </View>
                         <Slider
                             style={{ height: 40, width: 250 }}
                             thumbTintColor="#FFB236"
                             minimumTrackTintColor='#FFB236'
                             value={myValue}
-                            onValueChange={(value) => setMyValue(value)}
+                            onValueChange={(value) => setRateValues(value)}
                             minimumValue={1}
                             maximumValue={5}
                             step={1}
@@ -127,7 +152,7 @@ function AddReview({ route }) {
                         <Text style={{ fontWeight: 'bold' }}>1            2             3             4            5</Text>
                     </View>
                 </View>
-                <View style={{marginTop: 20}}>
+                <View style={{ marginTop: 20 }}>
                     <Text style={styles.textDesign}>후기 내용을 작성해주세요.</Text>
                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                         <TextInput
@@ -143,9 +168,16 @@ function AddReview({ route }) {
                     </View>
                 </View>
                 <View style={{ justifyContent: 'center', alignItems: 'center', margin: 20 }}>
-                    <Button mode="contained" onPress={() => addReview()} style={{ width: 130, backgroundColor: "#FFDA36" }}>
-                        <Text style={{ fontFamily: 'NanumSquare_0' }}>완료</Text>
-                    </Button>
+                    {text == "" ? (
+                        <Button mode="contained" onPress={() => addReview()} style={{ width: 130, backgroundColor: "#FFDA36" }} disabled={true}>
+                            <Text style={{ fontFamily: 'NanumSquare_0' }}>완료</Text>
+                        </Button>
+                    ) : (
+                        <Button mode="contained" onPress={() => addReview()} style={{ width: 130, backgroundColor: "#FFDA36" }}>
+                            <Text style={{ fontFamily: 'NanumSquare_0' }}>완료</Text>
+                        </Button>
+                    )}
+
                 </View>
             </ScrollView>
         </View>
