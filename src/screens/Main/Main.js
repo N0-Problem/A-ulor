@@ -58,7 +58,7 @@ function Main({navigation}) {
                     </TouchableOpacity>
                     <TouchableOpacity 
                         activeOpacity={0.7}
-                        onPress={() => navigation.navigate('StackNav3')}>
+                        onPress={() => navigation.navigate('BottomNav', { screen :'StackNav3'})}>
                         <View style={styles.box1}>
                             <MaterialCommunityIcons name="table-search" color='#414141' size={80} />
                             <Text style={{
