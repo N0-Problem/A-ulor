@@ -3,16 +3,13 @@ import {
     View, 
     Text, 
     StyleSheet,
-    Animated, 
     Platform, 
     PermissionsAndroid, 
     ActivityIndicator } from 'react-native';
 import { Button, List } from 'react-native-paper';
-import MapView, { PROVIDER_GOOGLE, Marker, AnimatedRegion } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import firestore from '@react-native-firebase/firestore';
-import { firebase } from '@react-native-firebase/auth';
-import { UpdateSources } from 'react-native-calendars/src/expandableCalendar/commons';
 import { ScrollView } from 'react-native-gesture-handler';
 
 // 얘는 메인이나 스플래시 뜰 때 넣어야 할 듯
@@ -62,35 +59,35 @@ firestore().collection('Centers').get()
         centers = querySnapshot.docs.map(doc => doc.data());
     });
 
-// 현재 위치에서 가장 가까운 n개의 센터 찾기 (n = nearest_n의 길이)
-function getNearest(current_latitude, current_longitude) {
-    nearest_n = [, , , ,];      // 가장 가까운 센터 n개 정보를 저장하는 배열, 현재는 4개
-    let dist_arr = [Number.MAX_VALUE, 0, 0, 0];    // 가장 가까운 센터 n개의 거리를 기록하는 배열
-    let now_dist;
-    centers &&
-        centers.forEach(now => {
-            now_dist = Math.abs(now.latitude - current_latitude) +
-                Math.abs(now.longitude - current_longitude);
-
-            // 현재 위치와 가장 가까운 센터 n개를 갱신해나가며 찾음
-            for (var i = 0; i < dist_arr.length; i++) {
-                if (now_dist < dist_arr[i]) {
-                    for (var j = dist_arr.length - 1; j > i; j--) {
-                        dist_arr[j] = dist_arr[j - 1];
-                    }
-                    dist_arr[i] = now_dist;
-                    nearest_n.splice(i, 0, now);
-                    nearest_n.pop();
-                    break;
-                }
-            }
-        });
-    console.log(nearest_n);
-}
-
-function CurrentLocation({navigation}) {
+function CurrentLocation({ navigation }) {
     const [location, setLocation] = useState();
     const mapView = useRef(null);
+
+    // 현재 위치에서 가장 가까운 n개의 센터 찾기 (n = nearest_n의 길이)
+    function getNearest(current_latitude, current_longitude) {
+        nearest_n = [, , , ,];      // 가장 가까운 센터 n개 정보를 저장하는 배열, 현재는 4개
+        let dist_arr = [Number.MAX_VALUE, 0, 0, 0];    // 가장 가까운 센터 n개의 거리를 기록하는 배열
+        let now_dist;
+        centers &&
+            centers.forEach(now => {
+                now_dist = Math.abs(now.latitude - current_latitude) +
+                    Math.abs(now.longitude - current_longitude);
+
+                // 현재 위치와 가장 가까운 센터 n개를 갱신해나가며 찾음
+                for (var i = 0; i < dist_arr.length; i++) {
+                    if (now_dist < dist_arr[i]) {
+                        for (var j = dist_arr.length - 1; j > i; j--) {
+                            dist_arr[j] = dist_arr[j - 1];
+                        }
+                        dist_arr[i] = now_dist;
+                        nearest_n.splice(i, 0, now);
+                        nearest_n.pop();
+                        break;
+                    }
+                }
+            });
+        console.log(nearest_n);
+    }
 
     // 지도에 n개의 Marker 띄우기
     const drawMarkers = () => {
@@ -112,10 +109,22 @@ function CurrentLocation({navigation}) {
     let clicked = false;
     const showCenterInfo = (center) => {
         if (clicked) {
-            
+            navigation.navigate('SelectProvince', {screen: 'CenterInfo', params: {center: center}});
+            console.log(center);
         } else {
             clicked = true;
         }
+    }
+
+    const animateMap = (latitude, longitude) => {
+        let r = {
+            latitude: latitude,
+            longitude: longitude,
+            latitudeDelta: 0.005,
+            longitudeDelta: 0.005,
+        };
+        this.mapView.animateToRegion(r, 1000);
+        clicked = false;
     }
 
     const listCenters = () => {
@@ -134,16 +143,6 @@ function CurrentLocation({navigation}) {
                 ))}
             </View>
         );
-    }
-
-    const animateMap = (latitude, longitude) => {
-        let r = {
-            latitude: latitude,
-            longitude: longitude,
-            latitudeDelta: 0.005,
-            longitudeDelta: 0.005,
-        };
-        this.mapView.animateToRegion(r, 1000);
     }
 
     useEffect(() => {
@@ -196,7 +195,11 @@ function CurrentLocation({navigation}) {
                 </View>
             ) : (
                 <View
-                    style={styles.container}>
+                    style={{
+                        flex: 1,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
                     <ActivityIndicator size="large" color="#85DEDC" />
                 </View>
             )}

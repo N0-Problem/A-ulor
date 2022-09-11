@@ -8,12 +8,14 @@ import Profile from '../../assets/images/mypage_profile.png';
 export default function Mypage({navigation}) {
     const [loggedIn, setLoggedIn] = useState(false);
     const [userName, setUserName] = useState("");
+    const [userId, setUserId] = useState("");
 
     useEffect(() => {
         auth().onAuthStateChanged(user => {
             if (user) {
             setLoggedIn(true);
             setUserName(user.displayName);
+            setUserId(user.uid);
             } else {
             setLoggedIn(false);
             }
@@ -55,12 +57,12 @@ export default function Mypage({navigation}) {
             </View>
             <View style={styles.listbox}>
                 {loggedIn ? (
-                    <Text style={styles.list} onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark'})}>자주 사용하는 센터</Text>
+                    <Text style={styles.list} onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark', params: {user_id: userId}})}>자주 사용하는 센터</Text>
                 ):(
                     <Text style={styles.list_disable} disabled={true}>자주 사용하는 센터</Text>
                 )}
                 {loggedIn ? (
-                    <Text style={styles.list} onPress={() => navigation.navigate('BookMark')}>내가 쓴 후기</Text>
+                    <Text style={styles.list} onPress={() => navigation.navigate('BottomNav', {screen: 'BookMark'})}>내가 쓴 후기</Text>
                 ):(
                     <Text style={styles.list_disable} disabled={true}>내가 쓴 후기</Text>
                 )}
