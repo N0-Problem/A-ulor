@@ -158,40 +158,6 @@ export default function UserInfo({navigation}) {
                     onCancel={() => {
                         setOpen(false)
                 }}
-            />
-            <View style={styles.drop_container}>
-                <Text style={styles.drop_title}>특이사항</Text>
-                <DropDownPicker
-                    style={styles.dropdown}
-                    textStyle={{
-                        fontSize: 20,
-                        fontFamily : 'NanumSquare_0',
-                        color : '#454545',
-                    }}
-                    dropDownContainerStyle={{
-                        width : '98%',
-                        right : 9, 
-                        borderTopColor : '#fff',
-                        borderColor : '#777',
-                    }}
-                    placeholder="특이사항을 선택하세요."
-                    placeholderStyle={{
-                        color: "grey",
-                        paddingLeft : 2
-                    }}
-                    open={dropopen}
-                    value={dropvalue}
-                    items={dropitems}
-                    setOpen={setdropOpen}
-                    setValue={setdropValue}
-                    setItems={setdropItems}
-                    onSelectItem={(item) => {
-                        if (item.label === "기타"){
-                            setextraInput(true);
-                        }else {
-                            setextraInput(false);
-                        }
-                    }}
                 />
                 <View style={styles.drop_container}>
                     <Text style={styles.drop_title}>특이사항</Text>
