@@ -36,7 +36,7 @@ export default function UserInfo({navigation}) {
         //user 정보 받아오기
         //isNewUser인지 확인
         // setDate(today);
-        // setdropValue('임산부');
+        //setdropValue('기타');
     }, []);
 
     function date_to_string(d) {
@@ -131,7 +131,7 @@ export default function UserInfo({navigation}) {
             <Button 
                 style={styles.button}
                 color={'#2d2d2d'}
-                onPress={()=>navigation.navigate('Mypage')}
+                onPress={()=>navigation.navigate('MyPage')}
             >저장
             </Button>
         </View>
