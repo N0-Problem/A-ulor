@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { List, Modal, Portal, Button } from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
-import {cityData} from '../../assets/data/cities'
+import { cityData } from '../../assets/data/cities'
 
 // 행정구역 도
 const province = [
@@ -25,14 +25,11 @@ const province = [
     { label: '제주특별자치도', value: '제주특별자치도' },
 ]
 
-
-let centers = ""
+let centers = "";
 
 function SelectCenter({ navigation, route }) {
 
     const userProvince = route.params;        // 사용자가 앞 화면에서 선택한 도 or 시
-
-    const [centerName, setCenterName] = useState();     // 화면에 띄울 센터 이름 관리
 
     const [openProvince, setProvinceOpen] = useState(false);
     const [provinceValue, setProvinceValue] = useState(null);
@@ -43,16 +40,18 @@ function SelectCenter({ navigation, route }) {
     const [cities, setCities] = useState(cityData[userProvince.provinceIndex]);
 
     firestore().collection('Centers').get()
-    .then(querySnapshot => {
-        centers = querySnapshot.docs.map(doc => doc.data());
-        centers = centers.filter((centers) => centers.address.toLowerCase().includes(userProvince.selectedProvince));
-    });
+        .then(querySnapshot => {
+            centers = querySnapshot.docs.map(doc => doc.data());
+            centers = centers.filter((centers) => centers.address.toLowerCase().includes(userProvince.selectedProvince));
+        });
 
-
-
+    const [centerName, setCenterName] = useState();     // 화면에 띄울 센터 이름 관리
+    
     /// accordion 관련 코드
     const [expanded, setExpanded] = React.useState(false);
-    const handlePress = () => setExpanded(!expanded);
+    const handlePress = () => {
+        setExpanded(!expanded);
+    };
     const [visible, setVisible] = React.useState(false);
 
     // modal 관련 코드
@@ -78,7 +77,7 @@ function SelectCenter({ navigation, route }) {
                         showArrowIcon={false}
                         disabled={true}
                         placeholder={userProvince.selectedProvince}
-                        placeholderStyle={{ color: 'black', fontFamily:'NanumSquare_0' }}
+                        placeholderStyle={{ color: 'black', fontFamily: 'NanumSquare_0' }}
                     />
                     <DropDownPicker
                         style={styles.cityPickerDesign}
@@ -94,11 +93,9 @@ function SelectCenter({ navigation, route }) {
                         setValue={setCityValue}
                         setItems={setCities}
                         onSelectItem={(cityValue) => {
-                            if(cityValue != null) {
-                                let addressStr = userProvince.selectedProvince + ' ' + cityValue.value;
-                                centers = centers.filter((centers) => centers.address.toLowerCase().includes(addressStr));
-                                setCenterName(centers);
-                            }
+                            let addressStr = userProvince.selectedProvince + ' ' + cityValue.value;
+                            centers = centers.filter((centers) => centers.address.toLowerCase().includes(addressStr));
+                            setCenterName(centers);
                         }}
                     />
 
@@ -114,7 +111,6 @@ function SelectCenter({ navigation, route }) {
                                     style={{ marginLeft: 5 }}
                                     title={item.name}
                                     titleStyle={{ fontFamily: 'NanumSquare_acR' }}
-                                    expanded={expanded}
                                     key={idx}
                                     onPress={handlePress}
                                 >
@@ -148,7 +144,7 @@ function SelectCenter({ navigation, route }) {
                                                 </Modal>
                                             </Portal>
                                             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingLeft: 30, paddingRight: 30 }}>
-                                                <Button style={{ flex: 1, marginRight: 30 }} mode="contained" color="#FFB236" onPress={() => navigation.navigate('CenterInfo')}>
+                                                <Button style={{ flex: 1, marginRight: 30 }} mode="contained" color="#FFB236" onPress={() => navigation.navigate('CenterInfo', {selectedCenter : centerName})}>
                                                     <Text style={{ fontFamily: 'NanumSquare_0' }}>세부정보 보기</Text>
                                                 </Button>
                                                 <Button style={{ flex: 1 }} mode="contained" color="#FFB236" onPress={showModal}>

@@ -5,14 +5,26 @@ import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import firestore from '@react-native-firebase/firestore';
 
-function CenterInfo({ navigation }) {
+function CenterInfo({ navigation, route }) {
 
-    const [visible, setVisible] = React.useState(false);
+    // 예약하러 가기 Modal 창
+    const [visibleResv, setVisibleResv] = useState(false);
+    const showResv = () => setVisibleResv(true);
+    const hideResv = () => setVisibleResv(false);
 
-    const showModal = () => setVisible(true);
-    const hideModal = () => setVisible(false);
+    // 준수사항 Modal 창
+    const [visibleCompliance, setVisibleCompliance] = useState(false);
+    const showCompliance = () => setVisibleCompliance(true);
+    const hideCompliance = () => setVisibleCompliance(false);
 
-    const centerName = "의정부시시설관리공단 이동지원센터"
+    // 자세히 && 간단히 Button
+    const [extended, setExtended] = useState(true);
+
+    const userCenter = route.params.selectedCenter[0];
+
+    let centerName = userCenter.name;
+
+    let parseCity = userCenter.address.split(' ');
 
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -29,8 +41,8 @@ function CenterInfo({ navigation }) {
                                 style={styles.mapDesign}
                                 provider={PROVIDER_GOOGLE}
                                 initialRegion={{
-                                    latitude: 37.557773,
-                                    longitude: 126.999968,
+                                    latitude: userCenter.latitude,
+                                    longitude: userCenter.longitude,
                                     latitudeDelta: 0.005,
                                     longitudeDelta: 0.005,
                                 }}
@@ -38,49 +50,144 @@ function CenterInfo({ navigation }) {
                                 showsMyLocationButton={false}>
                                 <Marker
                                     coordinate={{
-                                        latitude: 37.557773,
-                                        longitude: 126.999968,
+                                        latitude: userCenter.latitude,
+                                        longitude: userCenter.longitude,
                                     }}
                                 />
                             </MapView>
                         </View>
-                        <View style={styles.paragraphDesign}>
-                            <Text style={styles.textDesign}>주소 : </Text>
-                            <Text></Text>
-                        </View>
-                        <View style={styles.paragraphDesign}>
-                            <Text style={styles.textDesign}>전화번호 : </Text>
-                            <Text></Text>
-                            <Text>
-                                <Pressable>
-                                    {({ pressed }) => (
-                                        <Text style={{ color: pressed ? '#000000' : '#999999', fontFamily: 'NanumSquare', }}
-                                        >
-                                            123-4567
-                                        </Text>
-                                    )}
-                                </Pressable>
-                            </Text>
-                        </View>
-                        <View style={styles.paragraphDesign}>
-                            <Text style={styles.textDesign}>사전예약기간 : </Text>
-                            <Text></Text>
-                        </View>
-                        <View style={styles.paragraphDesign}>
-                            <Text style={styles.textDesign}>준수사항 : </Text>
-                            <Text></Text>
-                        </View>
-                        <View style={styles.paragraphDesign}>
-                            <Text style={styles.textDesign}>이용가능대상 : </Text>
-                            <Text></Text>
-                        </View>
-                        <View style={styles.paragraphDesign}>
-                            <Text style={styles.textDesign}>요금 : </Text>
-                            <Text></Text>
-                        </View>
+                        {extended ? (
+                            <View>
+                                <View style={styles.paragraphDesign}>
+                                    <Text style={styles.textDesign}>주소 : {userCenter.address}</Text>
+                                </View>
+                                <View style={styles.paragraphDesign}>
+                                    <Text style={styles.textDesign}>전화번호 : </Text>
+                                    {userCenter.phone_number.length > 1 ? (
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <Text>
+                                                <Pressable>
+                                                    {({ pressed }) => (
+                                                        <Text style={{ color: pressed ? '#000000' : '#999999', fontFamily: 'NanumSquare' }}
+                                                        >
+                                                            {userCenter.phone_number[0]}
+                                                        </Text>
+                                                    )}
+                                                </Pressable>
+                                            </Text>
+                                            <Text style={{ color: 'black', fontFamily: 'NanumSquare' }}> (광역) / </Text>
+                                            <Text>
+                                                <Pressable>
+                                                    {({ pressed }) => (
+                                                        <Text style={{ color: pressed ? '#000000' : '#999999', fontFamily: 'NanumSquare' }}
+                                                        >
+                                                            {userCenter.phone_number[1]}
+                                                        </Text>
+                                                    )}
+                                                </Pressable>
+                                            </Text>
+                                            <Text style={{ color: 'black', fontFamily: 'NanumSquare' }}> ({parseCity[1]})</Text>
+                                        </View>
+
+                                    ) : (
+                                        <Text>
+                                            <Pressable>
+                                                {({ pressed }) => (
+                                                    <Text style={{ color: pressed ? '#000000' : '#999999', fontFamily: 'NanumSquare' }}
+                                                    >
+                                                        {userCenter.phone_number}
+                                                    </Text>
+                                                )}
+                                            </Pressable>
+                                        </Text>)}
+                                </View>
+                                <View style={styles.paragraphDesign}>
+                                    <Text style={styles.textDesign}>운행지역 : </Text>
+                                    <Text></Text>
+                                </View>
+                            </View>
+
+                        ) : (
+                            <View>
+                                <View style={styles.paragraphDesign}>
+                                    <Text style={styles.textDesign}>주소 : {userCenter.address}</Text>
+                                    <Text></Text>
+                                </View>
+                                <View style={styles.paragraphDesign}>
+                                    <Text style={styles.textDesign}>전화번호 : </Text>
+                                    {userCenter.phone_number.length > 1 ? (
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <Text>
+                                                <Pressable>
+                                                    {({ pressed }) => (
+                                                        <Text style={{ color: pressed ? '#000000' : '#999999', fontFamily: 'NanumSquare' }}
+                                                        >
+                                                            {userCenter.phone_number[0]}
+                                                        </Text>
+                                                    )}
+                                                </Pressable>
+                                            </Text>
+                                            <Text style={{ color: 'black', fontFamily: 'NanumSquare' }}> (광역) / </Text>
+                                            <Text>
+                                                <Pressable>
+                                                    {({ pressed }) => (
+                                                        <Text style={{ color: pressed ? '#000000' : '#999999', fontFamily: 'NanumSquare' }}
+                                                        >
+                                                            {userCenter.phone_number[1]}
+                                                        </Text>
+                                                    )}
+                                                </Pressable>
+                                            </Text>
+                                            <Text style={{ color: 'black', fontFamily: 'NanumSquare' }}> ({parseCity[1]})</Text>
+                                        </View>
+
+                                    ) : (
+                                        <Text>
+                                            <Pressable>
+                                                {({ pressed }) => (
+                                                    <Text style={{ color: pressed ? '#000000' : '#999999', fontFamily: 'NanumSquare' }}
+                                                    >
+                                                        {userCenter.phone_number}
+                                                    </Text>
+                                                )}
+                                            </Pressable>
+                                        </Text>)}
+                                </View>
+                                <View style={styles.paragraphDesign}>
+                                    <Text style={styles.textDesign}>운행지역 : </Text>
+                                    <Text></Text>
+                                </View>
+                                <View style={styles.paragraphDesign}>
+                                    <Text style={styles.textDesign}>준수사항 : </Text>
+                                    <Portal>
+                                        <Modal visible={visibleCompliance} onDismiss={hideCompliance} contentContainerStyle={styles.modalComplianceDesign}>
+                                            <Text>Example Modal.  Click outside this area to dismiss.</Text>
+                                        </Modal>
+                                    </Portal>
+                                    <Text>
+                                        <Pressable>
+                                            {({ pressed }) => (
+                                                <Text style={{ color: pressed ? '#000000' : '#999999', fontFamily: 'NanumSquare' }}
+                                                    onPress={showCompliance}>
+                                                    자세히 보기
+                                                </Text>
+                                            )}
+                                        </Pressable>
+                                    </Text>
+                                </View>
+                                <View style={styles.paragraphDesign}>
+                                    <Text style={styles.textDesign}>이용가능대상 : </Text>
+                                    <Text></Text>
+                                </View>
+                                <View style={styles.paragraphDesign}>
+                                    <Text style={styles.textDesign}>요금 : </Text>
+                                    <Text></Text>
+                                </View>
+                            </View>
+                        )}
                         <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center', marginTop: 10 }}>
                             <Portal>
-                                <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalDesign}>
+                                <Modal visible={visibleResv} onDismiss={hideResv} contentContainerStyle={styles.modalDesign}>
                                     <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
                                         <TouchableOpacity onPress={() => console.log("전화!")}>
                                             <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', borderWidth: 2, borderColor: '#2B2B2B', padding: 20, borderRadius: 30, justifyContent: 'center', alignItems: 'center', width: 110 }}>
@@ -106,13 +213,24 @@ function CenterInfo({ navigation }) {
                                     </View>
                                 </Modal>
                             </Portal>
-                            <Button style={styles.buttonDesign} mode="text" color="#FFB236" onPress={showModal}>
-                                <Text style={{ fontFamily: 'NanumSquare' }}>예약하러 하기</Text>
-                            </Button>
-                            <Button style={styles.buttonDesign} mode="text" color="#FFB236" onPress={() => navigation.navigate('AddReview', { selectedCenter: centerName })}>
-                                <Text style={{ fontFamily: 'NanumSquare' }}>후기 작성</Text>
-                            </Button>
+                            <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
+                                <Button style={styles.buttonDesign} mode="text" color="#FFB236" onPress={showResv}>
+                                    <Text style={{ fontFamily: 'NanumSquare' }}>예약하러 하기</Text>
+                                </Button>
+                                <Button style={styles.buttonDesign} mode="text" color="#FFB236" onPress={() => navigation.navigate('AddReview', { reviewedCenter: centerName })}>
+                                    <Text style={{ fontFamily: 'NanumSquare' }}>후기 작성</Text>
+                                </Button>
+                            </View>
                         </View>
+                        {extended ? (
+                            <TouchableOpacity style={styles.moreButtonDesign} onPress={() => setExtended(!extended)}>
+                                <Text style={{ color: '#FFB236', fontFamily: 'NanumSquare' }}>자 세 히</Text>
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity style={styles.moreButtonDesign} onPress={() => setExtended(!extended)}>
+                                <Text style={{ color: '#FFB236', fontFamily: 'NanumSquare' }}>간 단 히</Text>
+                            </TouchableOpacity>
+                        )}
                     </Card>
                 </View>
                 <View>
@@ -125,7 +243,7 @@ function CenterInfo({ navigation }) {
                                 <Text style={{ textAlign: "left" }}>⭐⭐⭐⭐⭐</Text>
                             </View>
                             <View>
-                                <Text style={{ marginLeft: 133, marginTop: 5, fontSize: 13, fontFamily: 'NanumSquare_0', color: 'black' }}>이용 일자 : 2022-08-24</Text>
+                                <Text style={{ marginLeft: 137, marginTop: 5, fontSize: 13, fontFamily: 'NanumSquare_0', color: 'black' }}>이용 일자 : 2022-08-24</Text>
                             </View>
                         </View>
                         <View style={{ marginBottom: 10 }}>
@@ -140,7 +258,6 @@ function CenterInfo({ navigation }) {
                             <Text style={{ textAlign: "right", marginBottom: 5, marginRight: 10, fontSize: 13, fontFamily: 'NanumSquare_0', color: 'black' }}>작성 일자 : 2022-08-26</Text>
                         </View>
                     </View>
-
                 </View>
             </View>
         </ScrollView>
@@ -167,7 +284,7 @@ const styles = StyleSheet.create({
     },
 
     paragraphDesign: {
-        marginTop: 15,
+        marginTop: 25,
         flexDirection: 'row'
     },
 
@@ -181,9 +298,9 @@ const styles = StyleSheet.create({
     },
 
     reviewDesign: {
-        borderRadius: 10,
         backgroundColor: "white",
-        borderWidth: 2,
+        borderTopWidth: 2,
+        borderBottomWidth: 2,
         borderColor: "#FFB236",
         marginTop: 10,
         width: 380
@@ -216,6 +333,27 @@ const styles = StyleSheet.create({
         padding: 2,
         borderWidth: 1,
         borderColor: 'gray'
+    },
+
+    moreButtonDesign: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: -20,
+        marginRight: -15,
+        marginLeft: -15,
+        padding: 7,
+        borderColor: '#FFB236',
+        borderTopWidth: 1
+    },
+
+    modalComplianceDesign: {
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingTop: 50,
+        paddingBottom: 50,
+        marginRight: 30,
+        marginLeft: 30
     }
 });
 
