@@ -7,6 +7,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import auth from '@react-native-firebase/auth';
 import LogoImg from '../../assets/images/logo3.png';
+import StackNav3 from '../../components/StackNav/StackNav3';
 import { log } from 'react-native-reanimated';
 
 function Main({navigation}) {
@@ -55,7 +56,7 @@ function Main({navigation}) {
                     </TouchableOpacity>
                     <TouchableOpacity 
                         activeOpacity={0.7}
-                        onPress={() => navigation.navigate('StackNav3',{screen : 'SelectProvince'})}>
+                        onPress={() => navigation.navigate('StackNav3')}>
                         <View style={styles.box1}>
                             <MaterialCommunityIcons name="table-search" color='#414141' size={80} />
                             <Text style={{
@@ -105,11 +106,11 @@ function Main({navigation}) {
                             ],
                         )}>
                         <View style={styles.box3}>
-                            <Ionicons name="ios-bookmarks" color='#E0B01D' size={75} />
+                            <Ionicons name="ios-bookmarks" color='#C79726' size={75} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
                                 bottom: -16,
-                                color:'#E0B01D',
+                                color:'#C79726',
                                 fontSize: 18
                             }}>
                                 자주 사용하는 센터
@@ -152,11 +153,11 @@ function Main({navigation}) {
                             ],
                         )}>
                         <View style={styles.box2}>
-                            <FontAwesome5 name="user-alt" color='#E0B01D' size={77} />
+                            <FontAwesome5 name="user-alt" color='#C79726' size={77} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
                                 bottom: -16,
-                                color: '#E0B01D',
+                                color: '#C79726',
                                 fontSize: 18
                             }}>
                                 마이 페이지
