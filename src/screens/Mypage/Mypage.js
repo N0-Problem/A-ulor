@@ -62,7 +62,7 @@ export default function Mypage({navigation}) {
                     <Text style={styles.list_disable} disabled={true}>자주 사용하는 센터</Text>
                 )}
                 {loggedIn ? (
-                    <Text style={styles.list} onPress={() => navigation.navigate('BottomNav', {screen: 'BookMark'})}>내가 쓴 후기</Text>
+                    <Text style={styles.list} onPress={() => navigation.navigate('MyReview')}>내가 쓴 후기</Text>
                 ):(
                     <Text style={styles.list_disable} disabled={true}>내가 쓴 후기</Text>
                 )}
@@ -89,12 +89,14 @@ const styles = StyleSheet.create({
         paddingLeft : 20,
         paddingTop : 20,
         fontSize : 23,
+        color : '#4e4e4e',
         fontFamily:'NanumSquare_0',
     },
     text2 : {
         paddingLeft : 20,
         paddingTop : 10,
         fontSize : 15,
+        color : '#4e4e4e',
         textDecorationLine : 'underline',
         fontFamily:'NanumSquare_acR',
     },

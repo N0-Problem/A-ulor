@@ -134,11 +134,11 @@ export default function UserInfo({navigation}) {
                         <TouchableOpacity
                             onPress={() => setOpen(true)}>
                             <Text style={styles.text_input}>{date_to_string(date)}</Text>
-                        </TouchableOpacity>
+                    </TouchableOpacity>
                     ):(
                         <TouchableOpacity
                             onPress={() => setOpen(true)}>
-                            <Text style={styles.before_text_input}>{'생년월일을 입력해주세요.'}</Text>
+                            <Text style={styles.before_text_input}>{' 생년월일을 입력해주세요.'}</Text>
                         </TouchableOpacity>
                     )}
                 </View>
@@ -157,6 +157,40 @@ export default function UserInfo({navigation}) {
                     }}
                     onCancel={() => {
                         setOpen(false)
+                }}
+            />
+            <View style={styles.drop_container}>
+                <Text style={styles.drop_title}>특이사항</Text>
+                <DropDownPicker
+                    style={styles.dropdown}
+                    textStyle={{
+                        fontSize: 20,
+                        fontFamily : 'NanumSquare_0',
+                        color : '#454545',
+                    }}
+                    dropDownContainerStyle={{
+                        width : '98%',
+                        right : 9, 
+                        borderTopColor : '#fff',
+                        borderColor : '#777',
+                    }}
+                    placeholder="특이사항을 선택하세요."
+                    placeholderStyle={{
+                        color: "grey",
+                        paddingLeft : 2
+                    }}
+                    open={dropopen}
+                    value={dropvalue}
+                    items={dropitems}
+                    setOpen={setdropOpen}
+                    setValue={setdropValue}
+                    setItems={setdropItems}
+                    onSelectItem={(item) => {
+                        if (item.label === "기타"){
+                            setextraInput(true);
+                        }else {
+                            setextraInput(false);
+                        }
                     }}
                 />
                 <View style={styles.drop_container}>
@@ -219,37 +253,37 @@ const styles = StyleSheet.create({
         backgroundColor : '#fff'
     },
     input_container: {
-        height: 80,
+        height: 90,
         justifyContent : 'center',
         paddingLeft : 13,
         backgroundColor : '#fff',
-        borderBottomColor : '#FFB236',
+        borderBottomColor : '#dcdcdc',
         borderBottomWidth : 1,
     },
     text_title: {
-        color : '#FFB236',
+        color : '#4E4E4E',
         fontFamily : 'NanumSquare_0',
         fontSize : 16,
         top: -3,
     },
     text_input: {
-        backgroundColor: '#e2e2e2',
+        backgroundColor: '#f1f1f1',
         color : '#454545',
         fontFamily : 'NanumSquare_0',
-        fontSize : 22, 
-        height : 40,
+        fontSize : 20, 
+        height : 50,
         marginRight : 10,
         marginTop : 3,
         textAlignVertical : 'center',
-        paddingLeft: 5, 
+        paddingLeft: 9, 
         borderRadius : 7
     },
     before_text_input: {
         backgroundColor: '#e2e2e2',
         color : '#888',
         fontFamily : 'NanumSquare_0',
-        fontSize : 22, 
-        height : 40,
+        fontSize : 20, 
+        height : 50,
         marginRight : 10,
         marginTop : 3,
         textAlignVertical : 'center',
@@ -262,25 +296,25 @@ const styles = StyleSheet.create({
         paddingTop : 5,
         paddingBottom : 12,
         backgroundColor : '#fff',
-        borderBottomColor : '#FFB236',
+        borderBottomColor : '#dcdcdc',
         borderBottomWidth : 1,
     },
     drop_title: {
-        color : '#FFB236',
+        color : '#4E4E4E',
         fontFamily : 'NanumSquare_0',
         fontSize : 16,
         marginTop: 5,
     },
     dropdown : {
-        backgroundColor : '#e2e2e2',
+        backgroundColor : '#f1f1f1',
         borderColor : '#fff',
-        height : 43,
+        height : 46,
         right : 3,
         marginTop : 4,
         width : '99%',
     },
     extra_input : {
-        backgroundColor: '#e2e2e2',
+        backgroundColor: '#f1f1f1',
         color : '#454545',
         fontFamily : 'NanumSquare_0',
         textAlignVertical : 'center',
