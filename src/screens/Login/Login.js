@@ -7,7 +7,7 @@ import {
 import auth from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
-import LogoImg from '../../assets/images/logo.png';
+import LogoImg from '../../assets/images/logo2.png';
 
 export default function Login({navigation,route}) {
     // const navigation = useNavigation();
@@ -35,6 +35,7 @@ export default function Login({navigation,route}) {
                 .then(docSnapshot => {
                     if (docSnapshot.exists) {
                         navigation.navigate('Main');
+                        console.log('이미 있는 사용자입니다.')
                     } else {
                         console.log("새로 가입한 사용자입니다.");
                         const data = {
@@ -72,6 +73,7 @@ export default function Login({navigation,route}) {
         <View style={styles.container}>
             <Image style={styles.logo} source={LogoImg}/>
             <GoogleSigninButton
+                style={{ width: 192, height: 48 }}
                 onPress={() => onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}
             />
         </View>
@@ -83,6 +85,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor : '#FFDA38'
     },
     logo : {
         width:150,
