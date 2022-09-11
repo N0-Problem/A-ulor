@@ -7,12 +7,14 @@ import auth from '@react-native-firebase/auth';
 export default function Mypage({navigation}) {
     const [loggedIn, setLoggedIn] = useState(false);
     const [userName, setUserName] = useState("");
+    const [userId, setUserId] = useState("");
 
     useEffect(() => {
         auth().onAuthStateChanged(user => {
             if (user) {
             setLoggedIn(true);
             setUserName(user.displayName);
+            setUserId(user.uid);
             } else {
             setLoggedIn(false);
             }
@@ -54,12 +56,12 @@ export default function Mypage({navigation}) {
             </View>
             <View style={styles.listbox}>
                 {loggedIn ? (
-                    <Text style={styles.list} onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark'})}>Bookmark</Text>
+                    <Text style={styles.list} onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark', params: {user_id: userId}})}>Bookmark</Text>
                 ):(
                     <Text style={styles.list_disable} disabled={true}>Bookmark</Text>
                 )}
                 {loggedIn ? (
-                    <Text style={styles.list} onPress={() => navigation.navigate('BookMark')}>Review</Text>
+                    <Text style={styles.list} onPress={() => navigation.navigate('BottomNav', {screen: 'BookMark'})}>Review</Text>
                 ):(
                     <Text style={styles.list_disable} disabled={true}>Review</Text>
                 )}
