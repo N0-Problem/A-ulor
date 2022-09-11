@@ -47,10 +47,12 @@ function AddReview({ navigation, route }) {
 
     async function addReview() {
         let user_id;
+        let user_name;
 
         // 현재 유저 정보 가져오기
         auth().onAuthStateChanged(user => {
             user_id = user.uid;
+            user_name = user.displayName;
         });
         // review_id 생성 및 중복 확인
         let review_id = Math.random().toString(36).substring(2, 16);
@@ -62,7 +64,11 @@ function AddReview({ navigation, route }) {
         } while (doc.exists);
 
         // 오늘 날짜 가져와 포맷에 맞게 편집
-        const today = new Date();
+        const curr = new Date();
+        const utc = curr.getTime() + (curr.getTimezoneOffset() * 60 * 1000);
+        const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+        const today = new Date(utc + (KR_TIME_DIFF));
+
         const year = today.getFullYear();
         const month = ('0' + (today.getMonth() + 1)).slice(-2);
         const day = ('0' + today.getDate()).slice(-2);
@@ -71,8 +77,11 @@ function AddReview({ navigation, route }) {
         setMyValue(tempValue);
 
         let review = {
+            review_id: review_id,
             user_id: user_id,
+            user_name: user_name,
             center_id: reviewCenter.id,
+            center_name: reviewCenter.name,
             used_date: selectedDate,
             posted_date: now_date,
             rate: myValue,

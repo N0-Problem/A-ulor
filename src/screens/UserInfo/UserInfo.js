@@ -1,23 +1,22 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, KeyboardAwareScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator} from 'react-native';
 import { Button, TextInput, RadioButton } from 'react-native-paper';
 import DatePicker from 'react-native-date-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 export default function UserInfo({navigation}) {
-    // Convert UTC to KST (UTC + 9시간)
-    const curr = new Date();
-    const utc = curr.getTime() + (curr.getTimezoneOffset() * 60 * 1000);
-    const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
-    const today = new Date(utc + (KR_TIME_DIFF));
 
-    const [date, setDate] = useState(today);
+    const [date, setDate] = useState(new Date());
+    const [dateStr, setDateStr] = useState('');
+    //const [bookmarks, setBookmarks] = useState([]);
     const [open, setOpen] = useState(false);
-    const [userName, setUserName] = useState("");
+    const [user, setUser] = useState('');
     const [dropopen, setdropOpen] = useState(false);
-    const [dropvalue, setdropValue] = useState(null);
-    const [extraInput, setextraInput] = useState(false);
+    const [dropvalue, setdropValue] = useState();
+    const [extra, setExtra] = useState();
+    const [extraInput, setExtraInput] = useState();
     const [dropitems, setdropItems] = useState([
         {label: '경증 장애', value: '경증 장애'},
         {label: '중증 장애', value: '중증 장애'},
@@ -25,117 +24,193 @@ export default function UserInfo({navigation}) {
         {label: '임산부', value: '임산부'},
         {label: '기타', value: '기타'}
     ]);
-    const [isNewUser, setIsNewUser] = useState(true);
-    const [firstDate, setfirstDate] = useState(false);
+    const [getDate, setGetDate] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+    let birthdate = '';
+    let type = [];
+    let bookmarks = [];
+
+    function date_to_string(date) {
+        const year = date.getFullYear();
+        const month = ('0' + (date.getMonth()+1)).slice(-2);
+        const day = ('0' + date.getDate()).slice(-2);
+
+        return year + '-' + month + '-' + day;
+    }
+
+    function string_to_date(str) {
+        let date;
+        
+        if (str === '') {
+            const curr = new Date();
+            const utc = curr.getTime() + (curr.getTimezoneOffset() * 60 * 1000);
+            const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+            date = new Date(utc + (KR_TIME_DIFF));
+        } else {
+            let arr = dateStr.split('-');
+            date = new Date();
+            date.setFullYear(arr[0]);
+            date.setMonth(arr[1]-1);
+            date.setDate(arr[2]);
+            setGetDate(true);
+        }
+        setDate(date);
+        setLoading(false);
+    }
+
+    const getUserinfo = async () => {
+        auth().onAuthStateChanged(user => {
+            setUser(user);
+            firestore().collection('Users').doc(user.uid).get()
+            .then( async (doc) => {
+                if (doc.exists) {
+                    birthdate = doc.data().birthdate;
+                    type = doc.data().type.split(':');
+                    bookmarks = doc.data().bookmarks;
+                }
+                setDateStr(birthdate);
+                string_to_date(dateStr);
+    
+                if (type[0] === '기타') {
+                    setdropValue(type[0]);
+                    setExtra(true);
+                    setExtraInput(type[1]);
+                } else {
+                    setdropValue(type[0]);
+                }
+            });
+        });
+    }
 
     useEffect(() => {
-        auth().onAuthStateChanged(user => {
-            setUserName(user.displayName);
-            console.log(userName);
-        });
-        //user 정보 받아오기
-        //isNewUser인지 확인
-        // setDate(today);
-        //setdropValue('기타');
-    }, []);
+        getUserinfo();
+    }, [loading]);
 
-    function date_to_string(d) {
-        let d_year = d.getFullYear();
-        let d_month = d.getMonth();
-        let d_date = d.getDate();
+    function setUserinfo() {
 
-        console.log(String(d_year)+'년 '+String(d_month)+'월 '+String(d_date)+'일');
-        return(String(d_year)+'년 '+String(d_month)+'월 '+String(d_date)+'일');
+        let type = '';
+        if (dropvalue === '기타') {
+            type = '기타:'+extraInput;
+        } else {
+            type = dropvalue;
+        }
+
+        const userinfo = {
+            user_id: user.uid,
+            name: user.displayName,
+            address: '',
+            birthdate: date_to_string(date),
+            bookmarks: bookmarks,
+            type: type
+        }
+
+        firestore().collection('Users').doc(user.uid).set(userinfo);
+        navigation.navigate('MyPage')
     }
-    return (
-        <View style={styles.container}>
-            <View style={styles.input_container}>
-                <Text style={styles.text_title}>이름</Text>
-                <Text style={styles.text_input}>{userName}</Text>
+
+    if (loading) {
+        return (
+            <View
+                style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                }}>
+                <ActivityIndicator size="large" color="#85DEDC" />
             </View>
-            <View style={styles.input_container}>
-                <Text style={styles.text_title}>생년월일</Text>
-                {isNewUser ? (
-                    <TouchableOpacity
-                        onPress={() => setOpen(true)}>
-                        {firstDate ? (
+        )
+    }
+    else {
+        return (
+            <View style={styles.container}>
+                <View style={styles.input_container}>
+                    <Text style={styles.text_title}>이름</Text>
+                    <Text style={styles.text_input}>{user.displayName}</Text>
+                </View>
+                <View style={styles.input_container}>
+                    <Text style={styles.text_title}>생년월일</Text>
+                    { dateStr.length > 0 && getDate ? (
+                        <TouchableOpacity
+                            onPress={() => setOpen(true)}>
                             <Text style={styles.text_input}>{date_to_string(date)}</Text>
-                        ):(
+                        </TouchableOpacity>
+                    ):(
+                        <TouchableOpacity
+                            onPress={() => setOpen(true)}>
                             <Text style={styles.before_text_input}>{'생년월일을 입력해주세요.'}</Text>
-                        )}      
-                    </TouchableOpacity>
-                ):(
-                    <TouchableOpacity
-                        onPress={() => setOpen(true)}>
-                        <Text style={styles.text_input}>{date_to_string(date)}</Text>
-                    </TouchableOpacity>
-                )}
-            </View>
-            <DatePicker
-                modal
-                locale='ko'
-                mode={"date"}
-                open={open}
-                date={date}
-                maximumDate={date}
-                onConfirm={(date) => {
-                    setOpen(false)
-                    setfirstDate(true)
-                    setDate(date)
-                }}
-                onCancel={() => {
-                    setOpen(false)
-                }}
-            />
-            <View style={styles.drop_container}>
-                <Text style={styles.drop_title}>특이사항</Text>
-                <DropDownPicker
-                    style={styles.dropdown}
-                    textStyle={{
-                        fontSize: 20,
-                        fontFamily : 'NanumSquare_0',
-                        color : '#454545',
+                        </TouchableOpacity>
+                    )}
+                </View>
+                <DatePicker
+                    modal
+                    locale='ko'
+                    mode={"date"}
+                    open={open}
+                    date={date}
+                    maximumDate={new Date()}
+                    onConfirm={(date) => {
+                        setOpen(false)
+                        setGetDate(true)
+                        setDate(date)
+                        setDateStr(date_to_string(date));
                     }}
-                    dropDownContainerStyle={{
-                        width : '98%',
-                        right : 9, 
-                        borderTopColor : '#fff',
-                        borderColor : '#777',
-                    }}
-                    placeholder="특이사항을 선택하세요."
-                    placeholderStyle={{
-                        color: "grey",
-                    }}
-                    open={dropopen}
-                    value={dropvalue}
-                    items={dropitems}
-                    setOpen={setdropOpen}
-                    setValue={setdropValue}
-                    setItems={setdropItems}
-                    onSelectItem={(item) => {
-                        if (item.label === "기타"){
-                            setextraInput(true);
-                        }else {
-                            setextraInput(false);
-                        }
+                    onCancel={() => {
+                        setOpen(false)
                     }}
                 />
-                {extraInput ? (
-                <TextInput
-                    label=''
-                    placeholder='기타 특이사항을 입력하세요.'
-                    // value={'입력받기'}
-                    style={styles.extra_input}
-                />):(<></>)}
+                <View style={styles.drop_container}>
+                    <Text style={styles.drop_title}>특이사항</Text>
+                    <DropDownPicker
+                        style={styles.dropdown}
+                        textStyle={{
+                            fontSize: 20,
+                            fontFamily : 'NanumSquare_0',
+                            color : '#454545',
+                        }}
+                        dropDownContainerStyle={{
+                            width : '98%',
+                            right : 9, 
+                            borderTopColor : '#fff',
+                            borderColor : '#777',
+                        }}
+                        placeholder="특이사항을 선택하세요."
+                        placeholderStyle={{
+                            color: "grey",
+                        }}
+                        open={dropopen}
+                        value={dropvalue}
+                        items={dropitems}
+                        setOpen={setdropOpen}
+                        setValue={setdropValue}
+                        setItems={setdropItems}
+                        onSelectItem={(item) => {
+                            if (item.label === '기타'){
+                                setExtra(true);
+                            }else {
+                                setExtra(false);
+                            }
+                        }}
+                    />
+                    {extra ? (
+                    <TextInput
+                        label=''
+                        placeholder='기타 특이사항을 입력하세요.'
+                        value={extraInput}
+                        style={styles.extra_input}
+                        onChangeText={text => setExtraInput(text)}
+                    />):(<></>)}
+                </View>
+                <Button 
+                    style={styles.button}
+                    color={'#2d2d2d'}
+                    onPress={() => setUserinfo()}
+                >저장
+                </Button>
             </View>
-            <Button 
-                style={styles.button}
-                color={'#2d2d2d'}
-                onPress={()=>navigation.navigate('MyPage')}
-            >저장
-            </Button>
-        </View>
-    )
+        )
+    }
+
 }
 
 const styles = StyleSheet.create({
