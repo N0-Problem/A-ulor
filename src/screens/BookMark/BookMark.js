@@ -3,11 +3,11 @@ import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-nat
 import { Button, List, Modal, Portal} from 'react-native-paper';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import { set } from 'date-fns';
 
 export default function BookMark({ navigation, route }) {
-
-    const user_id = route.params.user_id;
+    
+    const params = route.params;
+    let user_id = '';
     const [bookmarks, setBookmarks] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -16,13 +16,20 @@ export default function BookMark({ navigation, route }) {
     let temp = [];
     //let bookmarks = [];
     //let loading = false;
+
+    if (params) {
+        user_id = params.user_id;
+    } else {
+        auth().onAuthStateChanged(user => {
+            user_id = user.uid;
+        })
+    }
     
     const getBookmarks = async () => {
         await firestore().collection('Users').doc(user_id).get()
         .then(async (querySnapshot) => {
             centerIds = querySnapshot.data().bookmarks;
             const centerRef = firestore().collection('Centers');
-            //const value = await makeResult(centerIds, centerRef);
             for (const center_id of centerIds) {
                 await centerRef.where('id', '==', center_id).get()
                 .then((querySnapshot) => {
@@ -30,7 +37,6 @@ export default function BookMark({ navigation, route }) {
                         for (const doc of querySnapshot.docs) {
                             if (doc.exists) {
                                 temp.push(doc.data());
-                                //console.log(doc.data().name);
                             }
                         }
                     }
