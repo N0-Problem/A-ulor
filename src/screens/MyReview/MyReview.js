@@ -1,71 +1,88 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ScrollView,TouchableOpacity, Pressable, ActivityIndicator } from 'react-native';
 import { Button, List, Modal, Portal} from 'react-native-paper';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import { set } from 'date-fns';
 
-export default function MyReview({ navigation, route }) {
-    const user_id = route.params.user_id;
-    const [bookmarks, setBookmarks] = useState([]);
+export default function MyReview({ navigation }) {
+    const [userId, setUserId] = useState("");
+    const [userName, setUserName] = useState("");
+    const [myReviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [modalVisible, setModalVisible] = useState(false);
+    const reviewCollection = firestore().collection('Review');
+    const stars = ["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"];
 
+    // let tempReviews = [];
+    let tempReviews = [{center_name:"전남 지체장애인협회 담양군지회", feedback:"1", posted_date: "2022-09-12", rate: 4, used_date: "2022-09-11", user_id:"XKkY2PL6qDfjfazxLwqF6qltMJz1"},
+                        {center_name:"밀양시 교통약자 콜택시", feedback:"2", posted_date: "2022-09-10", rate: 5, used_date: "2022-09-10", user_id:"XKkY2PL6qDfjfazxLwqF6qltMJz1"},
+                        {center_name:"밀양시 교통약자 콜택시", feedback:"3", posted_date: "2022-09-10", rate: 5, used_date: "2022-09-10", user_id:"XKkY2PL6qDfjfazxLwqF6qltMJz1"}];
 
-    let centerIds = [];
-    let temp = [];
-    //let bookmarks = [];
-    //let loading = false;
-    
-    const getBookmarks = async () => {
-        await firestore().collection('Users').doc(user_id).get()
-        .then(async (querySnapshot) => {
-            centerIds = querySnapshot.data().bookmarks;
-            const centerRef = firestore().collection('Centers');
-            //const value = await makeResult(centerIds, centerRef);
-            for (const center_id of centerIds) {
-                await centerRef.where('id', '==', center_id).get()
-                .then((querySnapshot) => {
-                    if (!querySnapshot.empty) {
-                        for (const doc of querySnapshot.docs) {
-                            if (doc.exists) {
-                                temp.push(doc.data());
-                                //console.log(doc.data().name);
-                            }
-                        }
-                    }
-                })
-            }
-        }).then(() => {
-            setLoading(false);
-            setBookmarks(temp);
-        })
+    useEffect(() => {
+        auth().onAuthStateChanged(user => {
+            setUserName(user.displayName);
+            setUserId(user.uid);
+            console.log(user.uid);
+        });
+        getMyReviews();
+        setReviews(tempReviews);
+    }, []);
+
+    const getMyReviews = async () => {
+        // const reviews = await reviewCollection.where('user_id', '==', userId);
+        // reviews.get().then((querySnapshot) => {
+        //     if (!querySnapshot.empty) {
+        //         for (const doc of querySnapshot.docs) {
+        //             if (doc.exists) {
+        //                 tempReviews.push(doc.data());
+        //                 //console.log(doc.data().feedback);
+        //             }
+        //         }
+        //     }
+        // }).then(() => {
+        //     setLoading(false);
+        //     setReviews(tempReviews);
+        // });
     }
 
-    /// accordion 관련 코드
-    const [expanded, setExpanded] = useState();
-    const handlePress = () => { setExpanded(!expanded); }
-    const [visible, setVisible] = React.useState(false);
+    // if (loading) {
+    //     return (
+    //         <View
+    //             style={{
+    //             flex: 1,
+    //             alignItems: 'center',
+    //             justifyContent: 'center',
+    //             }}>
+    //             <ActivityIndicator size="large" color="#85DEDC" />
+    //         </View>
+    //     )
+    // }
 
-    // modal 관련 코드
-    const showModal = () => setVisible(true);
-    const hideModal = () => setVisible(false);
-
-    function listBookmarks() {
+    function listReviews() {
+        const showModal = () => setModalVisible(true);
+        const hideModal = () => setModalVisible(false);  
+        let currentData = {};
+        const setModaldata = (review) => {
+            currentData = {
+                feedback: review.feedback,
+                centerName : review.center_name,
+                posted_date: review.posted_date,
+                rate: review.rate,
+                used_date: review.used_date,
+            };
+            setModalVisible(true);
+            console.log(currentData.feedback);
+        }
+        
         return (
-            bookmarks.map((center, id) => (
-                <List.Accordion
-                    style={{ marginLeft: 5 }}
-                    title={center.name}
-                    titleStyle={{ fontFamily: 'NanumSquare_acR' }}
-                    expanded={expanded}
-                    key={id}
-                    onPress={handlePress}
-                >
+            myReviews.map((review, idx) => (
                 <List.Item title={() => (
                     <View>
                         <Portal style={{ justifyContent: 'center', alignItems: 'center' }}>
-                            <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalDesign}>
-                                <Text style={{ fontFamily: 'NanumSquare_0' }}>선택하신 이동지원센터를 즐겨찾기에 추가하시겠습니까?</Text>
+                            <Modal visible={modalVisible} onDismiss={hideModal} contentContainerStyle={styles.modalDesign}>
+                                <Text style={{ fontFamily: 'NanumSquare_0' , color : ''}}>
+                                    {currentData.feedback}
+                                </Text>
                                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                                     <Text style={{ marginTop: 10 }}>
                                         <Button
@@ -79,7 +96,7 @@ export default function MyReview({ navigation, route }) {
                                         <Button
                                             mode="text"
                                             color="#FFB236"
-                                            onPress={() => setVisible(false)}>
+                                            onPress={() => setModalVisible(false)}>
                                             <Text style={{ fontFamily: 'NanumSquare_0' }}>
                                                 아니오
                                             </Text>
@@ -90,59 +107,85 @@ export default function MyReview({ navigation, route }) {
 
                             </Modal>
                         </Portal>
-                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingLeft: 30, paddingRight: 30 }}>
-                            <Button style={{ flex: 1, marginRight: 30 }} mode="contained" color="#FFB236" onPress={() => navigation.navigate('SelectProvince', {screen: 'CenterInfo', params: {center: center}})}>
-                                <Text style={{ fontFamily: 'NanumSquare_0' }}>세부정보 보기</Text>
-                            </Button>
-                            <Button style={{ flex: 1 }} mode="contained" color="#FFB236" onPress={showModal}>
-                                <Text style={{ fontFamily: 'NanumSquare_0' }}>즐겨찾기에 추가</Text>
-                            </Button>
+
+                        <View style={styles.reviewDesign}>
+                            <View style={styles.reviewTitle}>
+                                <TouchableOpacity 
+                                    style={styles.reviewCenter}
+                                    onPress={() => setModaldata(review)}>
+                                    <Text 
+                                        style={{ 
+                                            textAlign: "left", 
+                                            fontSize: 17, 
+                                            fontFamily: 'NanumSquare_0',
+                                            color: '#4e4e4e'
+                                        }}>
+                                        {review.center_name}
+                                    </Text>
+                                </TouchableOpacity>
+                                <View style={styles.reviewRate}>
+                                    <Text
+                                        style={{ 
+                                            fontSize: 17, 
+                                            color: '#fff',
+                                            bottom : 3
+                                        }}>
+                                        {stars[review.rate-1]}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View>
+                                <Text 
+                                    style={{ 
+                                        marginVertical : 3,
+                                        textAlign: "right",
+                                        fontSize: 13, 
+                                        fontFamily: 'NanumSquare_0', 
+                                        color: '#525252'
+                                    }}>
+                                    이용 일자 : {review.used_date}
+                                </Text>
+                            </View>
+                            <View>
+                                <Text 
+                                    style={{ 
+                                        marginVertical : 3,
+                                        textAlign: "right", 
+                                        fontSize: 13, 
+                                        fontFamily: 'NanumSquare_0', 
+                                        color: '#525252' 
+                                    }}>
+                                    작성 일자 : {review.posted_date}
+                                </Text>
+                            </View>
                         </View>
                     </View>
                 )} />
-            </List.Accordion>
             ))
-        )
-    }
-
-    useEffect(() => {
-        getBookmarks();
-    }, [])
-
-    if (loading) {
-        return (
-            <View
-                style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                }}>
-                <ActivityIndicator size="large" color="#85DEDC" />
-            </View>
         )
     }
 
     return (
         <View style={styles.container}>
             <View style={styles.title}>
-                <Text style={styles.title_font}>즐겨찾기한 센터</Text>
+                <Text style={styles.title_font}>내가 쓴 후기</Text>
             </View>
             {                
-                (bookmarks.length > 0) ? (
+                (myReviews.length > 0) ? (
                     <View style={styles.listDesign}>
                         <ScrollView showsVerticalScrollIndicator={false}>
-                            <List.Section>
-                                {listBookmarks()}
+                            <List.Section style={styles.listSection}>
+                                {listReviews()}
                             </List.Section>
                         </ScrollView>
                     </View>
                 ) : (
                     <View
-                    style={{
-                        flex: 1,
-                        alignItems: 'center',
-                    }}>
-                        <Text style={styles.textDesign}>즐겨찾기한 센터가 없습니다.</Text>
+                        style={{
+                            flex: 1,
+                            alignItems: 'center',
+                        }}>
+                        <Text style={styles.textDesign}>작성한 후기가 없습니다.</Text>
                     </View>
                 )
             }
@@ -153,28 +196,149 @@ export default function MyReview({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor : '#fff'
     },
-
     title: {
-        flex: 1,
-        margin: 20
+        height : 40,
+        marginVertical: 17,
+        marginHorizontal : 3,
+        borderBottomColor : '#d2d2d2',
+        borderBottomWidth : 2
     },
-
     title_font: {
-        flex: 1,
-        fontFamily: 'NanumSquare', 
-        fontSize: 25, 
-        color: "black" 
+        fontFamily: 'NanumSquare_0', 
+        fontSize: 20, 
+        marginLeft : 15,
+        color: '#4e4e4e', 
     },
-
     listDesign: {
-        flex: 5,
+        // backgroundColor : 'red',
+        marginTop : -10,
     },
-
+    listSection : {
+        // backgroundColor : 'blue',
+        width : '100%',
+    },
     textDesign: {
-        margin: 10,
         marginBottom: 0,
         fontFamily: 'NanumSquare_0',
+        fontSize : 17,
         color: 'gray'
+    },
+    //listview
+    reviewDesign: {
+        // backgroundColor: "red",
+        borderBottomWidth: 0.8,
+        borderBottomColor : '#d2d2d2',
+        marginLeft : -8,
+        marginTop : -10,
+        paddingBottom : 7,
+        paddingHorizontal : 6,
+        justifyContent : 'space-evenly'
+    },
+    reviewTitle : {
+        flexDirection :'row', 
+        justifyContent : 'space-between',
+        marginBottom : 10
+    },
+
+
+
+
+
+
+
+    modalDesign: {
+        backgroundColor: '#FF000000',
+        padding: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingTop: 50,
+        paddingBottom: 50
+    },
+
+    imageDesign: {
+        width: 50,
+        height: 50,
+        marginBottom: 8
+    },
+
+    modalTextDesign: {
+        fontWeight: 'bold',
+        color: 'black',
+        fontSize: 12
+    },
+
+    mapDesign: {
+        width: 320,
+        height: 200,
+        padding: 2,
+        borderWidth: 1,
+        borderColor: 'gray'
+    },
+
+    moreButtonDesign: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: -20,
+        marginRight: -15,
+        marginLeft: -15,
+        padding: 7,
+        borderColor: '#DCDCDC',
+        borderTopWidth: 1
+    },
+
+    modalComplianceDesign: {
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingTop: 50,
+        paddingBottom: 50,
+        marginRight: 30,
+        marginLeft: 30
+    },
+
+
+
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+    modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+        width: 0,
+        height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+    },
+    button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+    },
+    buttonOpen: {
+    backgroundColor: "#F194FF",
+    },
+    buttonClose: {
+    backgroundColor: "#2196F3",
+    },
+    textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+    },
+    modalText: {
+    marginBottom: 15,
+    textAlign: "center"
     },
 });
