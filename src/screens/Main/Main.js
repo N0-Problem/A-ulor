@@ -11,14 +11,16 @@ import { log } from 'react-native-reanimated';
 
 function Main({navigation}) {
     const [loggedIn, setLoggedIn] = useState(false);
+    const [userId, setUserId] = useState("");
 
     useEffect(() => {
         auth().onAuthStateChanged(user => {
             console.log(user);
             if (user) {
-            setLoggedIn(true);
+                setLoggedIn(true);
+                setUserId(user.uid);
             } else {
-            setLoggedIn(false);
+                setLoggedIn(false);
             }
         });
     }, []);
@@ -73,7 +75,7 @@ function Main({navigation}) {
                     {loggedIn ? (
                     <TouchableOpacity 
                         activeOpacity={0.7}
-                        onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark'})}>
+                        onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark', params: {user_id: userId}})}>
                         <View style={styles.box3}>
                             <Ionicons name="ios-bookmarks" color='#414141' size={75} />
                             <Text style={{
