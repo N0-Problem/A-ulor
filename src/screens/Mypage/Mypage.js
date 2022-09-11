@@ -13,11 +13,11 @@ export default function Mypage({navigation}) {
     useEffect(() => {
         auth().onAuthStateChanged(user => {
             if (user) {
-            setLoggedIn(true);
-            setUserName(user.displayName);
-            setUserId(user.uid);
+                setLoggedIn(true);
+                setUserName(user.displayName);
+                setUserId(user.uid);
             } else {
-            setLoggedIn(false);
+                setLoggedIn(false);
             }
         });
     }, []);
