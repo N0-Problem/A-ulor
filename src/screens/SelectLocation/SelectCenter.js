@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { List, Modal, Portal, Button } from 'react-native-paper';
-import firestore from '@react-native-firebase/firestore';
+import firestore, { firebase } from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 import { cityData } from '../../assets/data/cities'
 
 // 행정구역 도
@@ -57,6 +58,27 @@ function SelectCenter({ navigation, route }) {
     // modal 관련 코드
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
+
+    function addBookmark(item) {
+        let userinfo;
+        let bookmarks = [];
+        auth().onAuthStateChanged(user => {
+            userinfo = user;
+            const docRef = firestore().collection('Users').doc(userinfo.uid)
+            docRef.get()
+            .then(doc => {
+                if (doc.exists) {
+                    bookmarks = doc.data().bookmarks;
+                    if (bookmarks.includes(item.id)) {
+                        Alert.alert('이미 즐겨찾기 추가된 센터입니다!');
+                    } else {
+                        const FieldValue = firebase.firestore.FieldValue;
+                        docRef.update({bookmarks: FieldValue.arrayUnion(item.id)});
+                    }   
+                }
+            })
+        });
+    }
 
     return (
         <View style={styles.container}>
@@ -127,6 +149,7 @@ function SelectCenter({ navigation, route }) {
                                                             <Button
                                                                 mode="text"
                                                                 color="#FFB236"
+                                                                onPress={() => addBookmark(item)}
                                                             >
                                                                 <Text style={{ fontFamily: 'NanumSquare_0' }}>
                                                                     예
