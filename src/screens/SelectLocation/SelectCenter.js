@@ -149,7 +149,10 @@ function SelectCenter({ navigation, route }) {
                                                             <Button
                                                                 mode="text"
                                                                 color="#FFB236"
-                                                                onPress={() => addBookmark(item)}
+                                                                onPress={() => {
+                                                                    addBookmark(item);
+                                                                    setVisible(false);
+                                                                }}
                                                             >
                                                                 <Text style={{ fontFamily: 'NanumSquare_0' }}>
                                                                     예
