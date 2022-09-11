@@ -5,8 +5,6 @@ import DatePicker from 'react-native-date-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import { types } from '@babel/core';
-import { set } from 'date-fns';
 
 export default function UserInfo({navigation}) {
 
