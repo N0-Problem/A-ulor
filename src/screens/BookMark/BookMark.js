@@ -37,8 +37,8 @@ export default function BookMark({ navigation, route }) {
                 })
             }
         }).then(() => {
-            setBookmarks(temp);
             setLoading(false);
+            setBookmarks(temp);
         })
     }
 
