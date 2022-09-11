@@ -64,7 +64,7 @@ function SelectCenter({ navigation, route }) {
                 <Text style={styles.textDesign}>
                     지역을 선택해주세요.
                 </Text>
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'row', marginLeft:-2 }}>
                     <DropDownPicker
                         open={openProvince}
                         value={provinceValue}
@@ -73,7 +73,7 @@ function SelectCenter({ navigation, route }) {
                         setValue={setProvinceValue}
                         setItems={setProvinces}
                         style={styles.provincePickerDesign}
-                        containerStyle={{ width: 170, marginRight: 10, }}
+                        containerStyle={{ width: 170, marginRight: 10 }}
                         showArrowIcon={false}
                         disabled={true}
                         placeholder={userProvince.selectedProvince}
@@ -84,8 +84,10 @@ function SelectCenter({ navigation, route }) {
                         containerStyle={{
                             width: 190,
                         }}
-                        placeholder=""
-                        placeholderStyle={{ color: 'black' }}
+                        textStyle={{fontFamily:'NanumSquare_0', color:'#454545'}}
+                        dropDownContainerStyle={{width: 200, right:0, borderTopColor:'white', borderColor:'#777'}}
+                        placeholder="지역을 선택해주세요."
+                        placeholderStyle={{ color: 'gray' }}
                         open={openCity}
                         value={cityValue}
                         items={cities}
@@ -101,14 +103,14 @@ function SelectCenter({ navigation, route }) {
 
                 </View>
             </View>
-            <Text style={{ marginLeft: 20, marginTop: 10, fontFamily: 'NanumSquare_0' }}>검색 결과</Text>
+            <Text style={{ marginLeft: 20, marginTop: 30, fontFamily: 'NanumSquare', color:'#4E4E4E' }}>검색 결과</Text>
             <View style={styles.listDesign}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <List.Section>
                         {centerName && centerName.map((item, idx) => {
                             return (
                                 <List.Accordion
-                                    style={{ marginLeft: 5 }}
+                                    style={{ marginLeft: 5, backgroundColor:'white', borderBottomWidth: 1, borderColor:'#DCDCDC' }}
                                     title={item.name}
                                     titleStyle={{ fontFamily: 'NanumSquare_acR' }}
                                     key={idx}
@@ -118,7 +120,7 @@ function SelectCenter({ navigation, route }) {
                                         <View>
                                             <Portal style={{ justifyContent: 'center', alignItems: 'center' }}>
                                                 <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalDesign}>
-                                                    <Text style={{ fontFamily: 'NanumSquare_0' }}>선택하신 이동지원센터를 즐겨찾기에 추가하시겠습니까?</Text>
+                                                    <Text style={{ fontFamily: 'NanumSquare_0', color:'black' }}>선택하신 이동지원센터를 즐겨찾기에 추가하시겠습니까?</Text>
                                                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                                                         <Text style={{ marginTop: 10 }}>
                                                             <Button
@@ -166,6 +168,7 @@ function SelectCenter({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor:'white'
     },
 
     selectDesign: {
@@ -183,16 +186,15 @@ const styles = StyleSheet.create({
     textDesign: {
         margin: 10,
         marginBottom: 0,
-        fontFamily: 'NanumSquare_0'
+        fontFamily: 'NanumSquare',
+        color:'#4E4E4E'
     },
 
     provincePickerDesign: {
         width: 150,
         margin: 10,
-        borderColor: '#FFB236',
-        backgroundColor: '#E6E6E6'
-
-
+        borderWidth: 0,
+        backgroundColor: '#E6E6E6',
     },
 
     cityPickerDesign: {
