@@ -9,9 +9,9 @@ const StackNav2 = ({navigation}) => {
     const Stack = createNativeStackNavigator();
 
     return (
-        <Stack.Navigator initialRouteName="Mypage">
+        <Stack.Navigator initialRouteName="MyPage">
             <Stack.Screen
-                name="Mypage"
+                name="MyPage"
                 component={Mypage}
                 options={{
                     headerShown:false,

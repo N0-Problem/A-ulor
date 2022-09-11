@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Button } from 'react-native-paper';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import auth from '@react-native-firebase/auth';
+import Profile from '../../assets/images/mypage_profile.png';
 
 export default function Mypage({navigation}) {
     const [loggedIn, setLoggedIn] = useState(false);
@@ -49,19 +50,19 @@ export default function Mypage({navigation}) {
                     )}
                 </View>
                 <View style={styles.profilebox}>
-                    <FontAwesome5 name="user-circle" color='#fff' size={80} />
+                    <Image style={styles.profile}source={Profile}/>
                 </View>
             </View>
             <View style={styles.listbox}>
                 {loggedIn ? (
-                    <Text style={styles.list} onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark'})}>Bookmark</Text>
+                    <Text style={styles.list} onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark'})}>자주 사용하는 센터</Text>
                 ):(
-                    <Text style={styles.list_disable} disabled={true}>Bookmark</Text>
+                    <Text style={styles.list_disable} disabled={true}>자주 사용하는 센터</Text>
                 )}
                 {loggedIn ? (
-                    <Text style={styles.list} onPress={() => navigation.navigate('BookMark')}>Review</Text>
+                    <Text style={styles.list} onPress={() => navigation.navigate('BookMark')}>내가 쓴 후기</Text>
                 ):(
-                    <Text style={styles.list_disable} disabled={true}>Review</Text>
+                    <Text style={styles.list_disable} disabled={true}>내가 쓴 후기</Text>
                 )}
             </View>
         </View>
@@ -85,44 +86,54 @@ const styles = StyleSheet.create({
     text1 : {
         paddingLeft : 20,
         paddingTop : 20,
-        fontSize : 20,
+        fontSize : 23,
         fontFamily:'NanumSquare_0',
     },
     text2 : {
         paddingLeft : 20,
         paddingTop : 10,
-        fontSize : 12,
+        fontSize : 15,
         textDecorationLine : 'underline',
         fontFamily:'NanumSquare_acR',
     },
     profilebox : {
         flex : 1,
-        paddingRight : 20,
+        paddingRight : 80,
+    },
+    profile : {
+        width: 130,
+        height: 130,
+        resizeMode: 'stretch',
     },
     listbox : {
+        fontFamily:'NanumSquare_0',
         flex : 3,
         backgroundColor : '#fff',
         alignItems : 'flex-start',
     },
     list : {
+        fontFamily:'NanumSquare_0',
         alignSelf : 'stretch',
-        height : 50,
+        height : 60,
         padding : 15,
+        paddingTop : 20,
         marginTop : 2,
         marginHorizontal : 7,
-        color : '#020202', 
-        fontSize : 17,
+        color : '#444', 
+        fontSize : 18,
         borderBottomWidth : 0.3, 
         borderBottomColor : '#757575',
     }, 
     list_disable : {
+        fontFamily:'NanumSquare_0',
         alignSelf : 'stretch',
-        height : 50,
+        height : 60,
         padding : 15,
+        paddingTop : 20,
         marginTop : 2,
         marginHorizontal : 7,
         color : '#b1b1b1', 
-        fontSize : 17,
+        fontSize : 18,
         borderBottomWidth : 0.3, 
         borderBottomColor : '#757575',
     }

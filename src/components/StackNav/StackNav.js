@@ -27,20 +27,6 @@ const StackNav = () => {
                     headerShown:false,
                 }}
             />
-            {/* <Stack.Screen
-                name="Login"
-                component={Login}
-                options={{
-                    headerShown:false,
-                }}
-            />
-            <Stack.Screen
-                name="Mypage"
-                component={Mypage}
-                options={{
-                    headerShown:false,
-                }}
-            /> */}
         </Stack.Navigator>
     );
 };
