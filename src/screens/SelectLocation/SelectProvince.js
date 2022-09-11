@@ -46,11 +46,11 @@ function SelectProvince({navigation}) {
                     {tempbox06.map((item, index) => {
                         return (
                             <View key={index} style={{ flexDirection: 'row' }}>
-                                <Button style={styles.btnDesign} mode="contained" onPress={() => updateProvince(2 * index)} onTouchEnd={() => navigation.navigate('SelectCenter', {selectedProvince: province, provinceIndex : 2*index})}>
+                                <Button style={styles.btnDesign} labelStyle={{ width: 100, paddingTop: 7, paddingBottom: 7 }} mode="contained" onPress={() => updateProvince(2 * index)} onTouchEnd={() => navigation.navigate('SelectCenter', {selectedProvince: province, provinceIndex : 2*index})}>
                                     <Text style={{fontFamily:'NanumSquare_0'}}>{provinceData[2 * index].value}</Text>
                                 </Button>
-                                <Button style={styles.btnDesign} mode="contained" onPress={() => updateProvince(2 * index + 1)} onTouchEnd={() => navigation.navigate('SelectCenter', {selectedProvince: province, provinceIndex : 2*index+1})}>
-                                    <Text style={{fontFamily:'NanumSquare_0'}}>{provinceData[2 * index + 1].value}</Text>
+                                <Button style={styles.btnDesign} labelStyle={{ width: 100, paddingTop: 7, paddingBottom: 7 }} mode="contained" onPress={() => updateProvince(2 * index + 1)} onTouchEnd={() => navigation.navigate('SelectCenter', {selectedProvince: province, provinceIndex : 2*index+1})}>
+                                    <Text style={{fontFamily:'NanumSquare_0',}}>{provinceData[2 * index + 1].value}</Text>
                                 </Button>
                             </View>
 
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     },
 
     btnDesign: {
-        width: 140,
+        width: 130,
         height: 48,
         margin: 10,
         justifyContent: 'center',
