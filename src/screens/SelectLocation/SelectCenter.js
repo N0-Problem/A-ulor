@@ -106,20 +106,21 @@ function SelectCenter({ navigation, route }) {
             <Text style={{ marginLeft: 20, marginTop: 30, fontFamily: 'NanumSquare', color:'#4E4E4E' }}>검색 결과</Text>
             <View style={styles.listDesign}>
                 <ScrollView showsVerticalScrollIndicator={false}>
-                    <List.Section>
+                    <List.Section style={{borderBottomWidth: 1, borderColor:'#DCDCDC'}}>
                         {centerName && centerName.map((item, idx) => {
                             return (
                                 <List.Accordion
-                                    style={{ marginLeft: 5, backgroundColor:'white', borderBottomWidth: 1, borderColor:'#DCDCDC' }}
+                                    style={{ marginLeft: 5, backgroundColor:'white' }}
                                     title={item.name}
                                     titleStyle={{ fontFamily: 'NanumSquare_acR' }}
                                     key={idx}
                                     onPress={handlePress}
+                                    theme={{ colors: { primary: 'black' }}}
                                 >
                                     <List.Item title={() => (
                                         <View>
                                             <Portal style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                                <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalDesign}>
+                                                <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalDesign} key={idx}>
                                                     <Text style={{ fontFamily: 'NanumSquare_0', color:'black' }}>선택하신 이동지원센터를 즐겨찾기에 추가하시겠습니까?</Text>
                                                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                                                         <Text style={{ marginTop: 10 }}>
@@ -138,19 +139,18 @@ function SelectCenter({ navigation, route }) {
                                                                 <Text style={{ fontFamily: 'NanumSquare_0' }}>
                                                                     아니오
                                                                 </Text>
-
                                                             </Button>
                                                         </Text>
                                                     </View>
 
                                                 </Modal>
                                             </Portal>
-                                            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingLeft: 30, paddingRight: 30 }}>
-                                                <Button style={{ flex: 1, marginRight: 30 }} mode="contained" color="#FFB236" onPress={() => navigation.navigate('CenterInfo', {selectedCenter : centerName})}>
-                                                    <Text style={{ fontFamily: 'NanumSquare_0' }}>세부정보 보기</Text>
+                                            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingLeft: 30, paddingRight: 30, marginTop:-10, marginBottom: 5 }}>
+                                                <Button style={{ flex: 1, marginRight: 30 }} mode="contained" color="#FFDA36" onPress={() => navigation.navigate('CenterInfo', {selectedCenter : centerName[idx]})}>
+                                                    <Text style={{ fontFamily: 'NanumSquare_acR' }}>세부정보 보기</Text>
                                                 </Button>
-                                                <Button style={{ flex: 1 }} mode="contained" color="#FFB236" onPress={showModal}>
-                                                    <Text style={{ fontFamily: 'NanumSquare_0' }}>즐겨찾기에 추가</Text>
+                                                <Button style={{ flex: 1 }} mode="contained" color="#FFDA36" onPress={showModal}>
+                                                    <Text style={{ fontFamily: 'NanumSquare_acR' }}>즐겨찾기에 추가</Text>
                                                 </Button>
                                             </View>
                                         </View>
