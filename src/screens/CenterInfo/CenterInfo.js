@@ -217,7 +217,7 @@ function CenterInfo({ navigation, route }) {
                                 <Button style={styles.buttonDesign} mode="text" color="#FFB236" onPress={showResv}>
                                     <Text style={{ fontFamily: 'NanumSquare' }}>예약하러 하기</Text>
                                 </Button>
-                                <Button style={styles.buttonDesign} mode="text" color="#FFB236" onPress={() => navigation.navigate('AddReview', { reviewedCenter: centerName })}>
+                                <Button style={styles.buttonDesign} mode="text" color="#FFB236" onPress={() => navigation.navigate('AddReview', { reviewedCenter: userCenter })}>
                                     <Text style={{ fontFamily: 'NanumSquare' }}>후기 작성</Text>
                                 </Button>
                             </View>
@@ -277,8 +277,8 @@ const styles = StyleSheet.create({
     },
 
     titleDesign: {
-        fontSize: 16,
-        fontFamily: 'NanumSquare',
+        fontSize: 18,
+        fontFamily: 'NanumSquare_0',
         marginTop: -10,
         marginBottom: 10
     },
@@ -342,7 +342,7 @@ const styles = StyleSheet.create({
         marginRight: -15,
         marginLeft: -15,
         padding: 7,
-        borderColor: '#FFB236',
+        borderColor: '#DCDCDC',
         borderTopWidth: 1
     },
 

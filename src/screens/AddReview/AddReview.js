@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { Calendar } from "react-native-calendars";
 import { TextInput, Button } from 'react-native-paper';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
@@ -12,7 +13,7 @@ const stars = ["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"]
 
 function AddReview({ route }) {
 
-    const reviewCenter = route.params.selectedCenter;
+    const reviewCenter = route.params.reviewedCenter;
 
     const [myValue, setMyValue] = useState(0);
 
@@ -72,16 +73,17 @@ function AddReview({ route }) {
     }
 
     return (
-        <View>
+        <View style={{backgroundColor:'white'}}>
             <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 30 }}>
-                    <Text style={{ fontFamily: 'NanumSquare', fontSize: 17, color: 'black' }}>{reviewCenter.name}</Text>
+                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 0, paddingTop:20, paddingBottom: 15 ,backgroundColor:'#FFDA36' }}>
+                    <Text style={{ fontFamily: 'NanumSquare', fontSize: 20, color: '#4E4E4E', marginBottom: 10 }}>후기 작성</Text>
+                    <Text style={{ fontFamily: 'NanumSquare_0', fontSize: 13, color: '#4E4E4E' }}>{reviewCenter.name}</Text>
                 </View>
                 <View>
                     <Text style={styles.textDesign}>이용 일자를 입력해주세요.</Text>
                     <View>
                         <Calendar
-                            style={{ marginTop: 20, padding: 10 }}
+                            style={{ marginTop: 10, padding: 10 }}
                             onDayPress={(day) => {
                                 setSelectedDate(day.dateString);
                                 console.log(day.dateString)
@@ -109,7 +111,8 @@ function AddReview({ route }) {
                     <Text style={styles.textDesign}>
                         평점을 매겨주세요.
                     </Text>
-                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
+                        <FontAwesome name="star" color='#FFC021' size={25} />
                         <Text> {stars[myValue - 1]} </Text>
                         <Slider
                             style={{ height: 40, width: 250 }}
@@ -124,7 +127,7 @@ function AddReview({ route }) {
                         <Text style={{ fontWeight: 'bold' }}>1            2             3             4            5</Text>
                     </View>
                 </View>
-                <View>
+                <View style={{marginTop: 20}}>
                     <Text style={styles.textDesign}>후기 내용을 작성해주세요.</Text>
                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                         <TextInput
@@ -133,13 +136,14 @@ function AddReview({ route }) {
                             mode="outlined"
                             placeholder='여기에 후기를 작성해주세요!'
                             activeOutlineColor='#FFB236'
+                            outlineColor='white'
                             multiline={true}
-                            style={{ width: 380, height: 380, fontFamily: 'NanumSquare_0', }}
+                            style={{ width: 380, height: 380, fontFamily: 'NanumSquare_0', marginTop: -10 }}
                         />
                     </View>
                 </View>
                 <View style={{ justifyContent: 'center', alignItems: 'center', margin: 20 }}>
-                    <Button mode="contained" onPress={() => addReview()} style={{ width: 130, backgroundColor: "#FFB236" }}>
+                    <Button mode="contained" onPress={() => addReview()} style={{ width: 130, backgroundColor: "#FFDA36" }}>
                         <Text style={{ fontFamily: 'NanumSquare_0' }}>완료</Text>
                     </Button>
                 </View>
@@ -155,10 +159,15 @@ const styles = StyleSheet.create({
     },
 
     textDesign: {
-        marginTop: 30,
+        marginTop: 25,
         marginLeft: 10,
+        marginRight: 10,
+        marginBottom: 15,
+        paddingBottom: 10,
         color: "black",
         fontFamily: 'NanumSquare_0',
+        borderBottomWidth: 1,
+        borderBottomColor: '#DDD',
     }
 
 });
