@@ -3,9 +3,8 @@ import { View, Text, StyleSheet, ScrollView, Pressable, TouchableOpacity, Image,
 import { Button, Card, Title, Modal, Portal } from 'react-native-paper';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import Fontisto from 'react-native-vector-icons/Fontisto';
-import Geolocation from 'react-native-geolocation-service';
 import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
+import { Link } from '@react-navigation/native';
 
 function CenterInfo({ navigation, route }) {
 
@@ -15,9 +14,32 @@ function CenterInfo({ navigation, route }) {
 
     let tempReviews = [];
 
+    let tempRegions = [];
+
     const [reviewList, setReviewList] = useState([]);
 
+    const [regionList, setRegionList] = useState([]);
+
     const reviewCollection = firestore().collection('Review');
+
+    const operatingRegionCollection = firestore().collection('Operating_regions');
+
+    const getOperatingRegion = async () => {
+        const regions = operatingRegionCollection.where('center_id', '==', centerId);
+        regions.get().then((querySnapshot) => {
+            if (!querySnapshot.empty) {
+                for (const doc of querySnapshot.docs) {
+                    if (doc.exists) {
+                        tempRegions.push(doc.data());
+                    }
+                }
+            }
+        })
+            .then(() => {
+                setRegionList(tempRegions);
+
+            });
+    }
 
     const getMyReviews = async () => {
         setCenterId(userCenter.id);
@@ -38,10 +60,36 @@ function CenterInfo({ navigation, route }) {
 
     useEffect(() => {
         getMyReviews();
+        getOperatingRegion();
 
-    }, [reviewList]);
+    }, [reviewList], [regionList]);
 
-    // 예약하러 가기 Modal 창
+    // 운행지역 Modal 창
+    const [visibleRegion, setVisibleRegion] = useState(false);
+    const showRegion = () => setVisibleRegion(true);
+    const hideRegion = () => setVisibleRegion(false);
+
+    // 준수사항 Modal 창
+    const [visibleCompliance, setVisibleCompliance] = useState(false);
+    const showCompliance = () => setVisibleCompliance(true);
+    const hideCompliance = () => setVisibleCompliance(false);
+
+    // 이용가능대상 Modal 창
+    const [visibleAvailable, setVisibleAvailable] = useState(false);
+    const showAvailable = () => setVisibleAvailable(true);
+    const hideAvailable = () => setVisibleAvailable(false);
+
+    // 요금 Modal 창
+    const [visibleFee, setVisibleFee] = useState(false);
+    const showFee = () => setVisibleFee(true);
+    const hideFee = () => setVisibleFee(false);
+
+    // 세부 사항 Modal 창
+    const [visibleDetails, setVisibleDetails] = useState(false);
+    const showDetails = () => setVisibleDetails(true);
+    const hideDetails = () => setVisibleDetails(false);
+
+    // 예약 하기 Modal 창
     const [visibleResv, setVisibleResv] = useState(false);
     const showResv = () => setVisibleResv(true);
     const hideResv = function () {
@@ -49,12 +97,8 @@ function CenterInfo({ navigation, route }) {
         setVisibleResv(false);
     }
 
+    // 예약 하기 후 전화번호가 2개인 경우
     const [selectCall, setSelectCall] = useState(false);
-
-    // 준수사항 Modal 창
-    const [visibleCompliance, setVisibleCompliance] = useState(false);
-    const showCompliance = () => setVisibleCompliance(true);
-    const hideCompliance = () => setVisibleCompliance(false);
 
     // 자세히 && 간단히 Button
     const [extended, setExtended] = useState(true);
@@ -146,12 +190,7 @@ function CenterInfo({ navigation, route }) {
                                             </Pressable>
                                         </Text>)}
                                 </View>
-                                <View style={styles.paragraphDesign}>
-                                    <Text style={styles.textDesign}>운행지역 : </Text>
-                                    <Text></Text>
-                                </View>
                             </View>
-
                         ) : (
                             <View>
                                 <View style={styles.paragraphDesign}>
@@ -206,13 +245,50 @@ function CenterInfo({ navigation, route }) {
                                 </View>
                                 <View style={styles.paragraphDesign}>
                                     <Text style={styles.textDesign}>운행지역 : </Text>
-                                    <Text></Text>
+                                    <Portal>
+                                        <Modal visible={visibleRegion} onDismiss={hideRegion} contentContainerStyle={styles.moreInfoModalDesign}>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <View style={{ flex: 1, flexDirection: 'column', marginLeft: 20, justifyContent: 'center', alignItems: 'center', borderRightWidth: 1, borderRightColor: 'black' }}>
+                                                    <Text style={{ fontFamily: 'NanumSquare', color: '#FFC021', marginBottom: 20 }}>관내 지역</Text>
+                                                    {regionList[0].inner_regions.map((item, idx) => {
+                                                        return (
+                                                            <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 10 }}>{item}</Text>
+                                                        )
+                                                    })}
+                                                </View>
+                                                <View style={{ flex: 1, flexDirection: 'column', marginRight: 20, justifyContent: 'center', alignItems: 'center', borderLeftWidth: 1, borderLeftColor: 'black' }}>
+                                                    <Text style={{ fontFamily: 'NanumSquare', color: '#FFC021', marginBottom: 20 }}>관외 지역</Text>
+                                                    {regionList[0].outer_regions.map((item, idx) => {
+                                                        return (
+                                                            <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 10 }}>{item}</Text>
+                                                        )
+                                                    })}
+                                                </View>
+                                            </View>
+                                        </Modal>
+                                    </Portal>
+                                    <Text>
+                                        <Pressable>
+                                            {({ pressed }) => (
+                                                <Text style={{ color: pressed ? '#000000' : '#999999', fontFamily: 'NanumSquare' }}
+                                                    onPress={showRegion}>
+                                                    확인하기
+                                                </Text>
+                                            )}
+                                        </Pressable>
+                                    </Text>
                                 </View>
                                 <View style={styles.paragraphDesign}>
                                     <Text style={styles.textDesign}>준수사항 : </Text>
                                     <Portal>
-                                        <Modal visible={visibleCompliance} onDismiss={hideCompliance} contentContainerStyle={styles.modalComplianceDesign}>
-                                            <Text>Example Modal. Click outside this area to dismiss.</Text>
+                                        <Modal visible={visibleCompliance} onDismiss={hideCompliance} contentContainerStyle={styles.moreInfoModalDesign}>
+                                            <View style={{ flexDirection: 'column' }}>
+                                                {userCenter.rules.map((item, idx) => {
+                                                    return (
+                                                        <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 15, marginLeft: 10, marginRight: 10 }}>{idx + 1}. {item}</Text>
+                                                    )
+                                                })}
+                                            </View>
                                         </Modal>
                                     </Portal>
                                     <Text>
@@ -228,11 +304,60 @@ function CenterInfo({ navigation, route }) {
                                 </View>
                                 <View style={styles.paragraphDesign}>
                                     <Text style={styles.textDesign}>이용가능대상 : </Text>
-                                    <Text></Text>
+                                    <Portal>
+                                        <Modal visible={visibleAvailable} onDismiss={hideAvailable} contentContainerStyle={styles.moreInfoModalDesign}>
+                                            <View style={{ flexDirection: 'column' }}>
+                                                {userCenter.targets.map((item, idx) => {
+                                                    return (
+                                                        <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 15, marginLeft: 10, marginRight: 10 }}>{idx + 1}. {item}</Text>
+                                                    )
+                                                })}
+                                            </View>
+                                        </Modal>
+                                    </Portal>
+                                    <Text>
+                                        <Pressable>
+                                            {({ pressed }) => (
+                                                <Text style={{ color: pressed ? '#000000' : '#999999', fontFamily: 'NanumSquare' }}
+                                                    onPress={showAvailable}>
+                                                    확인하기
+                                                </Text>
+                                            )}
+                                        </Pressable>
+                                    </Text>
                                 </View>
                                 <View style={styles.paragraphDesign}>
                                     <Text style={styles.textDesign}>요금 : </Text>
-                                    <Text></Text>
+                                    <Portal>
+                                        <Modal visible={visibleFee} onDismiss={hideFee} contentContainerStyle={styles.moreInfoModalDesign}>
+                                            <Text style={{ fontFamily: 'NanumSquare_0', color: 'black',marginTop:10 ,marginBottom: 15, marginLeft: 10, marginRight: 10 }}>
+                                                {userCenter.fee}
+                                            </Text>
+                                        </Modal>
+                                    </Portal>
+                                    <Text>
+                                        <Pressable>
+                                            {({ pressed }) => (
+                                                <Text style={{ color: pressed ? '#000000' : '#999999', fontFamily: 'NanumSquare' }}
+                                                    onPress={showFee}>
+                                                    확인하기
+                                                </Text>
+                                            )}
+                                        </Pressable>
+                                    </Text>
+                                </View>
+                                <View style={styles.paragraphDesign}>
+                                    <Text style={styles.textDesign}>세부 사항 : </Text>
+                                    <Text>
+                                        <Pressable>
+                                            {({ pressed }) => (
+                                                <Text style={{ color: pressed ? '#000000' : '#999999', fontFamily: 'NanumSquare' }}
+                                                    onPress={() => Linking.openURL(userCenter.details)}>
+                                                    확인하기
+                                                </Text>
+                                            )}
+                                        </Pressable>
+                                    </Text>
                                 </View>
                             </View>
                         )}
@@ -319,60 +444,61 @@ function CenterInfo({ navigation, route }) {
                                     </View>
                                 </Modal>
                             </Portal>
-                            <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
-                                <Button style={styles.buttonDesign} mode="text" color="#FFB236" onPress={showResv}>
-                                    <Text style={{ fontFamily: 'NanumSquare' }}>예약하러 하기</Text>
+                            <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center', marginTop: 15, marginBottom: 10 }}>
+                                <Button style={styles.buttonDesign} mode="contained" color="#FFDA36" onPress={showResv}>
+                                    <Text style={{ fontFamily: 'NanumSquare' }}>예약 하기</Text>
                                 </Button>
-                                <Button style={styles.buttonDesign} mode="text" color="#FFB236" onPress={() => navigation.navigate('AddReview', { reviewedCenter: userCenter })}>
+                                <Button style={styles.buttonDesign} mode="contained" color="#FFDA36" onPress={() => navigation.navigate('AddReview', { reviewedCenter: userCenter })}>
                                     <Text style={{ fontFamily: 'NanumSquare' }}>후기 작성</Text>
                                 </Button>
                             </View>
                         </View>
                         {extended ? (
                             <TouchableOpacity style={styles.moreButtonDesign} onPress={() => setExtended(!extended)}>
-                                <Text style={{ color: '#FFB236', fontFamily: 'NanumSquare' }}>자 세 히</Text>
+                                <Text style={{ color: '#999999', fontFamily: 'NanumSquare' }}>▼</Text>
                             </TouchableOpacity>
                         ) : (
                             <TouchableOpacity style={styles.moreButtonDesign} onPress={() => setExtended(!extended)}>
-                                <Text style={{ color: '#FFB236', fontFamily: 'NanumSquare' }}>간 단 히</Text>
+                                <Text style={{ color: '#999999', fontFamily: 'NanumSquare' }}>▲</Text>
                             </TouchableOpacity>
                         )}
                     </Card>
                 </View>
-                <View style={{flexDirection:'column'}}>
-                    {reviewList.length == 0 ? (
-                        <View style={{ marginTop: 48, marginBottom: 45 }}>
-                            <Text style={{fontFamily: 'NanumSquare', fontSize: 15, color: "#4E4E4E"}}>아직 후기가 올라오지 않았어요!</Text>
+                {reviewList.length == 0 ? (
+                    <View style={{ flexDirection: 'column', marginTop: 10 }}>
+                        <View style={{ marginTop: 45, marginBottom: 45 }}>
+                            <Text style={{ fontFamily: 'NanumSquare', fontSize: 15, color: "#4E4E4E" }}>아직 후기가 올라오지 않았어요!</Text>
                         </View>
+                    </View>
+                ) : (
+                    <>
+                        {reviewList.map((item, index) => {
+                            return (
+                                <View style={{ flexDirection: 'column', backgroundColor: 'white' }} key={index}>
+                                    <View style={styles.reviewDesign}>
+                                        <View style={{ flexDirection: "row", marginBottom: 5, marginTop: 5, justifyContent: 'space-between' }}>
+                                            <View style={{ marginLeft: 8 }}>
+                                                <Text style={{ marginTop: 5, fontSize: 13, fontFamily: 'NanumSquare_0', color: '#4E4E4E' }}>{item.user_name}</Text>
+                                            </View>
+                                            <View>
+                                                <Text style={{ marginTop: 0, marginRight: 5, fontSize: 15, color: "#FFF" }}>{stars[item.rate - 1]}</Text>
+                                            </View>
+                                        </View>
+                                        <View style={{ marginBottom: 10 }}>
+                                            <Text style={{ marginLeft: 8, fontWeight: "bold", color: "black" }}>
+                                                {item.feedback}
+                                            </Text>
+                                        </View>
+                                        <View>
+                                            <Text style={{ textAlign: "right", marginBottom: 5, marginRight: 8, fontSize: 13, fontFamily: 'NanumSquare_0', color: '#4E4E4E' }}>이용 일자 : {item.used_date}</Text>
+                                        </View>
+                                    </View>
+                                </View>
 
-                    ) : (
-                        <View style={{ marginLeft: 5, marginBottom: 5, marginTop: 15 }}>
-                            <Text style={{ fontFamily: 'NanumSquare', fontSize: 20, color: "black" }}>후 기</Text>
-                        </View>
-                    )}
-                    {reviewList.map((item, index) => {
-                        return (
-                            <View style={styles.reviewDesign} key={index}>
-                                <View style={{ flexDirection: "row", marginBottom: 5, marginTop: 5, justifyContent: 'space-between' }}>
-                                    <View style={{ marginLeft: 10 }}>
-                                        <Text style={{ marginTop: 5, fontSize: 13, fontFamily: 'NanumSquare_0', color: '#4E4E4E' }}>{item.user_name}</Text>
-                                    </View>
-                                    <View>
-                                        <Text style={{ marginTop: 0, marginRight: 5, fontSize: 15, color: "#FFF" }}>{stars[item.rate - 1]}</Text>
-                                    </View>
-                                </View>
-                                <View style={{ marginBottom: 10 }}>
-                                    <Text style={{ marginLeft: 8, fontWeight: "bold", color: "black" }}>
-                                        {item.feedback}
-                                    </Text>
-                                </View>
-                                <View>
-                                    <Text style={{ textAlign: "right", marginBottom: 5, marginRight: 8, fontSize: 13, fontFamily: 'NanumSquare_0', color: '#4E4E4E' }}>이용 일자 : {item.used_date}</Text>
-                                </View>
-                            </View>
-                        )
-                    })}
-                </View>
+                            )
+                        })}
+                    </>
+                )}
             </View>
         </ScrollView>
     )
@@ -387,6 +513,7 @@ const styles = StyleSheet.create({
     cardDesign: {
         width: 380,
         marginTop: 15,
+        marginBottom: 15,
         padding: 20
     },
 
@@ -405,18 +532,19 @@ const styles = StyleSheet.create({
     textDesign: {
         color: "black",
         fontFamily: 'NanumSquare_0',
+        fontSize: 15
     },
 
     buttonDesign: {
-        marginBottom: 10
+        marginBottom: 10,
+        marginLeft: 10,
+        marginRight: 10
     },
 
     reviewDesign: {
         backgroundColor: "white",
         borderTopWidth: 2,
-        borderBottomWidth: 2,
         borderColor: "#FFB236",
-        marginTop: 10,
         width: 380
     },
 
@@ -442,7 +570,7 @@ const styles = StyleSheet.create({
     },
 
     mapDesign: {
-        width: 320,
+        width: 335,
         height: 200,
         padding: 2,
         borderWidth: 1,
@@ -460,14 +588,12 @@ const styles = StyleSheet.create({
         borderTopWidth: 1
     },
 
-    modalComplianceDesign: {
+    moreInfoModalDesign: {
         backgroundColor: 'white',
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingTop: 50,
-        paddingBottom: 50,
-        marginRight: 30,
-        marginLeft: 30
+        paddingTop: 30,
+        paddingBottom: 30,
+        marginLeft: 10,
+        marginRight: 10,
     },
 
     selectCallTextDesign: {
