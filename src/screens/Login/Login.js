@@ -38,7 +38,7 @@ export default function Login({navigation,route}) {
                         console.log('이미 있는 사용자입니다.')
                     } else {
                         console.log("새로 가입한 사용자입니다.");
-                        const data = {
+                        const userinfo = {
                             user_id: user.uid,
                             name: user.displayName,
                             address: '',
@@ -46,7 +46,7 @@ export default function Login({navigation,route}) {
                             type: '',
                             bookmarks: []
                         };
-                        userCollection.doc(user.uid).set(data);
+                        userCollection.doc(user.uid).set(userinfo);
                         navigation.navigate('Mypage', {screen:'UserInfo'});
                     }
                 });
