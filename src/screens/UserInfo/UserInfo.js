@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator} from 'react-native';
-import { Button, TextInput, RadioButton } from 'react-native-paper';
+import { Button, TextInput } from 'react-native-paper';
 import DatePicker from 'react-native-date-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
-import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
-export default function UserInfo({navigation}) {
+export default function UserInfo({navigation, route}) {
+
+    const params = route.params;
+    const userId = params.user_id;
+    const userName = params.user_name;
 
     const [date, setDate] = useState(new Date());
     const [dateStr, setDateStr] = useState('');
     //const [bookmarks, setBookmarks] = useState([]);
     const [open, setOpen] = useState(false);
-    const [user, setUser] = useState('');
     const [dropopen, setdropOpen] = useState(false);
     const [dropvalue, setdropValue] = useState();
     const [extra, setExtra] = useState();
@@ -40,15 +42,15 @@ export default function UserInfo({navigation}) {
     }
 
     function string_to_date(str) {
-        let date;
         
+        let date;
         if (str === '') {
             const curr = new Date();
             const utc = curr.getTime() + (curr.getTimezoneOffset() * 60 * 1000);
             const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
             date = new Date(utc + (KR_TIME_DIFF));
         } else {
-            let arr = dateStr.split('-');
+            let arr = str.split('-');
             date = new Date();
             date.setFullYear(arr[0]);
             date.setMonth(arr[1]-1);
@@ -56,36 +58,38 @@ export default function UserInfo({navigation}) {
             setGetDate(true);
         }
         setDate(date);
-        setLoading(false);
+        setDateStr(birthdate);
     }
 
-    const getUserinfo = async () => {
-        auth().onAuthStateChanged(user => {
-            setUser(user);
-            firestore().collection('Users').doc(user.uid).get()
-            .then( async (doc) => {
-                if (doc.exists) {
-                    birthdate = doc.data().birthdate;
-                    type = doc.data().type.split(':');
-                    bookmarks = doc.data().bookmarks;
-                }
-                setDateStr(birthdate);
-                string_to_date(dateStr);
-    
-                if (type[0] === '기타') {
-                    setdropValue(type[0]);
-                    setExtra(true);
-                    setExtraInput(type[1]);
-                } else {
-                    setdropValue(type[0]);
-                }
-            });
-        });
+    const getUserinfo = () => {
+        firestore().collection('Users').doc(userId).get()
+        .then((doc) => {
+            if (doc.exists) {
+                birthdate = doc.data().birthdate;
+                type = doc.data().type.split(':');
+                bookmarks = doc.data().bookmarks;
+                console.log(birthdate, type);
+            }
+        })
     }
 
     useEffect(() => {
         getUserinfo();
-    }, [loading]);
+
+        setTimeout(() => {
+            string_to_date(birthdate);
+
+            if (type[0] === '기타') {
+                setdropValue(type[0]);
+                setExtra(true);
+                setExtraInput(type[1]);
+            } else {
+                setdropValue(type[0]);
+            }
+
+            setLoading(false);
+        }, 800);
+    }, []);
 
     function setUserinfo() {
 
@@ -97,15 +101,14 @@ export default function UserInfo({navigation}) {
         }
 
         const userinfo = {
-            user_id: user.uid,
-            name: user.displayName,
-            address: '',
+            user_id: userId,
+            name: userName,
             birthdate: date_to_string(date),
             bookmarks: bookmarks,
             type: type
         }
 
-        firestore().collection('Users').doc(user.uid).set(userinfo);
+        firestore().collection('Users').doc(userId).set(userinfo);
         navigation.navigate('MyPage')
     }
 
@@ -126,7 +129,7 @@ export default function UserInfo({navigation}) {
             <View style={styles.container}>
                 <View style={styles.input_container}>
                     <Text style={styles.text_title}>이름</Text>
-                    <Text style={styles.text_input}>{user.displayName}</Text>
+                    <Text style={styles.text_input}>{userName}</Text>
                 </View>
                 <View style={styles.input_container}>
                     <Text style={styles.text_title}>생년월일</Text>

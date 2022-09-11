@@ -41,7 +41,6 @@ export default function Login({navigation,route}) {
                         const userinfo = {
                             user_id: user.uid,
                             name: user.displayName,
-                            address: '',
                             birthdate: '',
                             type: '',
                             bookmarks: []

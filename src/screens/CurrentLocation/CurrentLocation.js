@@ -6,11 +6,12 @@ import {
     Platform, 
     PermissionsAndroid, 
     ActivityIndicator } from 'react-native';
-import { Button, List } from 'react-native-paper';
+import { Button, List, Title } from 'react-native-paper';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import firestore from '@react-native-firebase/firestore';
 import { ScrollView } from 'react-native-gesture-handler';
+import { RotateInDownLeft } from 'react-native-reanimated';
 
 // 얘는 메인이나 스플래시 뜰 때 넣어야 할 듯
 async function requestPermission() {
@@ -59,9 +60,9 @@ firestore().collection('Centers').get()
         centers = querySnapshot.docs.map(doc => doc.data());
     });
 
+    
 function CurrentLocation({ navigation }) {
     const [location, setLocation] = useState();
-    const mapView = useRef(null);
 
     // 현재 위치에서 가장 가까운 n개의 센터 찾기 (n = nearest_n의 길이)
     function getNearest(current_latitude, current_longitude) {
@@ -86,7 +87,7 @@ function CurrentLocation({ navigation }) {
                     }
                 }
             });
-        console.log(nearest_n);
+        //console.log(nearest_n);
     }
 
     // 지도에 n개의 Marker 띄우기
@@ -98,22 +99,24 @@ function CurrentLocation({ navigation }) {
                     latitude: center.latitude,
                     longitude: center.longitude,
                 }}
-                title={center.name}
-                description='빨간 핀을 누르면 센터 정보로 이동합니다.'
+                // title={center.name}
+                // description='빨간 핀을 누르면 센터 정보로 이동합니다.'
                 onPress={() => showCenterInfo(center)}
             >
+                <View style={styles.talkBubble}>
+                    <View style={styles.talkBubbleSquare}>
+                        <Text style={{fontFamily: 'NanumSquare_0', textAlign: 'center', color: 'gray', fontSize: 14, marginTop: 5}}>{center.name}</Text>
+                        <Text style={{fontFamily: 'NanumSquare_0', textAlign: 'center', color: '#4E4E4E', fontSize: 16, margin: 2}}>눌러서 센터 정보 보기</Text>
+                    </View>
+                    <View style={styles.talkBubbleTriangle} />
+                </View>
             </Marker>
         ));
     }
 
-    let clicked = false;
     const showCenterInfo = (center) => {
-        if (clicked) {
-            navigation.navigate('SelectProvince', {screen: 'CenterInfo', params: {center: center}});
-            console.log(center);
-        } else {
-            clicked = true;
-        }
+        navigation.navigate('StackNav3', {screen: 'CenterInfo', params: {selectedCenter: center}});
+        console.log(center);
     }
 
     const animateMap = (latitude, longitude) => {
@@ -124,18 +127,25 @@ function CurrentLocation({ navigation }) {
             longitudeDelta: 0.005,
         };
         this.mapView.animateToRegion(r, 1000);
-        clicked = false;
     }
 
     const listCenters = () => {
         return (
-            <View style={{ marginTop: 10, marginBottom: 10 }}>
+            <View style={{ 
+                    marginTop: 10, 
+                }}>
                 {nearest_n.map((center, id) => (
                     <List.Item
+                        style={{
+                            borderBottomColor: '#999999', 
+                            borderBottomWidth: 0.5,
+                            marginRight: 10,
+                            marginLeft: -5,        
+                        }}
                         key={id}
                         title={center.name}
                         description={
-                            <Text>
+                            <Text styles={{fontFamily: 'NanumSquare_0'}}>
                                 {center.address}
                             </Text>
                         }
@@ -171,9 +181,11 @@ function CurrentLocation({ navigation }) {
         <>
             {location ? (
                 <View style={styles.container}>
-                    <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flexDirection: 'row', backgroundColor: 'white' }}>
                         <MapView
-                            ref={(ref)=>this.mapView=ref}
+                            ref={(ref)=>{
+                                this.mapView=ref
+                            }}
                             style={styles.mapDesign}
                             provider={PROVIDER_GOOGLE}
                             initialRegion={{
@@ -189,7 +201,10 @@ function CurrentLocation({ navigation }) {
                             {drawMarkers()}
                         </MapView>
                     </View>
-                    <View style={{ flexDirection: 'row' }}>
+                    <View style={styles.title}>
+                        <Text style={styles.title_font}>현재 내 위치 주변의 센터</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', backgroundColor: 'white' }}>
                         <ScrollView>{listCenters()}</ScrollView>
                     </View>
                 </View>
@@ -212,14 +227,56 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: 'white'
     },
     mapDesign: {
         height: 400,
         flex: 1,
     },
+
     listDesign: {
         flex: 1,
-    }
+    },
+
+    title: {
+        marginTop: 20,
+        marginBottom: 0,
+        backgroundColor: 'white'
+    },
+
+    title_font: {
+        fontFamily: 'NanumSquare', 
+        fontSize: 25, 
+        marginLeft : 5,
+        color: '#4e4e4e', 
+    },
+
+    talkBubble: {
+        backgroundColor: "transparent",
+    },
+    talkBubbleSquare: {
+        width: 150,
+        height: 40,
+        backgroundColor: "#FFDA36",
+        borderRadius: 10,
+    },
+    talkBubbleTriangle: {
+        width: 0,
+        height: 0,
+        marginTop: -5,
+        marginLeft: 60,
+        backgroundColor: "transparent",
+        borderTopColor: "#FFDA36",
+        borderTopWidth: 15,
+        borderRightColor: 'transparent',
+        borderRightWidth: 15,
+        borderLeftColor: 'transparent',
+        borderLeftWidth: 15,
+    },
+    textDesign: {
+        color: "#4E4E4E",
+        fontFamily: 'NanumSquare_0',
+    },
 });
 
 export default CurrentLocation;
