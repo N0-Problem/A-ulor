@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { format, startOfSecond } from "date-fns";
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import Slider from '@react-native-community/slider';
@@ -10,6 +10,7 @@ import auth from '@react-native-firebase/auth';
 
 const stars = [[1], [1, 1], [1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1, 1]]
 let tempValue;
+let tempDate;
 
 function AddReview({ navigation, route }) {
 
@@ -29,7 +30,11 @@ function AddReview({ navigation, route }) {
 
     const posts = [];
     const markedDates = posts.reduce((acc, current) => {
-        const formattedDate = format(new Date(current.date), 'yyyy-MM-dd');
+        const curr = new Date();
+        const utc = curr.getTime() + (curr.getTimezoneOffset() * 60 * 1000);
+        const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+        const today = new Date(utc + (KR_TIME_DIFF));
+        const formattedDate = format(new Date(today), 'yyyy-MM-dd');
         acc[formattedDate] = { marked: true };
         return acc;
     }, {});
@@ -44,6 +49,25 @@ function AddReview({ navigation, route }) {
             marked: markedDates[selectedDate]?.marked,
         }
     }
+
+    const [maximumDate, setMaximumDate] = useState("");
+
+    function calMaximumDate() {
+        const curr = new Date();
+        const utc = curr.getTime() + (curr.getTimezoneOffset() * 60 * 1000);
+        const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+        const today = new Date(utc + (KR_TIME_DIFF));
+
+        const year = today.getFullYear();
+        const month = ('0' + (today.getMonth() + 1)).slice(-2);
+        const day = ('0' + today.getDate()).slice(-2);
+        tempDate = year + '-' + month + '-' + day;
+        setMaximumDate(tempDate);
+    }
+
+    useEffect(() => {
+        calMaximumDate()
+    }, [])
 
     async function addReview() {
         let user_id;
@@ -108,11 +132,11 @@ function AddReview({ navigation, route }) {
                             onDayPress={(day) => {
                                 setSelectedDate(day.dateString);
                             }}
-                            monthFormat={'yyyy MM'}
+                            monthFormat={'yyyy-MM'}
                             onMonthChange={month => {
                                 console.log('month changed', month);
                             }}
-
+                            maxDate={maximumDate}
                             firstDay={1}
                             onPressArrowLeft={subtractMonth => subtractMonth()}
                             onPressArrowRight={addMonth => addMonth()}
