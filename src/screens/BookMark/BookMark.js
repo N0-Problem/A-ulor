@@ -28,9 +28,11 @@ export default function BookMark({ navigation, route }) {
     }
     
     const getBookmarks = async () => {
+        console.log(user_id);
         await firestore().collection('Users').doc(user_id).get()
         .then(async (querySnapshot) => {
-            if (!querySnapshot === 'undefined') {
+            if (querySnapshot.exists) {
+                console.log(querySnapshot);
                 centerIds = querySnapshot.data().bookmarks;
                 const centerRef = firestore().collection('Centers');
                 for (const center_id of centerIds) {
@@ -40,11 +42,12 @@ export default function BookMark({ navigation, route }) {
                             for (const doc of querySnapshot.docs) {
                                 if (doc.exists) {
                                     temp.push(doc.data());
+                                    console.log(doc.data());
                                 }
                             }
                         }
                     })
-                }r
+                }
             }
         }).then(() => {
             setBookmarks(temp);
@@ -129,6 +132,8 @@ export default function BookMark({ navigation, route }) {
         getBookmarks();
         setTimeout(() => {
             setLoading(false);
+            console.log(bookmarks);
+            console.log(temp);
         }, 800);
     }, [loading, isFocused])
 
