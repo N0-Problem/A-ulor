@@ -43,7 +43,7 @@ export default function Login({navigation,route}) {
                             address: '',
                             birthdate: '',
                             type: '',
-                            liked: {},
+                            bookmarks: []
                         };
                         userCollection.doc(user.uid).set(data);
                         navigation.navigate('Mypage', {screen:'UserInfo'});
