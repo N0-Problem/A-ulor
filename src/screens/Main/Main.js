@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { View, Text, StyleSheet, Image, Button, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, Button, TouchableOpacity, Alert, BackHandler } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native'; 
 import { createNativeStackNavigator } from '@react-navigation/native-stack'; 
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -14,6 +14,14 @@ function Main({navigation}) {
     const [loggedIn, setLoggedIn] = useState(false);
     const [userId, setUserId] = useState("");
 
+    // const handlePressBack = () => {
+    //     if(navigation?.canGoBack()) {
+    //         navigation.goBack()
+    //         return true;
+    //     }
+    //     return false;
+    // }
+
     useEffect(() => {
         auth().onAuthStateChanged(user => {
             console.log(user);
@@ -24,6 +32,10 @@ function Main({navigation}) {
                 setLoggedIn(false);
             }
         });
+        // BackHandler.addEventListener('hardwareBackPress', handlePressBack)
+        // return () => {
+        //     BackHandler.removeEventListener('hardwareBackPress',handlePressBack);
+        // }
     }, []);
     
     return (
@@ -41,10 +53,11 @@ function Main({navigation}) {
             </View>
             <View style={styles.boxes}>
                 <View style={styles.div1}>
-                    <TouchableOpacity 
-                        activeOpacity={0.7}
-                        onPress={() => navigation.navigate('BottomNav',{screen : 'CurrentLocation'})}>
-                        <View style={styles.box1}>
+                    <View>
+                        <TouchableOpacity 
+                            style={styles.box1}
+                            activeOpacity={0.7}
+                            onPress={() => navigation.navigate('BottomNav',{screen : 'CurrentLocation'})}>
                             <Ionicons name="location" color='#414141' size={80} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
@@ -54,12 +67,13 @@ function Main({navigation}) {
                             }}>
                                 내 주변 센터 찾기
                             </Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        activeOpacity={0.7}
-                        onPress={() => navigation.navigate('BottomNav', { screen :'StackNav3'})}>
-                        <View style={styles.box1}>
+                        </TouchableOpacity>
+                    </View>
+                    <View>
+                        <TouchableOpacity 
+                            style={styles.box1}
+                            activeOpacity={0.7}
+                            onPress={() => navigation.navigate('BottomNav', { screen :'StackNav3'})}>
                             <MaterialCommunityIcons name="table-search" color='#414141' size={80} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
@@ -69,15 +83,16 @@ function Main({navigation}) {
                             }}>
                                 원하는 센터 찾기
                             </Text>
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 <View style={styles.div2}>
                     {loggedIn ? (
-                    <TouchableOpacity 
-                        activeOpacity={0.7}
-                        onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark', params: {user_id: userId}})}>
-                        <View style={styles.box3}>
+                    <View>
+                        <TouchableOpacity 
+                            style={styles.box3}
+                            activeOpacity={0.7}
+                            onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark', params: {user_id: userId}})}>
                             <Ionicons name="ios-bookmarks" color='#414141' size={75} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
@@ -87,27 +102,28 @@ function Main({navigation}) {
                             }}>
                                 자주 사용하는 센터
                             </Text>
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                    </View>
                     ):(
-                    <TouchableOpacity 
-                        activeOpacity={0.7}
-                        onPress={() =>  
-                            Alert.alert(
-                            '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
-                            '',
-                            [{
-                                text: '확인',
-                                onPress: () => navigation.navigate('Login'),
-                            },
-                            {
-                                text: '취소',
-                                onPress: () => navigation.navigate('Main'),
-                                style: 'cancel',
-                            },
-                            ],
+                    <View>
+                        <TouchableOpacity 
+                            style={styles.box3}
+                            activeOpacity={0.7}
+                            onPress={() =>  
+                                Alert.alert(
+                                '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
+                                '',
+                                [{
+                                    text: '확인',
+                                    onPress: () => navigation.navigate('Login'),
+                                },
+                                {
+                                    text: '취소',
+                                    onPress: () => navigation.navigate('Main'),
+                                    style: 'cancel',
+                                },
+                                ],
                         )}>
-                        <View style={styles.box3}>
                             <Ionicons name="ios-bookmarks" color='#C79726' size={75} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
@@ -117,14 +133,15 @@ function Main({navigation}) {
                             }}>
                                 자주 사용하는 센터
                             </Text>
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                    </View>
                     )}
                     {loggedIn ? (
-                        <TouchableOpacity
-                        activeOpacity={0.7}
-                        onPress={() => navigation.navigate('Mypage')}>
-                        <View style={styles.box2}>
+                    <View>
+                        <TouchableOpacity 
+                            style={styles.box2}
+                            activeOpacity={0.7}
+                            onPress={() => navigation.navigate('Mypage')}>
                             <FontAwesome5 name="user-alt" color='#414141' size={77} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
@@ -134,27 +151,28 @@ function Main({navigation}) {
                             }}> 
                                 마이 페이지
                             </Text>
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                    </View>
                     ): (
-                        <TouchableOpacity
-                        activeOpacity={0.7}
-                        onPress={() =>  
-                            Alert.alert(
-                            '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
-                            '',
-                            [{
-                                text: '확인',
-                                onPress: () => navigation.navigate('Login'),
-                            },
-                            {
-                                text: '취소',
-                                onPress: () => navigation.navigate('Main'),
-                                style: 'cancel',
-                            },
-                            ],
+                        <View>
+                        <TouchableOpacity 
+                            style={styles.box2}
+                            activeOpacity={0.7}
+                            onPress={() =>  
+                                Alert.alert(
+                                '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
+                                '',
+                                [{
+                                    text: '확인',
+                                    onPress: () => navigation.navigate('Login'),
+                                },
+                                {
+                                    text: '취소',
+                                    onPress: () => navigation.navigate('Main'),
+                                    style: 'cancel',
+                                },
+                                ],
                         )}>
-                        <View style={styles.box2}>
                             <FontAwesome5 name="user-alt" color='#C79726' size={77} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
@@ -164,8 +182,8 @@ function Main({navigation}) {
                             }}>
                                 마이 페이지
                             </Text>
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                    </View>
                     )}
                 </View>
             </View>
@@ -210,6 +228,7 @@ const styles = StyleSheet.create({
     header_text3 : {
         fontFamily:'NanumSquare_0',
         paddingLeft: 20,
+        paddingVertical : 2,
         color: '#fff'
     },
     boxes :{
