@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, ScrollView, Pressable, TouchableOpacity, Image, Linking } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Pressable, TouchableOpacity, Image, Linking, Alert } from 'react-native';
 import { Button, Card, Title, Modal, Portal } from 'react-native-paper';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import firestore from '@react-native-firebase/firestore';
-import { Link } from '@react-navigation/native';
+import auth from '@react-native-firebase/auth';
 
 function CenterInfo({ navigation, route }) {
 
@@ -56,6 +56,29 @@ function CenterInfo({ navigation, route }) {
             .then(() => {
                 setReviewList(tempReviews)
             });
+    }
+
+    const moveToAddReview = () => {
+        auth().onAuthStateChanged(user => {
+            if (user) {
+                navigation.navigate('AddReview', { reviewedCenter: userCenter });
+            } else {
+                Alert.alert(
+                    '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
+                    '',
+                    [{
+                        text: '확인',
+                        onPress: () => navigation.navigate('Login'),
+                    },
+                    {
+                        text: '취소',
+                        onPress: () => navigation.navigate('Main'),
+                        style: 'cancel',
+                    },
+                    ],
+                )
+            }
+        })
     }
 
     useEffect(() => {
@@ -448,7 +471,7 @@ function CenterInfo({ navigation, route }) {
                                 <Button style={styles.buttonDesign} mode="contained" color="#FFDA36" onPress={showResv}>
                                     <Text style={{ fontFamily: 'NanumSquare' }}>예약 하기</Text>
                                 </Button>
-                                <Button style={styles.buttonDesign} mode="contained" color="#FFDA36" onPress={() => navigation.navigate('AddReview', { reviewedCenter: userCenter })}>
+                                <Button style={styles.buttonDesign} mode="contained" color="#FFDA36" onPress={() => moveToAddReview()}>
                                     <Text style={{ fontFamily: 'NanumSquare' }}>후기 작성</Text>
                                 </Button>
                             </View>
