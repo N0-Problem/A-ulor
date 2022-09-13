@@ -1,110 +1,131 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, ScrollView,TouchableOpacity, Pressable, ActivityIndicator } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
+import { View, Text, StyleSheet, ScrollView,TouchableOpacity, Pressable, ActivityIndicator,BackHandler } from 'react-native';
 import { Button, List, Modal, Portal} from 'react-native-paper';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
 export default function MyReview({ navigation }) {
-    const [userId, setUserId] = useState("");
-    const [userName, setUserName] = useState("");
+    // const [userId, setUserId] = useState("");
+    // const [userName, setUserName] = useState("");
     const [myReviews, setReviews] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
-    const reviewCollection = firestore().collection('Review');
+    const [currentData, setcurData] = useState({});
+    const isFocused = useIsFocused();
     const stars = ["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"];
 
-    // let tempReviews = [];
-    let tempReviews = [{center_name:"전남 지체장애인협회 담양군지회", feedback:"1", posted_date: "2022-09-12", rate: 4, used_date: "2022-09-11", user_id:"XKkY2PL6qDfjfazxLwqF6qltMJz1"},
-                        {center_name:"밀양시 교통약자 콜택시", feedback:"2", posted_date: "2022-09-10", rate: 5, used_date: "2022-09-10", user_id:"XKkY2PL6qDfjfazxLwqF6qltMJz1"},
-                        {center_name:"밀양시 교통약자 콜택시", feedback:"3", posted_date: "2022-09-10", rate: 5, used_date: "2022-09-10", user_id:"XKkY2PL6qDfjfazxLwqF6qltMJz1"}];
+    // const handlePressBack = () => {
+    //     if(navigation?.canGoBack()) {
+    //         navigation.goBack()
+    //         return true;
+    //     }
+    //     return false;
+    // }
+    
+    let userId = '';
+    // auth().onAuthStateChanged(user => {
+    //     // setUserName(user.displayName);
+    //     // setUserId(user.uid);
+    //     userId = user.uid;
+    // });
+
+    let tempReviews = [];
+    // let tempReviews = [{center_name:"전남 지체장애인협회 담양군지회", feedback:"너무 친절하시고 좋아요!", posted_date: "2022-09-12", rate: 4, used_date: "2022-09-11", user_id:"XKkY2PL6qDfjfazxLwqF6qltMJz1", review_id :"0srs12c93v2"},
+    //                     {center_name:"밀양시 교통약자 콜택시", feedback:"2", posted_date: "2022-09-10", rate: 5, used_date: "2022-09-10", user_id:"XKkY2PL6qDfjfazxLwqF6qltMJz1", review_id :"0srs12c93v2"}];
 
     useEffect(() => {
-        auth().onAuthStateChanged(user => {
-            setUserName(user.displayName);
-            setUserId(user.uid);
-            console.log(user.uid);
-        });
         getMyReviews();
-        setReviews(tempReviews);
-    }, []);
+        // BackHandler.addEventListener('hardwareBackPress', handlePressBack)
+        // return () => {
+        //     BackHandler.removeEventListener('hardwareBackPress', handlePressBack)
+        //     console.log('back');
+        // }
+    }, [isFocused]);
 
     const getMyReviews = async () => {
-        // const reviews = await reviewCollection.where('user_id', '==', userId);
-        // reviews.get().then((querySnapshot) => {
-        //     if (!querySnapshot.empty) {
-        //         for (const doc of querySnapshot.docs) {
-        //             if (doc.exists) {
-        //                 tempReviews.push(doc.data());
-        //                 //console.log(doc.data().feedback);
-        //             }
-        //         }
-        //     }
-        // }).then(() => {
-        //     setLoading(false);
-        //     setReviews(tempReviews);
-        // });
+        auth().onAuthStateChanged(async(user) => {
+            if (user) {
+                await firestore().collection('Review').where('user_id', '==', user.uid).get()
+                .then((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        for (const doc of querySnapshot.docs) {
+                            if (doc.exists) {
+                                tempReviews.push(doc.data());
+                                //console.log(doc.data().feedback);
+                            }
+                        }
+                    }
+                }).then(() => {
+                    setReviews(tempReviews);
+                    //console.log(myReviews);
+                });
+            }
+        });
     }
-
-    // if (loading) {
-    //     return (
-    //         <View
-    //             style={{
-    //             flex: 1,
-    //             alignItems: 'center',
-    //             justifyContent: 'center',
-    //             }}>
-    //             <ActivityIndicator size="large" color="#85DEDC" />
-    //         </View>
-    //     )
-    // }
+    
+    const DeleteReview = async (review_id) => {
+        try {
+            await firestore().collection('Review').doc(review_id).delete()
+            .then(() => {
+                getMyReviews();
+            })
+            //console.log('Delete Complete!', rows);
+        } catch (error) {
+            console.log(error.message);
+        }
+        setModalVisible(false)
+    };
 
     function listReviews() {
         const showModal = () => setModalVisible(true);
-        const hideModal = () => setModalVisible(false);  
-        let currentData = {};
-        const setModaldata = (review) => {
-            currentData = {
-                feedback: review.feedback,
+        const hideModal = () => setModalVisible(false);
+        
+        function setModaldata(review){
+            let tmp = {
                 centerName : review.center_name,
+                feedback: review.feedback,
                 posted_date: review.posted_date,
-                rate: review.rate,
                 used_date: review.used_date,
+                rate: review.rate,
+                review_id : review.review_id,
             };
             setModalVisible(true);
-            console.log(currentData.feedback);
+            setcurData(tmp);
         }
-        
+
         return (
             myReviews.map((review, idx) => (
-                <List.Item title={() => (
+                <List.Item key={idx} title={() => (
                     <View>
-                        <Portal style={{ justifyContent: 'center', alignItems: 'center' }}>
+                        <Portal style={{ justifyContent: 'center', alignItems: 'center'}}>
                             <Modal visible={modalVisible} onDismiss={hideModal} contentContainerStyle={styles.modalDesign}>
-                                <Text style={{ fontFamily: 'NanumSquare_0' , color : ''}}>
-                                    {currentData.feedback}
+                                <Text style={styles.modalCentername}>
+                                    {currentData.centerName}
                                 </Text>
+                                <Text style={styles.modalstar}>평점 : {stars[currentData.rate-1]}</Text>
+                                <Text style={styles.modalUsedDate}>이용 일자 : {currentData.used_date}</Text>
+                                <Text style={styles.modalPostDate}>작성 일자 : {currentData.posted_date}</Text>
+                                <Text style={styles.modalfeedback}>{currentData.feedback}</Text>
                                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                    <Text style={{ marginTop: 10 }}>
+                                    <Text>
                                         <Button
                                             mode="text"
-                                            color="#FFB236"
-                                        >
+                                            color="#666"
+                                            onPress={() => DeleteReview(currentData.review_id)}>
                                             <Text style={{ fontFamily: 'NanumSquare_0' }}>
-                                                예
+                                                삭제
                                             </Text>
                                         </Button>
                                         <Button
                                             mode="text"
-                                            color="#FFB236"
+                                            color="#666"
                                             onPress={() => setModalVisible(false)}>
                                             <Text style={{ fontFamily: 'NanumSquare_0' }}>
-                                                아니오
+                                                닫기
                                             </Text>
-
                                         </Button>
                                     </Text>
                                 </View>
-
                             </Modal>
                         </Portal>
 
@@ -241,21 +262,54 @@ const styles = StyleSheet.create({
         justifyContent : 'space-between',
         marginBottom : 10
     },
-
-
-
-
-
-
-
+    //modal
     modalDesign: {
-        backgroundColor: '#FF000000',
-        padding: 20,
-        alignItems: 'center',
+        backgroundColor: "white",
+        marginHorizontal: 45,
+        paddingTop : 20,
+        paddingBottom : 10,
+        paddingHorizontal : 17,
         justifyContent: 'center',
-        paddingTop: 50,
-        paddingBottom: 50
+        borderRadius : 13,
     },
+    modalCentername : {
+        fontFamily : 'NanumSquare',
+        fontSize : 20,
+        color : '#555'
+    },
+    modalstar : {
+        fontFamily : 'NanumSquare_0',
+        fontSize : 15,
+        marginTop : 20,
+        marginBottom : 3,
+        textAlign : 'right',
+        color : '#666'
+    },
+    modalUsedDate : {
+        fontFamily : 'NanumSquare_0',
+        fontSize : 15,
+        marginVertical : 3,
+        textAlign : 'right',
+        color : '#666'
+    },
+    modalPostDate : {
+        fontFamily : 'NanumSquare_0',
+        fontSize : 15,
+        marginVertical : 3,
+        textAlign : 'right',
+        color : '#666'
+    },
+    modalfeedback : {
+        fontFamily : 'NanumSquare_0',
+        backgroundColor : '#f0f0f0',
+        borderRadius : 7,
+        paddingVertical : 10,
+        paddingHorizontal : 7,
+        marginVertical : 15,
+        color : '#555'
+    },
+
+
 
     imageDesign: {
         width: 50,
@@ -296,49 +350,5 @@ const styles = StyleSheet.create({
         paddingBottom: 50,
         marginRight: 30,
         marginLeft: 30
-    },
-
-
-
-    centeredView: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 22
-    },
-    modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-        width: 0,
-        height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
-    },
-    button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2
-    },
-    buttonOpen: {
-    backgroundColor: "#F194FF",
-    },
-    buttonClose: {
-    backgroundColor: "#2196F3",
-    },
-    textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
-    },
-    modalText: {
-    marginBottom: 15,
-    textAlign: "center"
     },
 });
