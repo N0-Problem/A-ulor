@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, Alert} from 'react-native';
+import {Text, View, Alert, BackHandler} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Button} from 'react-native-paper';
@@ -19,15 +19,27 @@ function BottomNav({navigation}) {
   const Tab = createBottomTabNavigator();
   const [loggedIn, setLoggedIn] = useState(false);
 
+  const handlePressBack = () => {
+    if(navigation?.canGoBack()) {
+        navigation.goBack()
+        return true;
+    }
+    return false;
+}
+
   useEffect(() => {
-      auth().onAuthStateChanged(user => {
-          if (user) {
-          setLoggedIn(true);
-          } else {
-          setLoggedIn(false);
-          }
-      });
-    }, []);
+    auth().onAuthStateChanged(user => {
+        if (user) {
+        setLoggedIn(true);
+        } else {
+        setLoggedIn(false);
+        }
+    });
+    BackHandler.addEventListener('hardwareBackPress', handlePressBack)
+    return () => {
+        BackHandler.removeEventListener('hardwareBackPress',handlePressBack)
+    }
+}, [handlePressBack]);
 
   return (
     <Tab.Navigator
