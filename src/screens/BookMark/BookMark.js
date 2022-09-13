@@ -10,6 +10,7 @@ export default function BookMark({ navigation, route }) {
     const params = route.params;
     let user_id = '';
     const [bookmarks, setBookmarks] = useState([]);
+    const [loading, setLoading] = useState(true);
     const isFocused = useIsFocused();
 
 
@@ -53,11 +54,13 @@ export default function BookMark({ navigation, route }) {
         })
     }
 
-    const removeBookmark = (centerId) => {
+    const removeBookmark = async (centerId) => {
         const FieldValue = firebase.firestore.FieldValue;
         const docRef = firestore().collection('Users').doc(user_id);
-        docRef.update({bookmarks: FieldValue.arrayRemove(centerId)});
-        getBookmarks();
+        await docRef.update({bookmarks: FieldValue.arrayRemove(centerId)})
+        .then(() => {
+            getBookmarks();
+        });
     }
 
     /// accordion 관련 코드
@@ -129,20 +132,23 @@ export default function BookMark({ navigation, route }) {
 
     useEffect(() => {
         getBookmarks();
+        setTimeout(() => {
+            setLoading(false);
+        }, 800);
     }, [isFocused])
 
-    // if (loading) {
-    //     return (
-    //         <View
-    //             style={{
-    //             flex: 1,
-    //             alignItems: 'center',
-    //             justifyContent: 'center',
-    //             }}>
-    //             <ActivityIndicator size="large" color="#85DEDC" />
-    //         </View>
-    //     )
-    // }
+    if (loading) {
+        return (
+            <View
+                style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                }}>
+                <ActivityIndicator size="large" color="#85DEDC" />
+            </View>
+        )
+    }
 
     return (
         <View style={styles.container}>
