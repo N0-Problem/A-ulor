@@ -10,7 +10,6 @@ export default function BookMark({ navigation, route }) {
     const params = route.params;
     let user_id = '';
     const [bookmarks, setBookmarks] = useState([]);
-    const [loading, setLoading] = useState(true);
     const isFocused = useIsFocused();
 
 
@@ -28,12 +27,12 @@ export default function BookMark({ navigation, route }) {
     }
     
     const getBookmarks = async () => {
-        console.log(user_id);
+        console.log('getBookmarks');
         await firestore().collection('Users').doc(user_id).get()
-        .then(async (querySnapshot) => {
-            if (querySnapshot.exists) {
-                console.log(querySnapshot);
-                centerIds = querySnapshot.data().bookmarks;
+        .then(async (doc) => {
+            if (doc.exists) {
+                // console.log(querySnapshot);
+                centerIds = doc.data().bookmarks;
                 const centerRef = firestore().collection('Centers');
                 for (const center_id of centerIds) {
                     await centerRef.where('id', '==', center_id).get()
@@ -42,7 +41,7 @@ export default function BookMark({ navigation, route }) {
                             for (const doc of querySnapshot.docs) {
                                 if (doc.exists) {
                                     temp.push(doc.data());
-                                    console.log(doc.data());
+                                    // console.log(doc.data());
                                 }
                             }
                         }
@@ -58,7 +57,7 @@ export default function BookMark({ navigation, route }) {
         const FieldValue = firebase.firestore.FieldValue;
         const docRef = firestore().collection('Users').doc(user_id);
         docRef.update({bookmarks: FieldValue.arrayRemove(centerId)});
-        setLoading(true);
+        getBookmarks();
     }
 
     /// accordion 관련 코드
@@ -130,30 +129,25 @@ export default function BookMark({ navigation, route }) {
 
     useEffect(() => {
         getBookmarks();
-        setTimeout(() => {
-            setLoading(false);
-            console.log(bookmarks);
-            console.log(temp);
-        }, 800);
-    }, [loading, isFocused])
+    }, [isFocused])
 
-    if (loading) {
-        return (
-            <View
-                style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                }}>
-                <ActivityIndicator size="large" color="#85DEDC" />
-            </View>
-        )
-    }
+    // if (loading) {
+    //     return (
+    //         <View
+    //             style={{
+    //             flex: 1,
+    //             alignItems: 'center',
+    //             justifyContent: 'center',
+    //             }}>
+    //             <ActivityIndicator size="large" color="#85DEDC" />
+    //         </View>
+    //     )
+    // }
 
     return (
         <View style={styles.container}>
             <View style={styles.title}>
-                <Text style={styles.title_font}>즐겨찾기한 센터</Text>
+                <Text style={styles.title_font}>자주 사용하는 센터</Text>
             </View>
             {                
                 (bookmarks.length > 0) ? (
