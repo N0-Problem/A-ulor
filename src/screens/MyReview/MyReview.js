@@ -222,6 +222,7 @@ const styles = StyleSheet.create({
     title: {
         height : 40,
         marginVertical: 17,
+        marginTop: 20,
         marginHorizontal : 3,
         borderBottomColor : '#d2d2d2',
         borderBottomWidth : 2

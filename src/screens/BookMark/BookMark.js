@@ -188,16 +188,16 @@ const styles = StyleSheet.create({
         height : 40,
         marginVertical: 17,
         marginHorizontal : 3,
-        marginTop: 40,
+        marginTop: 20,
         borderBottomColor : '#d2d2d2',
         borderBottomWidth : 2
     },
 
     title_font: {
         fontFamily: 'NanumSquare_0', 
-        fontSize: 30, 
+        fontSize: 20, 
         marginLeft : 15,
-        color: '#4e4e4e', 
+        color: '#4e4e4e',
     },
 
     listDesign: {

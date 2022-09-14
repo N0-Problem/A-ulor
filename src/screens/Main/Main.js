@@ -46,8 +46,8 @@ function Main({navigation}) {
                     <View>
                         <Text style={styles.header_text}>아울러</Text>
                         <Text style={styles.header_text2}>{'전국 교통약자 이동지원센터 정보 통합 앱'}</Text>
-                        <Text style={styles.header_text3}>{'인간으로서의 존엄과 가치 및 행복을'}</Text>
-                        <Text style={styles.header_text3}>{'추구할 권리를 보장받기 위해 !'}</Text>
+                        <Text style={styles.header_text3}>{'모두가 자유롭게 이동할 수 있는'}</Text>
+                        <Text style={styles.header_text3}>{'보이지 않는 장애물까지 사라진 세상을 위해'}</Text>
                     </View>
                 </View>
             </View>
