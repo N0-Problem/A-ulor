@@ -5,7 +5,7 @@ import { Button, List, Modal, Portal} from 'react-native-paper';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
-export default function MyReview({ navigation }) {
+export default function MyReview({ navigation, route }) {
     // const [userId, setUserId] = useState("");
     // const [userName, setUserName] = useState("");
     const [myReviews, setReviews] = useState([]);
@@ -22,12 +22,19 @@ export default function MyReview({ navigation }) {
     //     return false;
     // }
     
+    const params = route.params;
     let userId = '';
-    // auth().onAuthStateChanged(user => {
-    //     // setUserName(user.displayName);
-    //     // setUserId(user.uid);
-    //     userId = user.uid;
-    // });
+
+    if (params) {
+        userId = params.user_id;
+    } else {
+        auth().onAuthStateChanged(user => {
+            if (user) {
+                userId = user.uid;
+            }
+        })
+    }
+    
 
     let tempReviews = [];
     // let tempReviews = [{center_name:"전남 지체장애인협회 담양군지회", feedback:"너무 친절하시고 좋아요!", posted_date: "2022-09-12", rate: 4, used_date: "2022-09-11", user_id:"XKkY2PL6qDfjfazxLwqF6qltMJz1", review_id :"0srs12c93v2"},
@@ -43,24 +50,22 @@ export default function MyReview({ navigation }) {
     }, [isFocused]);
 
     const getMyReviews = async () => {
-        auth().onAuthStateChanged(async(user) => {
-            if (user) {
-                await firestore().collection('Review').where('user_id', '==', user.uid).get()
-                .then((querySnapshot) => {
-                    if (!querySnapshot.empty) {
-                        for (const doc of querySnapshot.docs) {
-                            if (doc.exists) {
-                                tempReviews.push(doc.data());
-                                //console.log(doc.data().feedback);
-                            }
+        if (userId) {
+            await firestore().collection('Review').where('user_id', '==', userId).get()
+            .then((querySnapshot) => {
+                if (!querySnapshot.empty) {
+                    for (const doc of querySnapshot.docs) {
+                        if (doc.exists) {
+                            tempReviews.push(doc.data());
+                            //console.log(doc.data().feedback);
                         }
                     }
-                }).then(() => {
-                    setReviews(tempReviews);
-                    //console.log(myReviews);
-                });
-            }
-        });
+                }
+            }).then(() => {
+                setReviews(tempReviews);
+                //console.log(myReviews);
+            });
+        }
     }
     
     const DeleteReview = async (review_id) => {

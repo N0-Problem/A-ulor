@@ -10,16 +10,18 @@ export default function Mypage({navigation}) {
     const [userName, setUserName] = useState("");
     const [userId, setUserId] = useState("");
 
+    auth().onAuthStateChanged(user => {
+        if (user) {
+            setLoggedIn(true);
+            setUserName(user.displayName);
+            setUserId(user.uid);
+        } else {
+            setLoggedIn(false);
+        }
+    })
+
     useEffect(() => {
-        auth().onAuthStateChanged(user => {
-            if (user) {
-                setLoggedIn(true);
-                setUserName(user.displayName);
-                setUserId(user.uid);
-            } else {
-                setLoggedIn(false);
-            }
-        });
+
     }, []);
 
     return (
@@ -62,7 +64,7 @@ export default function Mypage({navigation}) {
                     <Text style={styles.list_disable} disabled={true}>자주 사용하는 센터</Text>
                 )}
                 {loggedIn ? (
-                    <Text style={styles.list} onPress={() => navigation.navigate('MyReview')}>내가 쓴 후기</Text>
+                    <Text style={styles.list} onPress={() => navigation.navigate('MyReview', {user_id: userId})}>내가 쓴 후기</Text>
                 ):(
                     <Text style={styles.list_disable} disabled={true}>내가 쓴 후기</Text>
                 )}

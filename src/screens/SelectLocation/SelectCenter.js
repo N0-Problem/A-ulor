@@ -59,42 +59,45 @@ function SelectCenter({ navigation, route }) {
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
 
+    let userinfo;
+    auth().onAuthStateChanged(user => {
+        if (user) {
+            userinfo = user;
+        }
+    });
+
     function addBookmark(item) {
-        let userinfo;
         let bookmarks = [];
-        auth().onAuthStateChanged(user => {
-            if (user) {
-                userinfo = user;
-                const docRef = firestore().collection('Users').doc(userinfo.uid)
-                docRef.get()
-                .then(doc => {
-                    if (doc.exists) {
-                        bookmarks = doc.data().bookmarks;
-                        if (bookmarks.includes(item.id)) {
-                            Alert.alert('이미 즐겨찾기 추가된 센터입니다!');
-                        } else {
-                            const FieldValue = firebase.firestore.FieldValue;
-                            docRef.update({bookmarks: FieldValue.arrayUnion(item.id)});
-                        }   
-                    }
-                });
-            } else {
-                Alert.alert(
-                    '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
-                    '',
-                    [{
-                        text: '확인',
-                        onPress: () => navigation.navigate('Login'),
-                    },
-                    {
-                        text: '취소',
-                        onPress: () => navigation.navigate('Main'),
-                        style: 'cancel',
-                    },
-                    ],
-                )
-            }
-        });
+        if (userinfo) {
+            const docRef = firestore().collection('Users').doc(userinfo.uid)
+            docRef.get()
+            .then(doc => {
+                if (doc.exists) {
+                    bookmarks = doc.data().bookmarks;
+                    if (bookmarks.includes(item.id)) {
+                        Alert.alert('이미 즐겨찾기 추가된 센터입니다!');
+                    } else {
+                        const FieldValue = firebase.firestore.FieldValue;
+                        docRef.update({bookmarks: FieldValue.arrayUnion(item.id)});
+                    }   
+                }
+            });
+        } else {
+            Alert.alert(
+                '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
+                '',
+                [{
+                    text: '확인',
+                    onPress: () => navigation.navigate('Login'),
+                },
+                {
+                    text: '취소',
+                    onPress: () => navigation.navigate('Main'),
+                    style: 'cancel',
+                },
+                ],
+            )
+        }
     }
 
     return (
