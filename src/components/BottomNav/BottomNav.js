@@ -84,7 +84,7 @@ function BottomNav({navigation}) {
         name="StackNav3"
         component={StackNav3}
         options={{
-          tabBarLabel: '원하는 센터',
+          tabBarLabel: '지역별 센터',
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="table-search" color={color} size={size} />
           ),

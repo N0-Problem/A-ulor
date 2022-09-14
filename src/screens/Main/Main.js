@@ -81,7 +81,7 @@ function Main({navigation}) {
                                 color: '#414141',
                                 fontSize: 18
                             }}>
-                                원하는 센터 찾기
+                                지역별 센터 찾기
                             </Text>
                         </TouchableOpacity>
                     </View>
