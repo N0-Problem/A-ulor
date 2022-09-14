@@ -85,6 +85,8 @@ function CenterInfo({ navigation, route }) {
         getMyReviews();
         getOperatingRegion();
 
+        return () => setCenterId("");
+
     }, [reviewList], [regionList]);
 
     // 운행지역 Modal 창
@@ -106,11 +108,6 @@ function CenterInfo({ navigation, route }) {
     const [visibleFee, setVisibleFee] = useState(false);
     const showFee = () => setVisibleFee(true);
     const hideFee = () => setVisibleFee(false);
-
-    // 세부 사항 Modal 창
-    const [visibleDetails, setVisibleDetails] = useState(false);
-    const showDetails = () => setVisibleDetails(true);
-    const hideDetails = () => setVisibleDetails(false);
 
     // 예약 하기 Modal 창
     const [visibleResv, setVisibleResv] = useState(false);

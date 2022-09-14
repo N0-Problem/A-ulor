@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { 
-    View, 
-    Text, 
+import {
+    View,
+    Text,
     StyleSheet,
-    Platform, 
-    PermissionsAndroid, 
-    ActivityIndicator } from 'react-native';
+    Platform,
+    PermissionsAndroid,
+    ActivityIndicator
+} from 'react-native';
 import { Button, List, Title } from 'react-native-paper';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
@@ -60,7 +61,7 @@ firestore().collection('Centers').get()
         centers = querySnapshot.docs.map(doc => doc.data());
     });
 
-    
+
 function CurrentLocation({ navigation }) {
     const [location, setLocation] = useState();
 
@@ -105,8 +106,8 @@ function CurrentLocation({ navigation }) {
             >
                 <View style={styles.talkBubble}>
                     <View style={styles.talkBubbleSquare}>
-                        <Text style={{fontFamily: 'NanumSquare_0', textAlign: 'center', color: 'gray', fontSize: 14, marginTop: 5}}>{center.name}</Text>
-                        <Text style={{fontFamily: 'NanumSquare_0', textAlign: 'center', color: '#4E4E4E', fontSize: 16, margin: 2}}>눌러서 센터 정보 보기</Text>
+                        <Text style={{ fontFamily: 'NanumSquare_0', textAlign: 'center', color: 'gray', fontSize: 14, marginTop: 5 }}>{center.name}</Text>
+                        <Text style={{ fontFamily: 'NanumSquare_0', textAlign: 'center', color: '#4E4E4E', fontSize: 16, margin: 2 }}>눌러서 센터 정보 보기</Text>
                     </View>
                     <View style={styles.talkBubbleTriangle} />
                 </View>
@@ -115,7 +116,7 @@ function CurrentLocation({ navigation }) {
     }
 
     const showCenterInfo = (center) => {
-        navigation.navigate('StackNav3', {screen: 'CenterInfo', params: {selectedCenter: center}});
+        navigation.navigate('StackNav3', { screen: 'CenterInfo', params: { selectedCenter: center } });
         console.log(center);
     }
 
@@ -131,25 +132,25 @@ function CurrentLocation({ navigation }) {
 
     const listCenters = () => {
         return (
-            <View style={{ 
-                    marginTop: 10, 
-                }}>
+            <View style={{
+                marginTop: 10,
+            }}>
                 {nearest_n.map((center, id) => (
                     <List.Item
                         style={{
-                            borderBottomColor: '#999999', 
+                            borderBottomColor: '#999999',
                             borderBottomWidth: 0.5,
                             marginRight: 10,
-                            marginLeft: -5,        
+                            marginLeft: -5,
                         }}
                         key={id}
                         title={center.name}
                         description={
-                            <Text styles={{fontFamily: 'NanumSquare_0'}}>
+                            <Text styles={{ fontFamily: 'NanumSquare_0' }}>
                                 {center.address}
                             </Text>
                         }
-                    onPress={() => animateMap(center.latitude, center.longitude)}/>
+                        onPress={() => animateMap(center.latitude, center.longitude)} />
                 ))}
             </View>
         );
@@ -183,8 +184,8 @@ function CurrentLocation({ navigation }) {
                 <View style={styles.container}>
                     <View style={{ flexDirection: 'row', backgroundColor: 'white' }}>
                         <MapView
-                            ref={(ref)=>{
-                                this.mapView=ref
+                            ref={(ref) => {
+                                this.mapView = ref
                             }}
                             style={styles.mapDesign}
                             provider={PROVIDER_GOOGLE}
@@ -196,7 +197,7 @@ function CurrentLocation({ navigation }) {
                             }}
                             showsUserLocation={true}
                             showsMyLocationButton={true}
-                            >
+                        >
                             {getNearest(location.latitude, location.longitude)}
                             {drawMarkers()}
                         </MapView>
@@ -205,7 +206,9 @@ function CurrentLocation({ navigation }) {
                         <Text style={styles.title_font}>현재 내 위치 주변의 센터</Text>
                     </View>
                     <View style={{ flexDirection: 'row', backgroundColor: 'white' }}>
-                        <ScrollView>{listCenters()}</ScrollView>
+                        <ScrollView>
+                            {listCenters()}
+                        </ScrollView>
                     </View>
                 </View>
             ) : (
@@ -214,7 +217,7 @@ function CurrentLocation({ navigation }) {
                         flex: 1,
                         alignItems: 'center',
                         justifyContent: 'center',
-                      }}>
+                    }}>
                     <ActivityIndicator size="large" color="#85DEDC" />
                 </View>
             )}
@@ -245,10 +248,10 @@ const styles = StyleSheet.create({
     },
 
     title_font: {
-        fontFamily: 'NanumSquare', 
-        fontSize: 25, 
-        marginLeft : 5,
-        color: '#4e4e4e', 
+        fontFamily: 'NanumSquare',
+        fontSize: 20,
+        marginLeft: 5,
+        color: '#4e4e4e',
     },
 
     talkBubble: {

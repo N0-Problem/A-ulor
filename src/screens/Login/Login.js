@@ -46,7 +46,7 @@ export default function Login({navigation,route}) {
                             bookmarks: []
                         };
                         userCollection.doc(user.uid).set(userinfo);
-                        navigation.navigate('Mypage', {screen:'UserInfo'});
+                        navigation.navigate('Mypage', {screen:'UserInfo', params: {user_id: user.uid, user_name: user.displayName}});
                     }
                 });
                 return res;
