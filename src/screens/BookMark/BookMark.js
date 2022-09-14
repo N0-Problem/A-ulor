@@ -23,7 +23,9 @@ export default function BookMark({ navigation, route }) {
         user_id = params.user_id;
     } else {
         auth().onAuthStateChanged(user => {
-            user_id = user.uid;
+            if (user) {
+                user_id = user.uid;
+            }
         })
     }
     
