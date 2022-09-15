@@ -92,7 +92,7 @@ function SelectCenter({ navigation, route }) {
                 },
                 {
                     text: '취소',
-                    onPress: () => navigation.navigate('Main'),
+                    //onPress: () => navigation.navigate('Main'),
                     style: 'cancel',
                 },
                 ],
