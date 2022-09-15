@@ -134,9 +134,11 @@ export default function BookMark({ navigation, route }) {
 
     useEffect(() => {
         getBookmarks();
-        setTimeout(() => {
+        const timeout = setTimeout(() => {
             setLoading(false);
         }, 800);
+
+        return () => clearTimeout(timeout);
     }, [isFocused])
 
     if (loading) {

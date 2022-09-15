@@ -52,7 +52,6 @@ export const cityData = [
     { label: '진천군', value: '진천군' },
     { label: '보은군', value: '보은군' },
     { label: '제천시', value: '제천시' },
-    { label: '영동군', value: '영동군' },
     { label: '충주시', value: '충주시' },
     { label: '영동군', value: '영동군' },],
     [{ label: '서천군', value: '서천군' },

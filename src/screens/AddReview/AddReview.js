@@ -75,8 +75,10 @@ function AddReview({ navigation, route }) {
 
         // 현재 유저 정보 가져오기
         auth().onAuthStateChanged(user => {
-            user_id = user.uid;
-            user_name = user.displayName;
+            if (user) {
+                user_id = user.uid;
+                user_name = user.displayName;
+            }
         });
         // review_id 생성 및 중복 확인
         let review_id = Math.random().toString(36).substring(2, 16);

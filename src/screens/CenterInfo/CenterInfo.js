@@ -5,46 +5,56 @@ import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import { useIsFocused } from '@react-navigation/native';
 
 function CenterInfo({ navigation, route }) {
 
+    const userCenter = route.params.selectedCenter;
+
+    let centerId = userCenter.id;
+    let centerName = userCenter.name;
+    let parseCity = userCenter.address.split(' ');
+
     const stars = ["⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐"];
 
-    const [centerId, setCenterId] = useState("");
+    //const [centerId, setCenterId] = useState("");
 
     let tempReviews = [];
-
-    let tempRegions = [];
+    let tempRegions;
 
     const [reviewList, setReviewList] = useState([]);
+    const [regions, setRegions] = useState();
+    const isFocused = useIsFocused();
 
-    const [regionList, setRegionList] = useState([]);
-
-    const reviewCollection = firestore().collection('Review');
-
-    const operatingRegionCollection = firestore().collection('Operating_regions');
+    let loggedIn = false;
+    auth().onAuthStateChanged(user => {
+        if (user) {
+            loggedIn = true;
+        }
+    })
 
     const getOperatingRegion = async () => {
-        const regions = operatingRegionCollection.where('center_id', '==', centerId);
-        regions.get().then((querySnapshot) => {
+        await firestore().collection('Operating_regions').where('center_id', '==', centerId)
+        .get()
+        .then((querySnapshot) => {
             if (!querySnapshot.empty) {
                 for (const doc of querySnapshot.docs) {
                     if (doc.exists) {
-                        tempRegions.push(doc.data());
+                        tempRegions = doc.data();
+                        console.log(tempRegions);
                     }
                 }
             }
         })
-            .then(() => {
-                setRegionList(tempRegions);
-
-            });
+        .then(() => {
+            setRegions(tempRegions);
+        });
     }
 
     const getMyReviews = async () => {
-        setCenterId(userCenter.id);
-        const reviews = reviewCollection.where('center_id', '==', centerId);
-        reviews.get().then((querySnapshot) => {
+        await firestore().collection('Review').where('center_id', '==', centerId)
+        .get()
+        .then((querySnapshot) => {
             if (!querySnapshot.empty) {
                 for (const doc of querySnapshot.docs) {
                     if (doc.exists) {
@@ -53,41 +63,41 @@ function CenterInfo({ navigation, route }) {
                 }
             }
         })
-            .then(() => {
-                setReviewList(tempReviews)
-            });
+        .then(() => {
+            setReviewList(tempReviews)
+        });
     }
 
     const moveToAddReview = () => {
-        auth().onAuthStateChanged(user => {
-            if (user) {
-                navigation.navigate('AddReview', { reviewedCenter: userCenter });
-            } else {
-                Alert.alert(
-                    '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
-                    '',
-                    [{
-                        text: '확인',
-                        onPress: () => navigation.navigate('Login'),
-                    },
-                    {
-                        text: '취소',
-                        onPress: () => navigation.navigate('Main'),
-                        style: 'cancel',
-                    },
-                    ],
-                )
-            }
-        })
+        if (loggedIn) {
+            navigation.navigate('AddReview', { reviewedCenter: userCenter });
+        } else {
+            Alert.alert(
+                '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
+                '',
+                [{
+                    text: '확인',
+                    onPress: () => navigation.navigate('Login'),
+                },
+                {
+                    text: '취소',
+                    onPress: () => navigation.navigate('Main'),
+                    style: 'cancel',
+                },
+                ],
+            )
+        }
     }
 
     useEffect(() => {
         getMyReviews();
         getOperatingRegion();
 
-        return () => setCenterId("");
+        return () => {
 
-    }, [reviewList], [regionList]);
+        }
+
+    }, [isFocused]);
 
     // 운행지역 Modal 창
     const [visibleRegion, setVisibleRegion] = useState(false);
@@ -122,12 +132,6 @@ function CenterInfo({ navigation, route }) {
 
     // 자세히 && 간단히 Button
     const [extended, setExtended] = useState(true);
-
-    const userCenter = route.params.selectedCenter;
-
-    let centerName = userCenter.name;
-
-    let parseCity = userCenter.address.split(' ');
 
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -270,7 +274,7 @@ function CenterInfo({ navigation, route }) {
                                             <View style={{ flexDirection: 'row' }}>
                                                 <View style={{ flex: 1, flexDirection: 'column', marginLeft: 20, justifyContent: 'center', alignItems: 'center', borderRightWidth: 1, borderRightColor: 'black' }}>
                                                     <Text style={{ fontFamily: 'NanumSquare', color: '#FFC021', marginBottom: 20 }}>관내 지역</Text>
-                                                    {regionList[0].inner_regions.map((item, idx) => {
+                                                    {regions.inner_regions.map((item, idx) => {
                                                         return (
                                                             <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 10 }}>{item}</Text>
                                                         )
@@ -278,7 +282,7 @@ function CenterInfo({ navigation, route }) {
                                                 </View>
                                                 <View style={{ flex: 1, flexDirection: 'column', marginRight: 20, justifyContent: 'center', alignItems: 'center', borderLeftWidth: 1, borderLeftColor: 'black' }}>
                                                     <Text style={{ fontFamily: 'NanumSquare', color: '#FFC021', marginBottom: 20 }}>관외 지역</Text>
-                                                    {regionList[0].outer_regions.map((item, idx) => {
+                                                    {regions.outer_regions.map((item, idx) => {
                                                         return (
                                                             <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 10 }}>{item}</Text>
                                                         )

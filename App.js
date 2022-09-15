@@ -7,13 +7,16 @@
  */
 
 import React, { useEffect } from 'react';
-import { StyleSheet, PermissionsAndroid} from 'react-native';
+import { StyleSheet, PermissionsAndroid, LogBox} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import SplashScreen from 'react-native-splash-screen';
 import DrawerMenu from './src/components/DrawerMenu/DrawerMenu';
 import auth from '@react-native-firebase/auth';
+
+LogBox.ignoreLogs(['Warning: ...']);
+LogBox.ignoreAllLogs();
 
 const theme = {
   ...DefaultTheme,
