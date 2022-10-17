@@ -60,13 +60,6 @@ async function requestPermission() {
 
 let centers, nearest_n = [];
 
-// 서버에서 모든 센터 정보 조회
-firestore().collection('Centers').get()
-    .then(querySnapshot => {
-        centers = querySnapshot.docs.map(doc => doc.data());
-    });
-
-
 function CurrentLocation({ navigation }) {
     const [location, setLocation] = useState();
     const [loading, setLoading] = useState(true);
@@ -147,7 +140,12 @@ function CurrentLocation({ navigation }) {
         .then((responseJson) => {
             const geo_address = responseJson.results[0].formatted_address;
             console.log('address: ' + geo_address);
-            getNearest(location.latitude, location.longitude, geo_address);
+            // 서버에서 모든 센터 정보 조회
+            firestore().collection('Centers').get()
+            .then(querySnapshot => {
+                centers = querySnapshot.docs.map(doc => doc.data());
+                getNearest(location.latitude, location.longitude, geo_address);
+            });
         }).catch((err) => console.log("Cannot find current location : " + err));
     }
 
@@ -192,11 +190,19 @@ function CurrentLocation({ navigation }) {
                     }
                 }
             });
+
         // 내 위치 행정구역 센터를 찾았으면, 하나씩 뒤로 밀고 맨 앞에 추가
         for (var i = nearest_n.length-1; i > 0; i--) {
             nearest_n[i] = nearest_n[i-1];
         }
         nearest_n[0] = local_center;
+        for (var i = 0; i < nearest_n.length; i++) {
+            let city = nearest_n[i].address.split(' ')[0];
+            if (city.slice(-1) === '도') {
+                city = nearest_n[i].address.split(' ')[1];
+            }
+            nearest_n[i].name = city;
+        }
         setLoading(false);
     }
 
@@ -238,8 +244,8 @@ function CurrentLocation({ navigation }) {
                             <View key={idx} style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: width}}>
                                 <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', borderRadius: 15, elevation: 10, paddingTop: 40, paddingBottom: 40, paddingLeft: 30 ,paddingRight: 30 }}>
                                     <View style={{ justifyContent: 'center', alignItems: 'center', }}>
-                                        <Text style={{ fontFamily: 'NanumSquare', fontSize: 20, color: "#4E4E4E", marginBottom: 20 }}>
-                                            {item.name}
+                                        <Text style={{ fontFamily: 'NanumSquare', fontSize: 20, color: "#4E4E4E", marginBottom: 30 }}>
+                                            {item.name} 교통약자이동지원센터
                                         </Text>
                                         <TouchableOpacity onPress={() => Linking.openURL(`tel:${item.phone_number[0]}`)}>
                                             <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', padding: 20, borderRadius: 30, justifyContent: 'center', alignItems: 'center', width: 260, height: 260, elevation: 10, marginBottom: 10 }}>
