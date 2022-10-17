@@ -16,6 +16,8 @@ import { Button, List, Title } from 'react-native-paper';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import firestore from '@react-native-firebase/firestore';
+import { ScrollView } from 'react-native-gesture-handler';
+import { config } from '../../../apikey';
 import { Scope } from '@babel/traverse';
 
 // 얘는 메인이나 스플래시 뜰 때 넣어야 할 듯
@@ -70,12 +72,33 @@ function CurrentLocation({ navigation }) {
     const [location, setLocation] = useState();
     const { width } = Dimensions.get('window');
     // 현재 위치에서 가장 가까운 n개의 센터 찾기 (n = nearest_n의 길이)
-    function getNearest(current_latitude, current_longitude) {
-        nearest_n = [, , , ,];      // 가장 가까운 센터 n개 정보를 저장하는 배열, 현재는 4개
-        let dist_arr = [Number.MAX_VALUE, 0, 0, 0];    // 가장 가까운 센터 n개의 거리를 기록하는 배열
+    const getNearest = (current_latitude, current_longitude, geo_address) => {
+        nearest_n = [, , ,];      // 가장 가까운 센터 n개 정보를 저장하는 배열, 현재는 3개
+        let dist_arr = [Number.MAX_VALUE, 0, 0];    // 가장 가까운 센터 3개의 거리를 기록하는 배열
         let now_dist;
+        let local_center;
+
+        let address = geo_address.split(' ');
+        console.log(address);
+
         centers &&
             centers.forEach(now => {
+                // 내 주소에 해당하는 행정구역의 센터 (물리적 거리와 관계 X)
+                const city = now.address.split(' ');
+                if (address[1] === city[0]) {
+                    if (city.slice(-1) === '도') {
+                        if (address[2] === city[1]) {
+                            console.log(now.name + '/' + now.address);
+                            local_center = now;
+                            return;
+                        }
+                    } else {
+                        console.log(now.name + '/' + now.address)
+                        local_center = now;
+                        return;
+                    }
+                }
+
                 now_dist = Math.abs(now.latitude - current_latitude) +
                     Math.abs(now.longitude - current_longitude);
 
@@ -92,47 +115,52 @@ function CurrentLocation({ navigation }) {
                     }
                 }
             });
-        //console.log(nearest_n);
+        // 내 위치 행정구역 센터를 찾았으면, 맨 앞에 추가하고 나머지 하나씩 뒤로 밀기
+        for (var i = 0; i < nearest_n.length-1; i++) {
+            nearest_n[i+1] = nearest_n[i];
+        }
+        nearest_n[0] = local_center;
+        console.log(nearest_n);
     }
 
-    // 지도에 n개의 Marker 띄우기
-    const drawMarkers = () => {
-        return nearest_n.map(center => (
-            <Marker
-                key={center.id}
-                coordinate={{
-                    latitude: center.latitude,
-                    longitude: center.longitude,
-                }}
-                // title={center.name}
-                // description='빨간 핀을 누르면 센터 정보로 이동합니다.'
-                onPress={() => showCenterInfo(center)}
-            >
-                <View style={styles.talkBubble}>
-                    <View style={styles.talkBubbleSquare}>
-                        <Text style={{ fontFamily: 'NanumSquare_0', textAlign: 'center', color: 'gray', fontSize: 14, marginTop: 5 }}>{center.name}</Text>
-                        <Text style={{ fontFamily: 'NanumSquare_0', textAlign: 'center', color: '#4E4E4E', fontSize: 16, margin: 2 }}>눌러서 센터 정보 보기</Text>
-                    </View>
-                    <View style={styles.talkBubbleTriangle} />
-                </View>
-            </Marker>
-        ));
-    }
+    // // 지도에 n개의 Marker 띄우기
+    // const drawMarkers = () => {
+    //     return nearest_n.map(center => (
+    //         <Marker
+    //             key={center.id}
+    //             coordinate={{
+    //                 latitude: center.latitude,
+    //                 longitude: center.longitude,
+    //             }}
+    //             // title={center.name}
+    //             // description='빨간 핀을 누르면 센터 정보로 이동합니다.'
+    //             onPress={() => showCenterInfo(center)}
+    //         >
+    //             <View style={styles.talkBubble}>
+    //                 <View style={styles.talkBubbleSquare}>
+    //                     <Text style={{ fontFamily: 'NanumSquare_0', textAlign: 'center', color: 'gray', fontSize: 14, marginTop: 5 }}>{center.name}</Text>
+    //                     <Text style={{ fontFamily: 'NanumSquare_0', textAlign: 'center', color: '#4E4E4E', fontSize: 16, margin: 2 }}>눌러서 센터 정보 보기</Text>
+    //                 </View>
+    //                 <View style={styles.talkBubbleTriangle} />
+    //             </View>
+    //         </Marker>
+    //     ));
+    // }
 
-    const showCenterInfo = (center) => {
-        navigation.navigate('StackNav3', { screen: 'CenterInfo', params: { selectedCenter: center } });
-        console.log(center);
-    }
+    // const showCenterInfo = (center) => {
+    //     navigation.navigate('StackNav3', { screen: 'CenterInfo', params: { selectedCenter: center } });
+    //     console.log(center);
+    // }
 
-    const animateMap = (latitude, longitude) => {
-        let r = {
-            latitude: latitude,
-            longitude: longitude,
-            latitudeDelta: 0.005,
-            longitudeDelta: 0.005,
-        };
-        this.mapView.animateToRegion(r, 1000);
-    }
+    // const animateMap = (latitude, longitude) => {
+    //     let r = {
+    //         latitude: latitude,
+    //         longitude: longitude,
+    //         latitudeDelta: 0.005,
+    //         longitudeDelta: 0.005,
+    //     };
+    //     this.mapView.animateToRegion(r, 1000);
+    // }
 
     const listCenters = () => {
         return (
@@ -158,6 +186,20 @@ function CurrentLocation({ navigation }) {
                 ))}
             </View>
         );
+    }
+
+    const reverseGeocoding = (lat, log) => {
+        const google_map_api_key = config.apikey;
+
+        //google map API에 reverseGeocoding 요청 보내기
+        fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + lat + ',' + log
+        + '&key=' + google_map_api_key + '&language=ko')
+        .then((response) => response.json())
+        .then((responseJson) => {
+            const geo_address = responseJson.results[0].formatted_address;
+            console.log('address: ' + geo_address);
+            getNearest(location.latitude, location.longitude, geo_address);
+        }).catch((err) => console.log("Cannot find current location : " + err));
     }
 
     useEffect(() => {
@@ -186,7 +228,7 @@ function CurrentLocation({ navigation }) {
         <View style={{ flex: 1 }}>
             {location ? (
                 <ScrollView horizontal={true} pagingEnabled={true} showsHorizontalScrollIndicator={false} >
-                    {getNearest(location.latitude, location.longitude)}
+                    {reverseGeocoding(location.latitude, location.longitude)}
                     {nearest_n && nearest_n.map((item, idx) => {
                         return (
                             <View key={idx} style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: width}}>
@@ -245,7 +287,6 @@ function CurrentLocation({ navigation }) {
 
                     })}
                 </ScrollView>
-
             ) : (
                 <View
                     style={{
