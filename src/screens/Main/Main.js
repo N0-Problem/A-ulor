@@ -65,7 +65,7 @@ function Main({navigation}) {
                                 color: '#414141',
                                 fontSize: 18
                             }}>
-                                내 주변 센터 찾기
+                                내 주변 센터 이용
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -81,7 +81,7 @@ function Main({navigation}) {
                                 color: '#414141',
                                 fontSize: 18
                             }}>
-                                지역별 센터 찾기
+                                원하는 센터 찾기
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -100,7 +100,7 @@ function Main({navigation}) {
                                 color: '#414141',
                                 fontSize: 18
                             }}>
-                                자주 사용하는 센터
+                                자주 이용하는 센터
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -131,7 +131,7 @@ function Main({navigation}) {
                                 color:'#C79726',
                                 fontSize: 18
                             }}>
-                                자주 사용하는 센터
+                                자주 이용하는 센터
                             </Text>
                         </TouchableOpacity>
                     </View>
