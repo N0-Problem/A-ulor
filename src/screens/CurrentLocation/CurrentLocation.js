@@ -1,11 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     View,
     Text,
     StyleSheet,
     Platform,
     PermissionsAndroid,
-    ActivityIndicator
+    TouchableOpacity,
+    Image,
+    ScrollView,
+    ActivityIndicator,
+    Linking,
+    Dimensions
 } from 'react-native';
 import { Button, List, Title } from 'react-native-paper';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
@@ -13,6 +18,7 @@ import Geolocation from 'react-native-geolocation-service';
 import firestore from '@react-native-firebase/firestore';
 import { ScrollView } from 'react-native-gesture-handler';
 import { config } from '../../../apikey';
+import { Scope } from '@babel/traverse';
 
 // 얘는 메인이나 스플래시 뜰 때 넣어야 할 듯
 async function requestPermission() {
@@ -64,7 +70,7 @@ firestore().collection('Centers').get()
 
 function CurrentLocation({ navigation }) {
     const [location, setLocation] = useState();
-
+    const { width } = Dimensions.get('window');
     // 현재 위치에서 가장 가까운 n개의 센터 찾기 (n = nearest_n의 길이)
     const getNearest = (current_latitude, current_longitude, geo_address) => {
         nearest_n = [, , ,];      // 가장 가까운 센터 n개 정보를 저장하는 배열, 현재는 3개
@@ -219,45 +225,68 @@ function CurrentLocation({ navigation }) {
     }, []);
 
     return (
-        <>
+        <View style={{ flex: 1 }}>
             {location ? (
-                <View style={styles.container}>
-                    <View style={{ flexDirection: 'row', backgroundColor: 'white' }}>
-                        <MapView
-                            ref={(ref) => {
-                                this.mapView = ref
-                            }}
-                            style={styles.mapDesign}
-                            provider={PROVIDER_GOOGLE}
-                            initialRegion={{
-                                latitude: location.latitude,
-                                longitude: location.longitude,
-                                latitudeDelta: 0.005,
-                                longitudeDelta: 0.005,
-                            }}
-                            showsUserLocation={true}
-                            showsMyLocationButton={true}
-                            onRegionChangeComplete={region => {
-                                setLocation({
-                                  latitude: region.latitude,
-                                  longitude: region.longitude,
-                                });
-                                // console.log(middle.latitude, middle.longitude);
-                                // console.log(region.latitude, region.longitude);
-                                reverseGeocoding(location.latitude, location.longitude)
-                            }}
-                        >
-                        </MapView>
-                    </View>
-                    <View style={styles.title}>
-                        <Text style={styles.title_font}>현재 내 위치 주변의 센터</Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', backgroundColor: 'white' }}>
-                        <ScrollView>
-                            {listCenters()}
-                        </ScrollView>
-                    </View>
-                </View>
+                <ScrollView horizontal={true} pagingEnabled={true} showsHorizontalScrollIndicator={false} >
+                    {reverseGeocoding(location.latitude, location.longitude)}
+                    {nearest_n && nearest_n.map((item, idx) => {
+                        return (
+                            <View key={idx} style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: width}}>
+                                <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', borderRadius: 15, elevation: 10, paddingTop: 40, paddingBottom: 40, paddingLeft: 30 ,paddingRight: 30 }}>
+                                    <View style={{ justifyContent: 'center', alignItems: 'center', }}>
+                                        <Text style={{ fontFamily: 'NanumSquare', fontSize: 20, color: "#4E4E4E", marginBottom: 20 }}>{item.name}</Text>
+                                        <TouchableOpacity onPress={() => Linking.openURL(`tel:${item.phone_number[0]}`)}>
+                                            <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', padding: 20, borderRadius: 30, justifyContent: 'center', alignItems: 'center', width: 260, height: 260, elevation: 10, marginBottom: 10 }}>
+                                                <Image style={styles.callImageDesign} source={require('../../assets/images/call.png')} />
+                                                <Text style={styles.callTextDesign}>전화로 이용</Text>
+                                                <Text style={styles.callTextDesign}>{item.phone_number[0]}</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                        {item.application != "" ? (
+                                            <TouchableOpacity onPress={() => Linking.openURL(`https://play.google.com/store/search?q=${item.application}&c=apps`)} style={{ marginRight: 5 }}>
+                                                <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', borderRadius: 30, justifyContent: 'center', alignItems: 'center', width: 130, height: 130, elevation: 10 }}>
+                                                    <Image style={styles.imageDesign} source={require('../../assets/images/app_store.png')} />
+                                                    <Text style={styles.buttonTextDesign} >앱으로</Text>
+                                                    <Text style={styles.buttonTextDesign}>이용</Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                        ) : (
+                                            <TouchableOpacity disabled="true" style={{ marginRight: 5 }}>
+                                                <View style={{ backgroundColor: "#FFDA36", borderRadius: 30, justifyContent: 'center', alignItems: 'center', width: 130, height: 130, elevation: 10 }}>
+                                                    <Image style={styles.imageDesign} source={require('../../assets/images/app_store_unable.png')} />
+                                                    <Text style={styles.unableButtonTextDesign} >앱을</Text>
+                                                    <Text style={styles.unableButtonTextDesign}>이용할 수 없어요</Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                        )}
+                                        {
+                                            item.website_address != "" ? (
+                                                <TouchableOpacity onPress={() => Linking.openURL(item.website_address)} style={{ marginLeft: 5 }}>
+                                                    <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', borderRadius: 30, justifyContent: 'center', alignItems: 'center', width: 130, height: 130, elevation: 10 }}>
+                                                        <Image style={styles.imageDesign} source={require('../../assets/images/internet.png')} />
+                                                        <Text style={styles.buttonTextDesign}>웹사이트로</Text>
+                                                        <Text style={styles.buttonTextDesign}>이용</Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            ) : (
+                                                <TouchableOpacity disabled="true" style={{ marginLeft: 5 }} activeOpacity={0.7}>
+                                                    <View style={{ backgroundColor: "#FFDA36", borderRadius: 30, justifyContent: 'center', alignItems: 'center', width: 130, height: 130, elevation: 10 }}>
+                                                        <Image style={styles.imageDesign} source={require('../../assets/images/internet_unable.png')} />
+                                                        <Text style={styles.unableButtonTextDesign} >웹사이트를</Text>
+                                                        <Text style={styles.unableButtonTextDesign}>이용할 수 없어요</Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            )
+                                        }
+                                    </View>
+                                </View>
+                            </View>
+                        )
+
+                    })}
+                </ScrollView>
             ) : (
                 <View
                     style={{
@@ -266,13 +295,25 @@ function CurrentLocation({ navigation }) {
                         justifyContent: 'center',
                     }}>
                     <ActivityIndicator size="large" color="#85DEDC" />
-                </View>
-            )}
-        </>
+                </View>)
+            }
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
+    text: {
+        color: '#fff',
+        fontSize: 30,
+        fontWeight: 'bold'
+    },
+    slide: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#9DD6EB'
+    },
+
     container: {
         flexDirection: 'column',
         justifyContent: 'center',
@@ -327,6 +368,38 @@ const styles = StyleSheet.create({
         color: "#4E4E4E",
         fontFamily: 'NanumSquare_0',
     },
+
+    callImageDesign: {
+        width: 80,
+        height: 80,
+        marginTop: 20,
+        marginBottom: 20
+    },
+
+    callTextDesign: {
+        fontWeight: 'bold',
+        color: 'black',
+        fontSize: 18,
+        marginBottom: 10
+    },
+
+    imageDesign: {
+        width: 50,
+        height: 50,
+        marginBottom: 12,
+    },
+
+    buttonTextDesign: {
+        fontWeight: 'bold',
+        color: 'black',
+        fontSize: 14
+    },
+
+    unableButtonTextDesign: {
+        fontWeight: 'bold',
+        color: '#C79726',
+        fontSize: 14
+    }
 });
 
 export default CurrentLocation;
