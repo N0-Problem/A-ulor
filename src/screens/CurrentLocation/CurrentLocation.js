@@ -16,7 +16,6 @@ import { Button, List, Title } from 'react-native-paper';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import firestore from '@react-native-firebase/firestore';
-import { ScrollView } from 'react-native-gesture-handler';
 import { config } from '../../../apikey';
 import { Scope } from '@babel/traverse';
 
@@ -61,67 +60,10 @@ async function requestPermission() {
 
 let centers, nearest_n = [];
 
-// 서버에서 모든 센터 정보 조회
-firestore().collection('Centers').get()
-    .then(querySnapshot => {
-        centers = querySnapshot.docs.map(doc => doc.data());
-    });
-
-
 function CurrentLocation({ navigation }) {
     const [location, setLocation] = useState();
+    const [loading, setLoading] = useState(true);
     const { width } = Dimensions.get('window');
-    // 현재 위치에서 가장 가까운 n개의 센터 찾기 (n = nearest_n의 길이)
-    const getNearest = (current_latitude, current_longitude, geo_address) => {
-        nearest_n = [, , ,];      // 가장 가까운 센터 n개 정보를 저장하는 배열, 현재는 3개
-        let dist_arr = [Number.MAX_VALUE, 0, 0];    // 가장 가까운 센터 3개의 거리를 기록하는 배열
-        let now_dist;
-        let local_center;
-
-        let address = geo_address.split(' ');
-        console.log(address);
-
-        centers &&
-            centers.forEach(now => {
-                // 내 주소에 해당하는 행정구역의 센터 (물리적 거리와 관계 X)
-                const city = now.address.split(' ');
-                if (address[1] === city[0]) {
-                    if (city.slice(-1) === '도') {
-                        if (address[2] === city[1]) {
-                            console.log(now.name + '/' + now.address);
-                            local_center = now;
-                            return;
-                        }
-                    } else {
-                        console.log(now.name + '/' + now.address)
-                        local_center = now;
-                        return;
-                    }
-                }
-
-                now_dist = Math.abs(now.latitude - current_latitude) +
-                    Math.abs(now.longitude - current_longitude);
-
-                // 현재 위치와 가장 가까운 센터 n개를 갱신해나가며 찾음
-                for (var i = 0; i < dist_arr.length; i++) {
-                    if (now_dist < dist_arr[i]) {
-                        for (var j = dist_arr.length - 1; j > i; j--) {
-                            dist_arr[j] = dist_arr[j - 1];
-                        }
-                        dist_arr[i] = now_dist;
-                        nearest_n.splice(i, 0, now);
-                        nearest_n.pop();
-                        break;
-                    }
-                }
-            });
-        // 내 위치 행정구역 센터를 찾았으면, 맨 앞에 추가하고 나머지 하나씩 뒤로 밀기
-        for (var i = 0; i < nearest_n.length-1; i++) {
-            nearest_n[i+1] = nearest_n[i];
-        }
-        nearest_n[0] = local_center;
-        console.log(nearest_n);
-    }
 
     // // 지도에 n개의 Marker 띄우기
     // const drawMarkers = () => {
@@ -162,31 +104,31 @@ function CurrentLocation({ navigation }) {
     //     this.mapView.animateToRegion(r, 1000);
     // }
 
-    const listCenters = () => {
-        return (
-            <View style={{
-                marginTop: 10,
-            }}>
-                {nearest_n.map((center, id) => (
-                    <List.Item
-                        style={{
-                            borderBottomColor: '#999999',
-                            borderBottomWidth: 0.5,
-                            marginRight: 10,
-                            marginLeft: -5,
-                        }}
-                        key={id}
-                        title={center.name}
-                        description={
-                            <Text styles={{ fontFamily: 'NanumSquare_0' }}>
-                                {center.address}
-                            </Text>
-                        }
-                        onPress={() => animateMap(center.latitude, center.longitude)} />
-                ))}
-            </View>
-        );
-    }
+    // const listCenters = () => {
+    //     return (
+    //         <View style={{
+    //             marginTop: 10,
+    //         }}>
+    //             {nearest_n.map((center, id) => (
+    //                 <List.Item
+    //                     style={{
+    //                         borderBottomColor: '#999999',
+    //                         borderBottomWidth: 0.5,
+    //                         marginRight: 10,
+    //                         marginLeft: -5,
+    //                     }}
+    //                     key={id}
+    //                     title={center.name}
+    //                     description={
+    //                         <Text styles={{ fontFamily: 'NanumSquare_0' }}>
+    //                             {center.address}
+    //                         </Text>
+    //                     }
+    //                     onPress={() => animateMap(center.latitude, center.longitude)} />
+    //             ))}
+    //         </View>
+    //     );
+    // }
 
     const reverseGeocoding = (lat, log) => {
         const google_map_api_key = config.apikey;
@@ -198,43 +140,113 @@ function CurrentLocation({ navigation }) {
         .then((responseJson) => {
             const geo_address = responseJson.results[0].formatted_address;
             console.log('address: ' + geo_address);
-            getNearest(location.latitude, location.longitude, geo_address);
+            // 서버에서 모든 센터 정보 조회
+            firestore().collection('Centers').get()
+            .then(querySnapshot => {
+                centers = querySnapshot.docs.map(doc => doc.data());
+                getNearest(location.latitude, location.longitude, geo_address);
+            });
         }).catch((err) => console.log("Cannot find current location : " + err));
+    }
+
+    // 현재 위치에서 가장 가까운 n개의 센터 찾기 (n = nearest_n의 길이)
+    const getNearest = (current_latitude, current_longitude, geo_address) => {
+        nearest_n = [, , ,];      // 가장 가까운 센터 n개 정보를 저장하는 배열, 현재는 3개
+        let dist_arr = [Number.MAX_VALUE, 0, 0];    // 가장 가까운 센터 3개의 거리를 기록하는 배열
+        let now_dist;
+        let local_center;
+        let address = geo_address.split(' ');
+
+        centers &&
+            centers.forEach(now => {
+                // 내 주소에 해당하는 행정구역의 센터 (물리적 거리와 관계 X)
+                const city = now.address.split(' ');
+                if (address[1] === city[0]) {
+                    if (city.slice(-1) === '도') {
+                        if (address[2] === city[1]) {
+                            console.log(now.name + '/' + now.address);
+                            local_center = now;
+                            return;
+                        }
+                    } else {
+                        local_center = now;
+                        return;
+                    }
+                }
+
+                now_dist = Math.abs(now.latitude - current_latitude) +
+                    Math.abs(now.longitude - current_longitude);
+
+                // 현재 위치와 가장 가까운 센터 n개를 갱신해나가며 찾음
+                for (var i = 0; i < dist_arr.length; i++) {
+                    if (now_dist < dist_arr[i]) {
+                        for (var j = dist_arr.length - 1; j > i; j--) {
+                            dist_arr[j] = dist_arr[j - 1];
+                        }
+                        dist_arr[i] = now_dist;
+                        nearest_n.splice(i, 0, now);
+                        nearest_n.pop();
+                        break;
+                    }
+                }
+            });
+
+        // 내 위치 행정구역 센터를 찾았으면, 하나씩 뒤로 밀고 맨 앞에 추가
+        for (var i = nearest_n.length-1; i > 0; i--) {
+            nearest_n[i] = nearest_n[i-1];
+        }
+        nearest_n[0] = local_center;
+        for (var i = 0; i < nearest_n.length; i++) {
+            let city = nearest_n[i].address.split(' ')[0];
+            if (city.slice(-1) === '도') {
+                city = nearest_n[i].address.split(' ')[1];
+            }
+            nearest_n[i].name = city;
+        }
+        setLoading(false);
     }
 
     useEffect(() => {
         // 위치 정보 권한 획득
-        requestPermission().then(result => {
-            console.log({ result });
-            if (result === 'granted') {
-                Geolocation.getCurrentPosition(
-                    pos => {
-                        setLocation(pos.coords);
-                    }, error => {
-                        console.log(error);
-                    },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 15000,
-                        maximumAge: 10000,
-                    },
-                );
-            }
-        });
+        if (!location) {
+            requestPermission().then(result => {
+                console.log({ result });
+                if (result === 'granted') {
+                    Geolocation.getCurrentPosition(
+                        pos => {
+                            setLocation(pos.coords);
+                        }, error => {
+                            console.log(error);
+                        },
+                        {
+                            enableHighAccuracy: true,
+                            timeout: 15000,
+                            maximumAge: 10000,
+                        },
+                    );
+                }
+            });
+        } else {
+            reverseGeocoding(location.latitude, location.longitude);
+        } 
         //batchWrite();
-    }, []);
+        return () => {
+            setLoading(true);
+        }
+    }, [location]);
 
     return (
         <View style={{ flex: 1 }}>
-            {location ? (
+            {!loading ? (
                 <ScrollView horizontal={true} pagingEnabled={true} showsHorizontalScrollIndicator={false} >
-                    {reverseGeocoding(location.latitude, location.longitude)}
                     {nearest_n && nearest_n.map((item, idx) => {
                         return (
                             <View key={idx} style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: width}}>
                                 <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', borderRadius: 15, elevation: 10, paddingTop: 40, paddingBottom: 40, paddingLeft: 30 ,paddingRight: 30 }}>
                                     <View style={{ justifyContent: 'center', alignItems: 'center', }}>
-                                        <Text style={{ fontFamily: 'NanumSquare', fontSize: 20, color: "#4E4E4E", marginBottom: 20 }}>{item.name}</Text>
+                                        <Text style={{ fontFamily: 'NanumSquare', fontSize: 20, color: "#4E4E4E", marginBottom: 30 }}>
+                                            {item.name} 교통약자이동지원센터
+                                        </Text>
                                         <TouchableOpacity onPress={() => Linking.openURL(`tel:${item.phone_number[0]}`)}>
                                             <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', padding: 20, borderRadius: 30, justifyContent: 'center', alignItems: 'center', width: 260, height: 260, elevation: 10, marginBottom: 10 }}>
                                                 <Image style={styles.callImageDesign} source={require('../../assets/images/call.png')} />
