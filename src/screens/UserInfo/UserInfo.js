@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator} from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import DatePicker from 'react-native-date-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import firestore from '@react-native-firebase/firestore';
+import { utils } from '@react-native-firebase/app';
+import storage from '@react-native-firebase/storage';
+import DocumentPicker from 'react-native-document-picker';
+//import RNFS from 'react-native-fs';
+
 
 export default function UserInfo({navigation, route}) {
 
@@ -28,6 +33,8 @@ export default function UserInfo({navigation, route}) {
     ]);
     const [getDate, setGetDate] = useState(false);
     const [loading, setLoading] = useState(true);
+
+    const [fileResponse, setFileResponse] = useState([]);
 
     let birthdate = '';
     let type = [];
@@ -73,6 +80,18 @@ export default function UserInfo({navigation, route}) {
         })
     }
 
+    const selectDocument = useCallback(async() => {
+        try {
+            const response = await DocumentPicker.pickMultiple({
+                presentationStyle: 'fullScreen',
+                copyTo: 'documentDirectory'
+            });
+            setFileResponse(response);
+        } catch (err) {
+            console.log('DocumentPicker: ', err);
+        }
+    }, []);
+
     useEffect(() => {
         getUserinfo();
 
@@ -109,6 +128,15 @@ export default function UserInfo({navigation, route}) {
         }
 
         firestore().collection('Users').doc(userId).set(userinfo);
+        
+        fileResponse.forEach(async (file) => {
+            let file_name = file.name;
+            let reference = storage().ref(`${userId}/${file_name}`);
+            let pathToFile = `${utils.FilePath.DOCUMENT_DIRECTORY}/${file_name}`;
+            console.log(file.fileCopyUri);
+            await reference.putFile(file.fileCopyUri);
+        })
+
         navigation.navigate('MyPage')
     }
 
@@ -204,6 +232,39 @@ export default function UserInfo({navigation, route}) {
                         onChangeText={text => setExtraInput(text)}
                     />):(<></>)}
                 </View>
+                <View style={styles.file_container}>
+                    <Text style={styles.text_title}>증빙 서류 등록</Text>
+                    <View style={{justifyContent: 'center', paddingTop: 5, paddingBottom: 5}}>
+                        {fileResponse.map((file, index) => (
+                            <Text
+                                key={index}
+                                style={{color: 'blue', fontSize: 18}}
+                            >
+                                {index+1}. {file?.name}
+                            </Text>
+                        ))}
+                    </View>
+                    <TouchableOpacity 
+                        style={{
+                            backgroundColor: '#f1f1f1',
+                            height : 50,
+                            marginRight : 10,
+                            marginTop : 3,
+                            paddingLeft: 9, 
+                            borderRadius : 7,
+                            justifyContent : 'center'
+                        }}
+                        onPress={() => selectDocument()}
+                    >
+                        <Text style={{
+                            color : '#aaaaaa',
+                            fontFamily : 'NanumSquare_0',
+                            fontSize : 20, 
+                        }}>
+                            파일 선택하기
+                        </Text>
+                    </TouchableOpacity>
+                </View>
                 <Button 
                     style={styles.button}
                     color={'#2d2d2d'}
@@ -281,6 +342,7 @@ const styles = StyleSheet.create({
         right : 3,
         marginTop : 4,
         width : '99%',
+        zIndex: 100
     },
     extra_input : {
         backgroundColor: '#f1f1f1',
@@ -300,5 +362,14 @@ const styles = StyleSheet.create({
         height : 40,
         bottom: 0,
         position: 'absolute',
-    }
+    },
+    file_container: {
+        marginTop: 10,
+        paddingBottom: 10,
+        justifyContent : 'center',
+        paddingLeft : 13,
+        backgroundColor : '#fff',
+        borderBottomColor : '#dcdcdc',
+        borderBottomWidth : 1,
+    },
 });
