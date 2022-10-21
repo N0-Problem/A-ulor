@@ -29,9 +29,14 @@ export default function Mypage({navigation}) {
             <View style={styles.userinfo}>
                 <View style={styles.textbox}>
                     {loggedIn ? (
-                        <Text style={styles.text1}>
-                            {userName}님, 안녕하세요!
-                        </Text>):(
+                        <View>
+                            <Text style={styles.text1}>
+                                안녕하세요!
+                            </Text>
+                            <Text style={styles.text2}>
+                                {userName}님
+                            </Text>
+                        </View>):(
                         <Text style={styles.text1}>
                             로그인이 필요합니다.
                         </Text>
@@ -40,14 +45,11 @@ export default function Mypage({navigation}) {
                         <TouchableOpacity
                             activeOpacity={0.7}
                             onPress={() => navigation.navigate('UserInfo', {user_id: userId, user_name: userName})}>
-                            <Text style={styles.text2}>
-                                개인 정보 수정 
-                            </Text>
                         </TouchableOpacity>):(
                         <TouchableOpacity
                             activeOpacity={0.7}
                             onPress={() => navigation.navigate('Login')}>
-                            <Text style={styles.text2}>
+                            <Text style={styles.text3}>
                                 로그인 하러 가기 
                             </Text>
                         </TouchableOpacity>
@@ -67,6 +69,16 @@ export default function Mypage({navigation}) {
                     <Text style={styles.list} onPress={() => navigation.navigate('MyReview', {user_id: userId})}>내가 쓴 후기</Text>
                 ):(
                     <Text style={styles.list_disable} disabled={true}>내가 쓴 후기</Text>
+                )}
+                {loggedIn ? (
+                    <Text style={styles.list} onPress={() => navigation.navigate('UserInfo', {user_id: userId, user_name: userName})}>개인 정보 수정</Text>
+                ):(
+                    <Text style={styles.list_disable} disabled={true}>개인 정보 수정</Text>
+                )}
+                {loggedIn ? (
+                    <Text style={styles.list} onPress={() => navigation.navigate('Mydocuments', {user_id: userId})}>증빙 서류 관리</Text>
+                ):(
+                    <Text style={styles.list_disable} disabled={true}>증빙 서류 관리</Text>
                 )}
             </View>
         </View>
@@ -88,13 +100,20 @@ const styles = StyleSheet.create({
         flex : 4,
     },
     text1 : {
-        paddingLeft : 20,
-        paddingTop : 20,
-        fontSize : 23,
+        paddingLeft : 25,
+        paddingTop : 10,
+        fontSize : 28,
         color : '#4e4e4e',
         fontFamily:'NanumSquare_0',
     },
     text2 : {
+        paddingLeft : 25,
+        paddingTop : 10,
+        fontSize : 40,
+        color : '#4e4e4e',
+        fontFamily:'NanumSquare_0',
+    },
+    text3 : {
         paddingLeft : 20,
         paddingTop : 10,
         fontSize : 15,
@@ -120,13 +139,12 @@ const styles = StyleSheet.create({
     list : {
         fontFamily:'NanumSquare_0',
         alignSelf : 'stretch',
-        height : 60,
-        padding : 15,
-        paddingTop : 20,
-        marginTop : 2,
+        paddingLeft : 15,
+        height : 70,
         marginHorizontal : 7,
+        textAlignVertical : 'center',
         color : '#444', 
-        fontSize : 18,
+        fontSize : 22,
         borderBottomWidth : 0.3, 
         borderBottomColor : '#757575',
     }, 
@@ -139,7 +157,7 @@ const styles = StyleSheet.create({
         marginTop : 2,
         marginHorizontal : 7,
         color : '#b1b1b1', 
-        fontSize : 18,
+        fontSize : 22,
         borderBottomWidth : 0.3, 
         borderBottomColor : '#757575',
     }

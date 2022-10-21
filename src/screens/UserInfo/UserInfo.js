@@ -1,12 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect} from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator} from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import DatePicker from 'react-native-date-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import firestore from '@react-native-firebase/firestore';
-import { utils } from '@react-native-firebase/app';
-import storage from '@react-native-firebase/storage';
-import DocumentPicker from 'react-native-document-picker';
 //import RNFS from 'react-native-fs';
 
 
@@ -33,8 +30,6 @@ export default function UserInfo({navigation, route}) {
     ]);
     const [getDate, setGetDate] = useState(false);
     const [loading, setLoading] = useState(true);
-
-    const [fileResponse, setFileResponse] = useState([]);
 
     let birthdate = '';
     let type = [];
@@ -80,17 +75,25 @@ export default function UserInfo({navigation, route}) {
         })
     }
 
-    const selectDocument = useCallback(async() => {
-        try {
-            const response = await DocumentPicker.pickMultiple({
-                presentationStyle: 'fullScreen',
-                copyTo: 'documentDirectory'
-            });
-            setFileResponse(response);
-        } catch (err) {
-            console.log('DocumentPicker: ', err);
+    function setUserinfo() {
+
+        let type = '';
+        if (dropvalue === '기타') {
+            type = '기타:'+extraInput;
+        } else {
+            type = dropvalue;
         }
-    }, []);
+
+        const userinfo = {
+            user_id: userId,
+            name: userName,
+            birthdate: date_to_string(date),
+            bookmarks: bookmarks,
+            type: type
+        }
+        firestore().collection('Users').doc(userId).set(userinfo);
+        navigation.navigate('MyPage')
+    }
 
     useEffect(() => {
         getUserinfo();
@@ -109,36 +112,6 @@ export default function UserInfo({navigation, route}) {
             setLoading(false);
         }, 800);
     }, []);
-
-    function setUserinfo() {
-
-        let type = '';
-        if (dropvalue === '기타') {
-            type = '기타:'+extraInput;
-        } else {
-            type = dropvalue;
-        }
-
-        const userinfo = {
-            user_id: userId,
-            name: userName,
-            birthdate: date_to_string(date),
-            bookmarks: bookmarks,
-            type: type
-        }
-
-        firestore().collection('Users').doc(userId).set(userinfo);
-        
-        fileResponse.forEach(async (file) => {
-            let file_name = file.name;
-            let reference = storage().ref(`${userId}/${file_name}`);
-            let pathToFile = `${utils.FilePath.DOCUMENT_DIRECTORY}/${file_name}`;
-            console.log(file.fileCopyUri);
-            await reference.putFile(file.fileCopyUri);
-        })
-
-        navigation.navigate('MyPage')
-    }
 
     if (loading) {
         return (
@@ -231,39 +204,6 @@ export default function UserInfo({navigation, route}) {
                         style={styles.extra_input}
                         onChangeText={text => setExtraInput(text)}
                     />):(<></>)}
-                </View>
-                <View style={styles.file_container}>
-                    <Text style={styles.text_title}>증빙 서류 등록</Text>
-                    <View style={{justifyContent: 'center', paddingTop: 5, paddingBottom: 5}}>
-                        {fileResponse.map((file, index) => (
-                            <Text
-                                key={index}
-                                style={{color: 'blue', fontSize: 18}}
-                            >
-                                {index+1}. {file?.name}
-                            </Text>
-                        ))}
-                    </View>
-                    <TouchableOpacity 
-                        style={{
-                            backgroundColor: '#f1f1f1',
-                            height : 50,
-                            marginRight : 10,
-                            marginTop : 3,
-                            paddingLeft: 9, 
-                            borderRadius : 7,
-                            justifyContent : 'center'
-                        }}
-                        onPress={() => selectDocument()}
-                    >
-                        <Text style={{
-                            color : '#aaaaaa',
-                            fontFamily : 'NanumSquare_0',
-                            fontSize : 20, 
-                        }}>
-                            파일 선택하기
-                        </Text>
-                    </TouchableOpacity>
                 </View>
                 <Button 
                     style={styles.button}
