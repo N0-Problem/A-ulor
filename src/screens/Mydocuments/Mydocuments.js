@@ -133,7 +133,7 @@ export default function Mydocuments({ navigation, route }) {
                 </View>
             <View>
                 <Button onPress={() => uploadDocuments()}>
-                    서류 등록하기
+                    서류 저장하기
                 </Button>
             </View>
         </View>
