@@ -11,7 +11,9 @@ export default function Mydocuments({ navigation, route }) {
     const userId = route.params.user_id;
 
     const [loading, setLoading] = useState(true);
-    const [fileResponse, setFileResponse] = useState([]);
+    const [fileList, setFileList] = useState([]);
+    const [newFileList, setNewFileList] = useState([]);
+    const [deletedFileList, setDeleteFileList] = useState([]);
 
     const selectDocuments = useCallback(async() => {
         try {
@@ -19,29 +21,50 @@ export default function Mydocuments({ navigation, route }) {
                 presentationStyle: 'fullScreen',
                 copyTo: 'documentDirectory'
             });
-            setFileResponse(response);
+            response.forEach((file) => {
+                setFileList(fileList => [...fileList, file]);
+                setNewFileList(newFileList => [...newFileList, file]);
+            })
+            console.log(fileList);
         } catch (err) {
             console.log('DocumentPicker: ', err);
         }
     }, []);
 
+    const deleteDocument = (current_file) => {
+        setFileList(fileList.filter(file => file.name !== current_file.name));  // 보여지는 파일 리스트에서 삭제
+
+        if (newFileList.includes(current_file)) {
+            setNewFileList(newFileList.filter(file => file.name !== current_file.name));    // 서버에 추가할 파일 리스트에서 삭제
+        } else {
+            setDeleteFileList([...deletedFileList, current_file]);  // 서버에서 삭제할 파일 리스트에 추가
+        }
+    }
+
     const getDocuments = async() => {
         try {
             const fileList = await storage().ref().child(`${userId}/`).listAll();
-            setFileResponse(fileList.items);
+            setFileList(fileList.items);
             setLoading(false);
         } catch (err) {
             console.log('getDocuments: ', err);
         }
     }
 
-    const uploadDocuments = () => {
-        fileResponse.forEach(async (file) => {
+    const saveDocuments = () => {
+        // 이번에 새로 추가된 파일 서버에 추가
+        newFileList.forEach(async (file) => {
             let file_name = file.name;
             let reference = storage().ref(`${userId}/${file_name}`);
-            console.log(file.fileCopyUri);
             await reference.putFile(file.fileCopyUri);
         })
+        // 서버에 있던 파일 중 이번에 삭제한 파일 삭제
+        deletedFileList.forEach(async (file) => {
+            let file_name = file.name;
+            let reference = storage().ref(`${userId}/${file_name}`);
+            await reference.delete();
+        })
+        navigation.navigate('MyPage');
     }
 
     const downloadToDevice = async (file) => {
@@ -81,34 +104,49 @@ export default function Mydocuments({ navigation, route }) {
                 <Text style={styles.title_font}>증빙 서류 관리</Text>
             </View>
             <View style={styles.file_container}>
-                <Text style={styles.text_title}>증빙 서류 등록</Text>
-                <View style={{justifyContent: 'center', paddingTop: 5, paddingBottom: 5}}>
-                    { fileResponse.length ? (
+                <View style={{justifyContent: 'center', paddingBottom: 5}}>
+                    { fileList.length ? (
                             <View>
-                            {fileResponse.map((file, index) => (
-                                <Text
-                                    key={index}
-                                    style={{
-                                        color: 'blue', 
-                                        fontSize: 25,
-                                        margin: 10,
-        
-                                    }}
-                                    numberOfLines={1}
-                                    ellipsizeMode='tail'
-                                    onPress={() => {downloadToDevice(file, index)}}
-                                >
-                                    {index+1}. {file.name}
-                                </Text>
+                            {fileList.map((file, index) => (
+                                <List.Item key={index} title={() => (
+                                    <View>
+                                        <Text
+                                            style={{
+                                                color: 'blue', 
+                                                fontSize: 25,
+                                                margin: 10,
+                
+                                            }}
+                                            numberOfLines={1}
+                                            ellipsizeMode='tail'
+                                            onPress={() => {downloadToDevice(file, index)}}
+                                        >
+                                            {file.name}
+                                        </Text>
+                                        <TouchableOpacity style={{
+                                            
+                                        }}
+                                        onPress={() => deleteDocument(file)}>
+                                            <Text style={{
+                                                color : 'black',
+                                                fontFamily : 'NanumSquare_0',
+                                                fontSize : 20, 
+                                                textAlign : 'center',
+                                            }}>
+                                                삭제하기
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>                                   
+                                )}/>
                             ))}
-                        </View>
+                            </View>
                         ) : (
                             <Text style={{
                                 color : 'black',
                                 fontFamily : 'NanumSquare_0',
                                 fontSize : 20, 
                                 textAlign : 'center',
-                                marginTop: 10
+                                marginTop: 25
                             }}>
                                 등록된 서류가 없습니다!
                             </Text>
@@ -132,7 +170,7 @@ export default function Mydocuments({ navigation, route }) {
                     </TouchableOpacity>
                 </View>
             <View>
-                <Button onPress={() => uploadDocuments()}>
+                <Button onPress={() => saveDocuments()}>
                     서류 저장하기
                 </Button>
             </View>
@@ -143,7 +181,7 @@ export default function Mydocuments({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 10,
+        padding: 0,
         backgroundColor : '#fff'
     },
 
@@ -158,7 +196,7 @@ const styles = StyleSheet.create({
     title_font: {
         fontFamily: 'NanumSquare_0', 
         fontSize: 28, 
-        marginLeft : 10,
+        marginLeft : 20,
         color: '#4e4e4e',
     },
 
@@ -187,6 +225,7 @@ const styles = StyleSheet.create({
 
     button_container: {
         flex: 1,
+        margin: 10,
         alignItems: 'center'
     },
 
