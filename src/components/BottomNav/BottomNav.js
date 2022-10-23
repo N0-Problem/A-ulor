@@ -157,7 +157,7 @@ function BottomNav({navigation}) {
         listeners={() => ({ //Mypage에서는 BottomNav를 띄우지 않기 위해
           tabPress: e => {
             e.preventDefault(); // Prevent default behavior
-            navigation.navigate('Mypage');
+            navigation.navigate('BottomNav', {screen: 'StackNav2'});
           },
         })}
         />

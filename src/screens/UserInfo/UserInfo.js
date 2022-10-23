@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect} from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator} from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import DatePicker from 'react-native-date-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import firestore from '@react-native-firebase/firestore';
+//import RNFS from 'react-native-fs';
+
 
 export default function UserInfo({navigation, route}) {
 
@@ -73,6 +75,26 @@ export default function UserInfo({navigation, route}) {
         })
     }
 
+    function setUserinfo() {
+
+        let type = '';
+        if (dropvalue === '기타') {
+            type = '기타:'+extraInput;
+        } else {
+            type = dropvalue;
+        }
+
+        const userinfo = {
+            user_id: userId,
+            name: userName,
+            birthdate: date_to_string(date),
+            bookmarks: bookmarks,
+            type: type
+        }
+        firestore().collection('Users').doc(userId).set(userinfo);
+        navigation.navigate('MyPage')
+    }
+
     useEffect(() => {
         getUserinfo();
 
@@ -90,27 +112,6 @@ export default function UserInfo({navigation, route}) {
             setLoading(false);
         }, 800);
     }, []);
-
-    function setUserinfo() {
-
-        let type = '';
-        if (dropvalue === '기타') {
-            type = '기타:'+extraInput;
-        } else {
-            type = dropvalue;
-        }
-
-        const userinfo = {
-            user_id: userId,
-            name: userName,
-            birthdate: date_to_string(date),
-            bookmarks: bookmarks,
-            type: type
-        }
-
-        firestore().collection('Users').doc(userId).set(userinfo);
-        navigation.navigate('MyPage')
-    }
 
     if (loading) {
         return (
@@ -281,6 +282,7 @@ const styles = StyleSheet.create({
         right : 3,
         marginTop : 4,
         width : '99%',
+        zIndex: 100
     },
     extra_input : {
         backgroundColor: '#f1f1f1',
@@ -300,5 +302,14 @@ const styles = StyleSheet.create({
         height : 40,
         bottom: 0,
         position: 'absolute',
-    }
+    },
+    file_container: {
+        marginTop: 10,
+        paddingBottom: 10,
+        justifyContent : 'center',
+        paddingLeft : 13,
+        backgroundColor : '#fff',
+        borderBottomColor : '#dcdcdc',
+        borderBottomWidth : 1,
+    },
 });

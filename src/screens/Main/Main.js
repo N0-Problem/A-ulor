@@ -141,7 +141,7 @@ function Main({navigation}) {
                         <TouchableOpacity 
                             style={styles.box2}
                             activeOpacity={0.7}
-                            onPress={() => navigation.navigate('Mypage')}>
+                            onPress={() => navigation.navigate('BottomNav', {screen: 'StackNav2'})}>
                             <FontAwesome5 name="user-alt" color='#414141' size={77} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',

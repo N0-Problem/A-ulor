@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Mypage from '../../screens/Mypage/Mypage';
 import UserInfo from '../../screens/UserInfo/UserInfo';
 import MyReview from '../../screens/MyReview/MyReview';
+import Mydocuments from '../../screens/Mydocuments/Mydocuments';
 
 const StackNav2 = ({navigation}) => {
     const Stack = createNativeStackNavigator();
@@ -27,6 +28,13 @@ const StackNav2 = ({navigation}) => {
             <Stack.Screen
                 name="MyReview"
                 component={MyReview}
+                options={{
+                    headerShown:false,
+                }}
+            />
+            <Stack.Screen
+                name="Mydocuments"
+                component={Mydocuments}
                 options={{
                     headerShown:false,
                 }}
