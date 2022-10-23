@@ -101,30 +101,28 @@ export default function Mydocuments({ navigation, route }) {
     return (
         <View style={styles.container}>
             <View style={styles.title}>
-                <Text style={styles.title_font}>증빙 서류 관리</Text>
+                <Text style={styles.titleText}>증빙 서류 관리</Text>
             </View>
-            <View style={styles.file_container}>
-                <View style={{justifyContent: 'center', paddingBottom: 5}}>
-                    { fileList.length ? (
-                            <View>
-                            {fileList.map((file, index) => (
-                                <List.Item key={index} title={() => (
-                                    <View>
-                                        <Text
-                                            style={{
-                                                color: 'blue', 
-                                                fontSize: 25,
-                                                margin: 10,
-                
-                                            }}
-                                            numberOfLines={1}
-                                            ellipsizeMode='tail'
-                                            onPress={() => {downloadToDevice(file, index)}}
-                                        >
-                                            {file.name}
-                                        </Text>
+            <View style={styles.fileContainer}>
+                { fileList.length ? (
+                        <View>
+                        {fileList.map((file, index) => (
+                            <List.Item key={index} title={() => (
+                                <View style={styles.listDesign}>
+                                    <Text
+                                        style={styles.fileText}
+                                        numberOfLines={1}
+                                        ellipsizeMode='tail'
+                                        onPress={() => {downloadToDevice(file, index)}}
+                                    >
+                                        {file.name}
+                                    </Text>
+                                    <View style={{ alignItems: 'center' }}>
                                         <TouchableOpacity style={{
-                                            
+                                            marginBottom: 10,
+                                            backgroundColor: '#f1f1f1',
+                                            borderRadius: 5,
+                                            alignSelf: 'center'
                                         }}
                                         onPress={() => deleteDocument(file)}>
                                             <Text style={{
@@ -132,47 +130,49 @@ export default function Mydocuments({ navigation, route }) {
                                                 fontFamily : 'NanumSquare_0',
                                                 fontSize : 20, 
                                                 textAlign : 'center',
+                                                padding: 5,
+                                                margin: 3,
                                             }}>
                                                 삭제하기
                                             </Text>
                                         </TouchableOpacity>
-                                    </View>                                   
-                                )}/>
-                            ))}
-                            </View>
-                        ) : (
-                            <Text style={{
-                                color : 'black',
-                                fontFamily : 'NanumSquare_0',
-                                fontSize : 20, 
-                                textAlign : 'center',
-                                marginTop: 25
-                            }}>
-                                등록된 서류가 없습니다!
-                            </Text>
-                        )
-                    }
-                </View>
-            </View>
-            <View style={styles.button_container}>
-                    <TouchableOpacity 
-                        style={styles.button}
-                        onPress={() => selectDocuments()}
-                    >
+                                    </View>
+                                </View>                                   
+                            )}/>
+                        ))}
+                        </View>
+                    ) : (
                         <Text style={{
                             color : 'black',
                             fontFamily : 'NanumSquare_0',
                             fontSize : 25, 
-                            textAlign : 'center'
+                            textAlign : 'center',
+                            marginTop: 25
                         }}>
+                            등록된 서류가 없습니다!
+                        </Text>
+                    )
+                }
+            </View>
+            <View style={styles.buttonContainer}>
+                    <TouchableOpacity 
+                        style={styles.button}
+                        onPress={() => selectDocuments()}
+                    >
+                        <Text style={styles.buttonText}>
                             파일 선택하기
                         </Text>
                     </TouchableOpacity>
                 </View>
             <View>
-                <Button onPress={() => saveDocuments()}>
-                    서류 저장하기
-                </Button>
+            <TouchableOpacity 
+                        style={styles.button}
+                        onPress={() => saveDocuments()}
+                    >
+                        <Text style={styles.buttonText}>
+                            서류 저장하기
+                        </Text>
+                    </TouchableOpacity>
             </View>
         </View>
     )
@@ -181,7 +181,6 @@ export default function Mydocuments({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 0,
         backgroundColor : '#fff'
     },
 
@@ -193,20 +192,32 @@ const styles = StyleSheet.create({
         borderBottomWidth : 1
     },
 
-    title_font: {
+    titleText: {
         fontFamily: 'NanumSquare_0', 
         fontSize: 28, 
         marginLeft : 20,
         color: '#4e4e4e',
     },
 
+    fileContainer: {
+        justifyContent: 'center',
+        marginLeft: -5
+    },
+
+    fileText: {
+        color: 'black', 
+        fontSize: 25,
+        marginBottom: 10,
+    },
+
     listDesign: {
-        flex: 5,
+        borderBottomColor: 'gray',
+        borderBottomWidth: 0.5,
+        marginBottom: -15
     },
 
     textDesign: {
         margin: 10,
-        marginBottom: 0,
         fontFamily: 'NanumSquare_0',
         color: 'gray'
     },
@@ -223,19 +234,26 @@ const styles = StyleSheet.create({
         marginLeft: 9
     },
 
-    button_container: {
+    buttonContainer: {
         flex: 1,
-        margin: 10,
+        marginHorizontal: 10,
         alignItems: 'center'
     },
 
     button: {
         alignSelf : 'stretch',
-        backgroundColor: '#f1f1f1',
+        backgroundColor: '#FFDA36',
         height : 50,
         marginTop : 20,
         paddingLeft: 9, 
         borderRadius : 7,
         justifyContent : 'center'
+    },
+
+    buttonText: {
+        color : 'black',
+        fontFamily : 'NanumSquare_0',
+        fontSize : 25, 
+        textAlign : 'center'
     }
 });
