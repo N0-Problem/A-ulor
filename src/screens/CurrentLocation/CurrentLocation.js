@@ -11,7 +11,8 @@ import {
     ActivityIndicator,
     Linking,
     Dimensions,
-    Alert
+    Alert,
+    Button
 } from 'react-native';
 import { Modal, Portal } from 'react-native-paper';
 import Geolocation from 'react-native-geolocation-service';
@@ -323,9 +324,31 @@ function CurrentLocation({ navigation }) {
                                         </Modal>
                                     </Portal>
                                 </View>
-                                <Text style={{ color: 'black' }}>
-                                    넘겨서 다음 센터 보기
-                                </Text>
+                                {
+                                    idx !== nearest_n.length -1 ? (
+                                        <Text style={{ 
+                                            color: 'black',
+                                            fontFamily: 'NanumSquare',
+                                            fontSize: 20,
+                                            margin: 10,
+                                            marginTop: 20,
+                                            
+                                        }}>
+                                            오른쪽으로 밀어서 다음 센터 보기  ▶
+                                        </Text>
+                                    ) : (
+                                        <Text style={{ 
+                                            color: 'black',
+                                            fontFamily: 'NanumSquare',
+                                            fontSize: 20,
+                                            margin: 10,
+                                            marginTop: 20
+        
+                                        }}>
+                                            마지막 페이지입니다!
+                                        </Text>
+                                    )
+                                }
                             </View>
                         )
 

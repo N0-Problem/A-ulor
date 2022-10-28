@@ -185,7 +185,7 @@ export default function Mydocuments({ navigation, route }) {
                     ) : (
                         <Text style={{
                             color : 'black',
-                            fontFamily : 'NanumSquare_0',
+                            fontFamily : 'NanumSquare',
                             fontSize : 25, 
                             textAlign : 'center',
                             marginTop: 25
@@ -236,7 +236,9 @@ const styles = StyleSheet.create({
 
     fileText: {
         color: 'black', 
+        fontFamily: 'NanumSquare',
         fontSize: 23,
+        marginTop: -10,
         marginBottom: 10,
         paddingRight: 10
     },
@@ -244,8 +246,6 @@ const styles = StyleSheet.create({
     listDesign: {
         borderBottomColor: 'gray',
         borderBottomWidth: 0.5,
-        marginBottom: 5,
-        marginTop: -20
     },
 
     textDesign: {
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
 
     buttonContainer: {
         marginHorizontal: 5,
-        marginBottom : 20,
+        marginBottom : 10,
         justifyContent : 'center'
     },
 
