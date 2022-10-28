@@ -26,9 +26,9 @@ const province = [
     { label: '제주특별자치도', value: '제주특별자치도' },
 ]
 
-let centers = "";
+let centers = [];
 
-function SelectCenter({ navigation, route }) {
+function SelectCity({ navigation, route }) {
 
     const userProvince = route.params;        // 사용자가 앞 화면에서 선택한 도 or 시
 
@@ -265,4 +265,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default SelectCenter;
+export default SelectCity;
