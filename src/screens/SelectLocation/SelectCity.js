@@ -26,8 +26,8 @@ const province = [
     { label: '제주도', value: '제주도' },
 ]
 
-
 let centers = [];
+
 
 function SelectCity({ navigation, route }) {
 
@@ -48,7 +48,7 @@ function SelectCity({ navigation, route }) {
         });
 
     const [centerName, setCenterName] = useState();     // 화면에 띄울 센터 이름 관리
-    
+
     /// accordion 관련 코드
     const [expanded, setExpanded] = React.useState(false);
     const handlePress = () => {
@@ -72,17 +72,17 @@ function SelectCity({ navigation, route }) {
         if (userinfo) {
             const docRef = firestore().collection('Users').doc(userinfo.uid)
             docRef.get()
-            .then(doc => {
-                if (doc.exists) {
-                    bookmarks = doc.data().bookmarks;
-                    if (bookmarks.includes(item.id)) {
-                        Alert.alert('이미 즐겨찾기 추가된 센터입니다!');
-                    } else {
-                        const FieldValue = firebase.firestore.FieldValue;
-                        docRef.update({bookmarks: FieldValue.arrayUnion(item.id)});
-                    }   
-                }
-            });
+                .then(doc => {
+                    if (doc.exists) {
+                        bookmarks = doc.data().bookmarks;
+                        if (bookmarks.includes(item.id)) {
+                            Alert.alert('이미 즐겨찾기 추가된 센터입니다!');
+                        } else {
+                            const FieldValue = firebase.firestore.FieldValue;
+                            docRef.update({ bookmarks: FieldValue.arrayUnion(item.id) });
+                        }
+                    }
+                });
         } else {
             Alert.alert(
                 '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
@@ -101,14 +101,36 @@ function SelectCity({ navigation, route }) {
         }
     }
 
+    let tempArr = new Array();
+    function make2DArr() {
+        for (let i = 0; i < Math.floor(cityData[userProvince.provinceIndex].length / 2); i++) {
+            tempArr.push(i)
+        }
+    }
+
     return (
-        <View style={styles.container}>
-            
-            <View style={styles.selectDesign}>
+        <ScrollView>
+            <View style={styles.container}>
+
                 <Text style={styles.textDesign}>
                     지역을 선택해주세요.
                 </Text>
-                <View style={{ flexDirection: 'row', marginLeft:-2 }}>
+                {make2DArr()}
+                <View style={{ flexDirection: 'column', }}>
+                    {tempArr.map((item, index) => {
+                        return (
+                            <View key={index} style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', }}>
+                                <Button style={styles.btnDesign} labelStyle={{ width: 100, paddingTop: 5, paddingBottom: 5, fontFamily: 'NanumSquare_0', fontSize: 20 }} mode="contained" onPress={() => navigation.navigate('SelectedCenters', { selectedProvince: userProvince.selectedProvince, selectedCity: cityData[userProvince.provinceIndex][2 * index].value })}>
+                                    {cityData[userProvince.provinceIndex][2 * index].value}
+                                </Button>
+                                <Button style={styles.btnDesign} labelStyle={{ width: 100, paddingTop: 5, paddingBottom: 5, fontFamily: 'NanumSquare_0', fontSize: 20 }} mode="contained" onPress={() => navigation.navigate('SelectedCenters', { selectedProvince: userProvince.selectedProvince, selectedCity: cityData[userProvince.provinceIndex][2 * index + 1].value })}>
+                                    {cityData[userProvince.provinceIndex][2 * index + 1].value}
+                                </Button>
+                            </View>
+                        )
+                    })}
+                </View>
+                {/* <View style={{ flexDirection: 'row', marginLeft:-2 }}>
                     <DropDownPicker
                         open={openProvince}
                         value={provinceValue}
@@ -145,12 +167,10 @@ function SelectCity({ navigation, route }) {
                         }}
                     />
 
-                </View>
-            </View>
-            <Text style={{ marginLeft: 20, marginTop: 30, fontFamily: 'NanumSquare', color:'#4E4E4E' }}>검색 결과</Text>
-            <View style={styles.listDesign}>
-                <ScrollView showsVerticalScrollIndicator={false}>
-                    <List.Section style={{borderBottomWidth: 1, borderColor:'#DCDCDC'}}>
+                </View> */}
+                {/* <Text style={{ marginLeft: 20, marginTop: 30, fontFamily: 'NanumSquare', color: '#4E4E4E' }}>검색 결과</Text> */}
+
+                {/* <List.Section style={{borderBottomWidth: 1, borderColor:'#DCDCDC'}}>
                         {centerName && centerName.map((item, idx) => {
                             return (
                                 <List.Accordion
@@ -206,17 +226,28 @@ function SelectCity({ navigation, route }) {
                                 </List.Accordion>
                             )
                         })}
-                    </List.Section>
-                </ScrollView>
+                    </List.Section> */}
+
             </View>
-        </View>
+        </ScrollView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor:'white'
+        justifyContent: 'center',
+        alignItems: 'center',
+
+    },
+
+    btnDesign: {
+        width: 150,
+        height: 54,
+        margin: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+
     },
 
     selectDesign: {
@@ -227,15 +258,16 @@ const styles = StyleSheet.create({
 
     },
 
-    listDesign: {
-        flex: 5,
-    },
-
     textDesign: {
-        margin: 10,
-        marginBottom: 0,
+        // margin: 10,
+        // marginBottom: 0,
+        // fontFamily: 'NanumSquare',
+        // color:'#4E4E4E'
+        marginTop: 30,
+        marginBottom: 10,
         fontFamily: 'NanumSquare',
-        color:'#4E4E4E'
+        color: 'black',
+        fontSize: 26
     },
 
     provincePickerDesign: {
