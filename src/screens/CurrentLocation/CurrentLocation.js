@@ -18,6 +18,8 @@ import Geolocation from 'react-native-geolocation-service';
 import firestore from '@react-native-firebase/firestore';
 import { config } from '../../../apikey';
 import { Scope } from '@babel/traverse';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import StackNav4 from '../../components/StackNav/StackNav4'
 
 // 얘는 메인이나 스플래시 뜰 때 넣어야 할 듯
 async function requestPermission() {
@@ -63,7 +65,7 @@ let centers, nearest_n = [];
 function CurrentLocation({ navigation }) {
     const [location, setLocation] = useState();
     const [loading, setLoading] = useState(true);
-    const { width } = Dimensions.get('window');
+    const width = Dimensions.get('window').width;
 
     // // 지도에 n개의 Marker 띄우기
     // const drawMarkers = () => {
@@ -132,21 +134,21 @@ function CurrentLocation({ navigation }) {
 
     const reverseGeocoding = (lat, log) => {
         const google_map_api_key = config.apikey;
-
+        // console.log(lat, log)
         //google map API에 reverseGeocoding 요청 보내기
         fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + lat + ',' + log
-        + '&key=' + google_map_api_key + '&language=ko')
-        .then((response) => response.json())
-        .then((responseJson) => {
-            const geo_address = responseJson.results[0].formatted_address;
-            console.log('address: ' + geo_address);
-            // 서버에서 모든 센터 정보 조회
-            firestore().collection('Centers').get()
-            .then(querySnapshot => {
-                centers = querySnapshot.docs.map(doc => doc.data());
-                getNearest(location.latitude, location.longitude, geo_address);
-            });
-        }).catch((err) => console.log("Cannot find current location : " + err));
+            + '&key=' + google_map_api_key + '&language=ko')
+            .then((response) => response.json())
+            .then((responseJson) => {
+                const geo_address = responseJson.results[0].formatted_address;
+                // console.log('address: ' + geo_address);
+                // 서버에서 모든 센터 정보 조회
+                firestore().collection('Centers').get()
+                    .then(querySnapshot => {
+                        centers = querySnapshot.docs.map(doc => doc.data());
+                        getNearest(location.latitude, location.longitude, geo_address);
+                    });
+            }).catch((err) => console.log("Cannot find current location : " + err));
     }
 
     // 현재 위치에서 가장 가까운 n개의 센터 찾기 (n = nearest_n의 길이)
@@ -192,17 +194,17 @@ function CurrentLocation({ navigation }) {
             });
 
         // 내 위치 행정구역 센터를 찾았으면, 하나씩 뒤로 밀고 맨 앞에 추가
-        for (var i = nearest_n.length-1; i > 0; i--) {
-            nearest_n[i] = nearest_n[i-1];
+        for (var i = nearest_n.length - 1; i > 0; i--) {
+            nearest_n[i] = nearest_n[i - 1];
         }
         nearest_n[0] = local_center;
-        for (var i = 0; i < nearest_n.length; i++) {
-            let city = nearest_n[i].address.split(' ')[0];
-            if (city.slice(-1) === '도') {
-                city = nearest_n[i].address.split(' ')[1];
-            }
-            nearest_n[i].name = city;
-        }
+        // for (var i = 0; i < nearest_n.length; i++) {
+        //     let city = nearest_n[i].address.split(' ')[0];
+        //     if (city.slice(-1) === '도') {
+        //         city = nearest_n[i].address.split(' ')[1];
+        //     }
+        //     nearest_n[i].name = city;
+        // }
         setLoading(false);
     }
 
@@ -228,7 +230,7 @@ function CurrentLocation({ navigation }) {
             });
         } else {
             reverseGeocoding(location.latitude, location.longitude);
-        } 
+        }
         //batchWrite();
         return () => {
             setLoading(true);
@@ -237,18 +239,22 @@ function CurrentLocation({ navigation }) {
 
     return (
         <View style={{ flex: 1 }}>
+            {console.log(nearest_n)}
             {!loading ? (
                 <ScrollView horizontal={true} pagingEnabled={true} showsHorizontalScrollIndicator={false} >
                     {nearest_n && nearest_n.map((item, idx) => {
                         return (
                             <View key={idx} style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: width}}>
-                                <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', borderRadius: 15, elevation: 10, paddingTop: 40, paddingBottom: 40, paddingLeft: 30 ,paddingRight: 30 }}>
+                                <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', borderRadius: 15, elevation: 10, paddingTop: 20, paddingLeft: 30, paddingBottom: 20, paddingRight: 30 }}>
                                     <View style={{ justifyContent: 'center', alignItems: 'center', }}>
-                                        <Text style={{ fontFamily: 'NanumSquare', fontSize: 20, color: "#4E4E4E", marginBottom: 30 }}>
-                                            {item.name} 교통약자이동지원센터
+                                        <Text style={{ fontFamily: 'NanumSquare', fontSize: 20, color: "#4E4E4E", marginBottom: 5 }}>
+                                            {item.formatted_name}
+                                        </Text>
+                                        <Text style={{ fontFamily: 'NanumSquare', fontSize: 16, color: "#4E4E4E", marginBottom: 10 }}>
+                                            ({item.name})
                                         </Text>
                                         <TouchableOpacity onPress={() => Linking.openURL(`tel:${item.phone_number[0]}`)}>
-                                            <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', padding: 20, borderRadius: 30, justifyContent: 'center', alignItems: 'center', width: 260, height: 260, elevation: 10, marginBottom: 10 }}>
+                                            <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', padding: 20, borderRadius: 30, justifyContent: 'center', alignItems: 'center', width: 240, height: 240, elevation: 10, marginBottom: 10 }}>
                                                 <Image style={styles.callImageDesign} source={require('../../assets/images/call.png')} />
                                                 <Text style={styles.callTextDesign}>전화로 이용</Text>
                                                 <Text style={styles.callTextDesign}>{item.phone_number[0]}</Text>
@@ -258,7 +264,7 @@ function CurrentLocation({ navigation }) {
                                     <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                                         {item.application != "" ? (
                                             <TouchableOpacity onPress={() => Linking.openURL(`https://play.google.com/store/search?q=${item.application}&c=apps`)} style={{ marginRight: 5 }}>
-                                                <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', borderRadius: 30, justifyContent: 'center', alignItems: 'center', width: 130, height: 130, elevation: 10 }}>
+                                                <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', borderRadius: 20, justifyContent: 'center', alignItems: 'center', width: 115, height: 115, elevation: 10 }}>
                                                     <Image style={styles.imageDesign} source={require('../../assets/images/app_store.png')} />
                                                     <Text style={styles.buttonTextDesign} >앱으로</Text>
                                                     <Text style={styles.buttonTextDesign}>이용</Text>
@@ -266,7 +272,7 @@ function CurrentLocation({ navigation }) {
                                             </TouchableOpacity>
                                         ) : (
                                             <TouchableOpacity disabled="true" style={{ marginRight: 5 }}>
-                                                <View style={{ backgroundColor: "#FFDA36", borderRadius: 30, justifyContent: 'center', alignItems: 'center', width: 130, height: 130, elevation: 10 }}>
+                                                <View style={{ backgroundColor: "#FFDA36", borderRadius: 20, justifyContent: 'center', alignItems: 'center', width: 115, height: 115, elevation: 10 }}>
                                                     <Image style={styles.imageDesign} source={require('../../assets/images/app_store_unable.png')} />
                                                     <Text style={styles.unableButtonTextDesign} >앱을</Text>
                                                     <Text style={styles.unableButtonTextDesign}>이용할 수 없어요</Text>
@@ -276,7 +282,7 @@ function CurrentLocation({ navigation }) {
                                         {
                                             item.website_address != "" ? (
                                                 <TouchableOpacity onPress={() => Linking.openURL(item.website_address)} style={{ marginLeft: 5 }}>
-                                                    <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', borderRadius: 30, justifyContent: 'center', alignItems: 'center', width: 130, height: 130, elevation: 10 }}>
+                                                    <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', borderRadius: 20, justifyContent: 'center', alignItems: 'center', width: 115, height: 115, elevation: 10 }}>
                                                         <Image style={styles.imageDesign} source={require('../../assets/images/internet.png')} />
                                                         <Text style={styles.buttonTextDesign}>웹사이트로</Text>
                                                         <Text style={styles.buttonTextDesign}>이용</Text>
@@ -284,7 +290,7 @@ function CurrentLocation({ navigation }) {
                                                 </TouchableOpacity>
                                             ) : (
                                                 <TouchableOpacity disabled="true" style={{ marginLeft: 5 }} activeOpacity={0.7}>
-                                                    <View style={{ backgroundColor: "#FFDA36", borderRadius: 30, justifyContent: 'center', alignItems: 'center', width: 130, height: 130, elevation: 10 }}>
+                                                    <View style={{ backgroundColor: "#FFDA36", borderRadius: 20, justifyContent: 'center', alignItems: 'center', width: 115, height: 115, elevation: 10 }}>
                                                         <Image style={styles.imageDesign} source={require('../../assets/images/internet_unable.png')} />
                                                         <Text style={styles.unableButtonTextDesign} >웹사이트를</Text>
                                                         <Text style={styles.unableButtonTextDesign}>이용할 수 없어요</Text>
@@ -292,6 +298,23 @@ function CurrentLocation({ navigation }) {
                                                 </TouchableOpacity>
                                             )
                                         }
+                                    </View>
+                                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 10 }}>
+                                        <TouchableOpacity onPress={() => navigation.navigate('StackNav4', { screen: 'CenterInfo', params: { selectedCenter: nearest_n[idx] }})} style={{ marginRight: 5 }}>
+                                            <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', borderRadius: 20, justifyContent: 'center', alignItems: 'center', width: 115, height: 115, elevation: 10 }}>
+                                                <Image style={styles.imageDesign} source={require('../../assets/images/center.png')} />
+                                                <Text style={styles.buttonTextDesign}>자세한 정보</Text>
+                                                <Text style={styles.buttonTextDesign}>보러가기</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                        {/* 아래의 TouchableOpacity에 onPress로 즐겨찾기에 추가하는 백엔드 작업 만들어주세요! */}
+                                        <TouchableOpacity style={{ marginLeft: 5 }}>
+                                            <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', borderRadius: 20, justifyContent: 'center', alignItems: 'center', width: 115, height: 115, elevation: 10 }}>
+                                                <Ionicons name="ios-bookmarks" color='black' size={30} style={{ marginBottom: 10 }} />
+                                                <Text style={styles.buttonTextDesign}>즐겨찾기에</Text>
+                                                <Text style={styles.buttonTextDesign}>추가</Text>
+                                            </View>
+                                        </TouchableOpacity>
                                     </View>
                                 </View>
                             </View>
@@ -396,8 +419,8 @@ const styles = StyleSheet.create({
     },
 
     imageDesign: {
-        width: 50,
-        height: 50,
+        width: 30,
+        height: 30,
         marginBottom: 12,
     },
 

@@ -5,7 +5,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Button} from 'react-native-paper';
 import Main from '../../screens/Main/Main';
 import CurrentLocation from '../../screens/CurrentLocation/CurrentLocation';
-import SelectCenter from '../../screens/SelectLocation/SelectCenter';
+import SelectCity from '../../screens/SelectLocation/SelectCity';
 import Mypage from '../../screens/Mypage/Mypage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -13,6 +13,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import BookMark from '../../screens/BookMark/BookMark';
 import StackNav3 from '../StackNav/StackNav3';
 import StackNav2 from '../StackNav/StackNav2';
+import StackNav4 from '../StackNav/StackNav4';
 import auth from '@react-native-firebase/auth';
 
 function BottomNav({navigation}) {
@@ -68,8 +69,8 @@ function BottomNav({navigation}) {
         })}
       /> */}
       <Tab.Screen
-        name="CurrentLocation"
-        component={CurrentLocation}
+        name="StackNav4"
+        component={StackNav4}
         options={{
           tabBarLabel: '내 주변 센터',
           tabBarIcon: ({ color, size }) => (
@@ -84,7 +85,7 @@ function BottomNav({navigation}) {
         name="StackNav3"
         component={StackNav3}
         options={{
-          tabBarLabel: '지역별 센터',
+          tabBarLabel: '원하는 센터',
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="table-search" color={color} size={size} />
           ),

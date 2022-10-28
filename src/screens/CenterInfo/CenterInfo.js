@@ -12,6 +12,7 @@ function CenterInfo({ navigation, route }) {
     const userCenter = route.params.selectedCenter;
 
     let centerId = userCenter.id;
+    let centerFormattedName = userCenter.formatted_name;
     let centerName = userCenter.name;
     let parseCity = userCenter.address.split(' ');
 
@@ -138,10 +139,9 @@ function CenterInfo({ navigation, route }) {
             <View style={styles.container}>
                 <View>
                     <Card style={styles.cardDesign}>
-                        <Card.Content style={{ justifyContent: 'center', alignItems: 'center', flexDirection: "row" }}>
-                            <Text style={styles.titleDesign}>🏬</Text>
-                            <Title style={styles.titleDesign}> {centerName} </Title>
-                            <Text style={styles.titleDesign}>🏬</Text>
+                        <Card.Content style={{ justifyContent: 'center', alignItems: 'center', flexDirection: "column" }}>
+                            <Title style={styles.titleDesign}>🏬 {centerFormattedName} 🏬</Title>
+                            <Text style ={styles.subTitleDesign}>({centerName})</Text>
                         </Card.Content>
                         <View style={styles.container}>
                             <MapView
@@ -545,6 +545,12 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontFamily: 'NanumSquare_0',
         marginTop: -10,
+    },
+
+    subTitleDesign: {
+        color : 'black',
+        fontSize: 14,
+        fontFamily: 'NanumSquare_0',       
         marginBottom: 10
     },
 
