@@ -241,13 +241,13 @@ function CurrentLocation({ navigation }) {
         <View style={{ flex: 1 }}>
             {console.log(nearest_n)}
             {!loading ? (
-                <ScrollView horizontal={true} pagingEnabled={true} showsHorizontalScrollIndicator={false} >
+                <ScrollView horizontal={true} pagingEnabled={true} showsHorizontalScrollIndicator={false}>
                     {nearest_n && nearest_n.map((item, idx) => {
                         return (
                             <View key={idx} style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: width}}>
                                 <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', borderRadius: 15, elevation: 10, paddingTop: 20, paddingLeft: 30, paddingBottom: 20, paddingRight: 30 }}>
                                     <View style={{ justifyContent: 'center', alignItems: 'center', }}>
-                                        <Text style={{ fontFamily: 'NanumSquare', fontSize: 20, color: "#4E4E4E", marginBottom: 5 }}>
+                                        <Text style={{ fontFamily: 'NanumSquare', fontSize: 22, color: "#4E4E4E", marginBottom: 10 }}>
                                             {item.formatted_name}
                                         </Text>
                                         <Text style={{ fontFamily: 'NanumSquare', fontSize: 16, color: "#4E4E4E", marginBottom: 10 }}>
@@ -317,6 +317,9 @@ function CurrentLocation({ navigation }) {
                                         </TouchableOpacity>
                                     </View>
                                 </View>
+                                <Text style={{color:'black'}}>
+                                    넘겨서 다음 센터 보기
+                                </Text>
                             </View>
                         )
 
@@ -414,7 +417,7 @@ const styles = StyleSheet.create({
     callTextDesign: {
         fontWeight: 'bold',
         color: 'black',
-        fontSize: 18,
+        fontSize: 28,
         marginBottom: 10
     },
 
@@ -427,13 +430,13 @@ const styles = StyleSheet.create({
     buttonTextDesign: {
         fontWeight: 'bold',
         color: 'black',
-        fontSize: 14
+        fontSize: 20
     },
 
     unableButtonTextDesign: {
         fontWeight: 'bold',
         color: '#C79726',
-        fontSize: 14
+        fontSize: 20
     }
 });
 

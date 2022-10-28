@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     text2 : {
         paddingLeft : 25,
         paddingTop : 10,
-        fontSize : 40,
+        fontSize : 37,
         color : '#4e4e4e',
         fontFamily:'NanumSquare_0',
     },

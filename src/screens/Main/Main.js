@@ -45,7 +45,7 @@ function Main({navigation}) {
                     <Image style={styles.logo} source={LogoImg}/>
                     <View>
                         <Text style={styles.header_text}>아울러</Text>
-                        <Text style={styles.header_text2}>{'전국 교통약자 이동지원센터 정보 통합 앱'}</Text>
+                        {/* <Text style={styles.header_text2}>{'전국 교통약자 이동지원센터 정보 통합 앱'}</Text> */}
                         <Text style={styles.header_text3}>{'모두가 자유롭게 이동할 수 있는'}</Text>
                         <Text style={styles.header_text3}>{'보이지 않는 장애물까지 사라진 세상을 위해'}</Text>
                     </View>
@@ -58,12 +58,12 @@ function Main({navigation}) {
                             style={styles.box1}
                             activeOpacity={0.7}
                             onPress={() => navigation.navigate('BottomNav',{screen : 'CurrentLocation'})}>
-                            <Ionicons name="location" color='#414141' size={80} />
+                            <Ionicons name="location" color='#414141' size={70} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
                                 bottom: -12,
                                 color: '#414141',
-                                fontSize: 18
+                                fontSize: 22
                             }}>
                                 내 주변 센터 이용
                             </Text>
@@ -74,12 +74,12 @@ function Main({navigation}) {
                             style={styles.box1}
                             activeOpacity={0.7}
                             onPress={() => navigation.navigate('BottomNav', { screen :'StackNav3'})}>
-                            <MaterialCommunityIcons name="table-search" color='#414141' size={80} />
+                            <MaterialCommunityIcons name="table-search" color='#414141' size={70} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
                                 bottom: -16,
                                 color: '#414141',
-                                fontSize: 18
+                                fontSize: 22
                             }}>
                                 원하는 센터 찾기
                             </Text>
@@ -93,12 +93,12 @@ function Main({navigation}) {
                             style={styles.box3}
                             activeOpacity={0.7}
                             onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark', params: {user_id: userId}})}>
-                            <Ionicons name="ios-bookmarks" color='#414141' size={75} />
+                            <Ionicons name="ios-bookmarks" color='#414141' size={65} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
                                 bottom: -16,
                                 color: '#414141',
-                                fontSize: 18
+                                fontSize: 22
                             }}>
                                 자주 이용하는 센터
                             </Text>
@@ -124,12 +124,12 @@ function Main({navigation}) {
                                 },
                                 ],
                         )}>
-                            <Ionicons name="ios-bookmarks" color='#C79726' size={75} />
+                            <Ionicons name="ios-bookmarks" color='#C79726' size={65} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
                                 bottom: -16,
                                 color:'#C79726',
-                                fontSize: 18
+                                fontSize: 22
                             }}>
                                 자주 이용하는 센터
                             </Text>
@@ -142,12 +142,12 @@ function Main({navigation}) {
                             style={styles.box2}
                             activeOpacity={0.7}
                             onPress={() => navigation.navigate('BottomNav', {screen: 'StackNav2'})}>
-                            <FontAwesome5 name="user-alt" color='#414141' size={77} />
+                            <FontAwesome5 name="user-alt" color='#414141' size={65} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
                                 bottom: -16,
                                 color: '#414141',
-                                fontSize: 18
+                                fontSize: 22
                             }}> 
                                 마이 페이지
                             </Text>
@@ -173,12 +173,12 @@ function Main({navigation}) {
                                 },
                                 ],
                         )}>
-                            <FontAwesome5 name="user-alt" color='#C79726' size={77} />
+                            <FontAwesome5 name="user-alt" color='#C79726' size={65} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
                                 bottom: -16,
                                 color: '#C79726',
-                                fontSize: 18
+                                fontSize: 22
                             }}>
                                 마이 페이지
                             </Text>
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
         flex : 1
     },
     main_header: {
-        height: '25%',
+        height: '20%',
         backgroundColor: '#4E4E4E',
         alignItems : 'center'
     },
@@ -207,13 +207,15 @@ const styles = StyleSheet.create({
         flexDirection :'row',
     },
     logo : {
-        width : 100,
-        height : 85,
-        marginLeft : 5,
+        width : 110,
+        height : 95,
+        marginLeft : 10,
+        marginRight : -15,
+        marginTop: -10
     },
     header_text:{
         fontFamily:'NanumSquare',
-        fontSize : 20,
+        fontSize : 30,
         paddingLeft: 20,
         paddingBottom : 5,
         color: '#fff'
@@ -227,9 +229,11 @@ const styles = StyleSheet.create({
     },
     header_text3 : {
         fontFamily:'NanumSquare_0',
+        fontSize : 16,
         paddingLeft: 20,
         paddingVertical : 2,
-        color: '#fff'
+        color: '#fff',
+        marginRight: 15
     },
     boxes :{
         height : '77%',

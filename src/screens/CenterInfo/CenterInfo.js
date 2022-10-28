@@ -143,26 +143,7 @@ function CenterInfo({ navigation, route }) {
                             <Title style={styles.titleDesign}>🏬 {centerFormattedName} 🏬</Title>
                             <Text style ={styles.subTitleDesign}>({centerName})</Text>
                         </Card.Content>
-                        <View style={styles.container}>
-                            <MapView
-                                style={styles.mapDesign}
-                                provider={PROVIDER_GOOGLE}
-                                initialRegion={{
-                                    latitude: userCenter.latitude,
-                                    longitude: userCenter.longitude,
-                                    latitudeDelta: 0.005,
-                                    longitudeDelta: 0.005,
-                                }}
-                                showsUserLocation={true}
-                                showsMyLocationButton={false}>
-                                <Marker
-                                    coordinate={{
-                                        latitude: userCenter.latitude,
-                                        longitude: userCenter.longitude,
-                                    }}
-                                />
-                            </MapView>
-                        </View>
+
                         {extended ? (
                             <View>
                                 <View style={styles.paragraphDesign}>
@@ -218,8 +199,8 @@ function CenterInfo({ navigation, route }) {
                         ) : (
                             <View>
                                 <View style={styles.paragraphDesign}>
-                                    <Text style={styles.textDesign}>주소 : {userCenter.address}</Text>
-                                    <Text></Text>
+                                    <Text style={styles.textDesign}>주소</Text>
+                                    <Text style={styles.textDesign}>{userCenter.address}</Text>
                                 </View>
                                 <View style={styles.paragraphDesign}>
                                     <Text style={styles.textDesign}>전화번호 : </Text>
@@ -370,7 +351,7 @@ function CenterInfo({ navigation, route }) {
                                         </Pressable>
                                     </Text>
                                 </View>
-                                <View style={styles.paragraphDesign}>
+                                {/* <View style={styles.paragraphDesign}>
                                     <Text style={styles.textDesign}>세부 사항 : </Text>
                                     <Text>
                                         <Pressable>
@@ -382,7 +363,7 @@ function CenterInfo({ navigation, route }) {
                                             )}
                                         </Pressable>
                                     </Text>
-                                </View>
+                                </View> */}
                             </View>
                         )}
                         <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center', marginTop: 10 }}>
@@ -556,7 +537,7 @@ const styles = StyleSheet.create({
 
     paragraphDesign: {
         marginTop: 25,
-        flexDirection: 'row'
+        flexDirection: 'column'
     },
 
     textDesign: {
