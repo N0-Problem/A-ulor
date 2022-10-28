@@ -117,7 +117,7 @@ export default function MyReview({ navigation, route }) {
                                             mode="text"
                                             color="#666"
                                             onPress={() => DeleteReview(currentData.review_id)}>
-                                            <Text style={{ fontFamily: 'NanumSquare_0' }}>
+                                            <Text style={{ fontFamily: 'NanumSquare_0', fontSize: 22 }}>
                                                 삭제
                                             </Text>
                                         </Button>
@@ -125,7 +125,7 @@ export default function MyReview({ navigation, route }) {
                                             mode="text"
                                             color="#666"
                                             onPress={() => setModalVisible(false)}>
-                                            <Text style={{ fontFamily: 'NanumSquare_0' }}>
+                                            <Text style={{ fontFamily: 'NanumSquare_0', fontSize: 22 }}>
                                                 닫기
                                             </Text>
                                         </Button>
@@ -141,18 +141,20 @@ export default function MyReview({ navigation, route }) {
                                     <Text
                                         style={{
                                             textAlign: "left",
-                                            fontSize: 17,
+                                            fontSize: 23,
                                             fontFamily: 'NanumSquare_0',
-                                            color: '#4e4e4e'
+                                            color: '#4e4e4e',
+                                            marginBottom: 10
                                         }}>
                                         {review.center_name}
                                     </Text>
                                     <View style={styles.reviewRate}>
                                         <Text
                                             style={{
-                                                fontSize: 17,
+                                                fontSize: 20,
                                                 color: '#fff',
-                                                bottom: 3
+                                                bottom: 3,
+                                                alignSelf: 'flex-end'
                                             }}>
                                             {stars[review.rate - 1]}
                                         </Text>
@@ -160,7 +162,7 @@ export default function MyReview({ navigation, route }) {
                                 </View>
                                 <View>
                                     <Text style={styles.reviewFeedback} ellipsizeMode='tail' numberOfLines={1} >
-                                        {currentData.feedback}
+                                        {review.feedback}
                                     </Text>
                                 </View>
                             </View>
@@ -174,7 +176,7 @@ export default function MyReview({ navigation, route }) {
     return (
         <View style={styles.container}>
             <View style={styles.title}>
-                <Text style={styles.title_font}>내가 쓴 후기</Text>
+                <Text style={styles.titleText}>내가 쓴 후기</Text>
             </View>
             {
                 (myReviews.length > 0) ? (
@@ -204,20 +206,23 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff'
     },
+
     title: {
-        height: 40,
-        marginVertical: 17,
-        marginTop: 20,
-        marginHorizontal: 3,
-        borderBottomColor: '#d2d2d2',
-        borderBottomWidth: 2
+        alignSelf: 'stretch',
+        height : 45,
+        marginTop: 30,
+        marginBottom: 15, 
+        borderBottomColor : '#d2d2d2',
+        borderBottomWidth : 1
     },
-    title_font: {
-        fontFamily: 'NanumSquare_0',
-        fontSize: 20,
-        marginLeft: 15,
+
+    titleText: {
+        fontFamily: 'NanumSquare_0', 
+        fontSize: 28, 
+        marginLeft : 20,
         color: '#4e4e4e',
     },
+
     listDesign: {
         // backgroundColor : 'red',
         marginTop: -10,
@@ -244,18 +249,23 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly'
     },
     reviewTitle: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         justifyContent: 'space-between',
         marginBottom: 10
     },
 
+    reviewRate: {
+        alignContent: 'flex-end'
+    },
+
     reviewFeedback: {
         fontFamily: 'NanumSquare_0',
+        fontSize: 20,
         backgroundColor: '#f0f0f0',
         borderRadius: 7,
         paddingVertical: 10,
         paddingHorizontal: 7,
-        marginVertical: 5,
+        marginVertical: 0,
         color: '#555'
     }, 
 
@@ -271,12 +281,12 @@ const styles = StyleSheet.create({
     },
     modalCentername: {
         fontFamily: 'NanumSquare',
-        fontSize: 20,
+        fontSize: 22,
         color: '#555'
     },
     modalstar: {
         fontFamily: 'NanumSquare_0',
-        fontSize: 15,
+        fontSize: 18,
         marginTop: 20,
         marginBottom: 3,
         textAlign: 'right',
@@ -284,20 +294,21 @@ const styles = StyleSheet.create({
     },
     modalUsedDate: {
         fontFamily: 'NanumSquare_0',
-        fontSize: 15,
+        fontSize: 18,
         marginVertical: 3,
         textAlign: 'right',
         color: '#666'
     },
     modalPostDate: {
         fontFamily: 'NanumSquare_0',
-        fontSize: 15,
+        fontSize: 18,
         marginVertical: 3,
         textAlign: 'right',
         color: '#666'
     },
     modalfeedback: {
         fontFamily: 'NanumSquare_0',
+        fontSize: 25,
         backgroundColor: '#f0f0f0',
         borderRadius: 7,
         paddingVertical: 10,
