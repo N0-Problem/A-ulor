@@ -8,9 +8,12 @@ import {
   ScrollView,
 } from 'react-native';
 import {Button, TextInput, RadioButton} from 'react-native-paper';
+
 import DatePicker from 'react-native-date-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import firestore from '@react-native-firebase/firestore';
+//import RNFS from 'react-native-fs';
+
 
 export default function UserInfo({navigation, route}) {
     const params = route.params;
@@ -158,6 +161,24 @@ export default function UserInfo({navigation, route}) {
             .replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
         setPhoneNumber(phoneNumber);
     }
+
+    useEffect(() => {
+        getUserinfo();
+
+        setTimeout(() => {
+            string_to_date(birthdate);
+
+            if (type[0] === '기타') {
+                setdropValue(type[0]);
+                setExtra(true);
+                setExtraInput(type[1]);
+            } else {
+                setdropValue(type[0]);
+            }
+
+            setLoading(false);
+        }, 800);
+    }, []);
 
     if (loading) {
         return (
@@ -410,6 +431,7 @@ export default function UserInfo({navigation, route}) {
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     backgroundColor: '#fff',

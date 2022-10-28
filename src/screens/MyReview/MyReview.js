@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useIsFocused } from '@react-navigation/native';
-import { View, Text, StyleSheet, ScrollView,TouchableOpacity, Pressable, ActivityIndicator,BackHandler } from 'react-native';
-import { Button, List, Modal, Portal} from 'react-native-paper';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Pressable, ActivityIndicator, BackHandler } from 'react-native';
+import { Button, List, Modal, Portal } from 'react-native-paper';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
@@ -21,7 +21,7 @@ export default function MyReview({ navigation, route }) {
     //     }
     //     return false;
     // }
-    
+
     const params = route.params;
     let userId = '';
 
@@ -34,7 +34,7 @@ export default function MyReview({ navigation, route }) {
             }
         })
     }
-    
+
 
     let tempReviews = [];
     // let tempReviews = [{center_name:"전남 지체장애인협회 담양군지회", feedback:"너무 친절하시고 좋아요!", posted_date: "2022-09-12", rate: 4, used_date: "2022-09-11", user_id:"XKkY2PL6qDfjfazxLwqF6qltMJz1", review_id :"0srs12c93v2"},
@@ -52,28 +52,28 @@ export default function MyReview({ navigation, route }) {
     const getMyReviews = async () => {
         if (userId) {
             await firestore().collection('Review').where('user_id', '==', userId).get()
-            .then((querySnapshot) => {
-                if (!querySnapshot.empty) {
-                    for (const doc of querySnapshot.docs) {
-                        if (doc.exists) {
-                            tempReviews.push(doc.data());
-                            //console.log(doc.data().feedback);
+                .then((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        for (const doc of querySnapshot.docs) {
+                            if (doc.exists) {
+                                tempReviews.push(doc.data());
+                                //console.log(doc.data().feedback);
+                            }
                         }
                     }
-                }
-            }).then(() => {
-                setReviews(tempReviews);
-                //console.log(myReviews);
-            });
+                }).then(() => {
+                    setReviews(tempReviews);
+                    //console.log(myReviews);
+                });
         }
     }
-    
+
     const DeleteReview = async (review_id) => {
         try {
             await firestore().collection('Review').doc(review_id).delete()
-            .then(() => {
-                getMyReviews();
-            })
+                .then(() => {
+                    getMyReviews();
+                })
             //console.log('Delete Complete!', rows);
         } catch (error) {
             console.log(error.message);
@@ -84,15 +84,15 @@ export default function MyReview({ navigation, route }) {
     function listReviews() {
         const showModal = () => setModalVisible(true);
         const hideModal = () => setModalVisible(false);
-        
-        function setModaldata(review){
+
+        function setModaldata(review) {
             let tmp = {
-                centerName : review.center_name,
+                centerName: review.center_name,
                 feedback: review.feedback,
                 posted_date: review.posted_date,
                 used_date: review.used_date,
                 rate: review.rate,
-                review_id : review.review_id,
+                review_id: review.review_id,
             };
             setModalVisible(true);
             setcurData(tmp);
@@ -102,12 +102,12 @@ export default function MyReview({ navigation, route }) {
             myReviews.map((review, idx) => (
                 <List.Item key={idx} title={() => (
                     <View>
-                        <Portal style={{ justifyContent: 'center', alignItems: 'center'}}>
+                        <Portal style={{ justifyContent: 'center', alignItems: 'center' }}>
                             <Modal visible={modalVisible} onDismiss={hideModal} contentContainerStyle={styles.modalDesign}>
                                 <Text style={styles.modalCentername}>
                                     {currentData.centerName}
                                 </Text>
-                                <Text style={styles.modalstar}>평점 : {stars[currentData.rate-1]}</Text>
+                                <Text style={styles.modalstar}>평점 : {stars[currentData.rate - 1]}</Text>
                                 <Text style={styles.modalUsedDate}>이용 일자 : {currentData.used_date}</Text>
                                 <Text style={styles.modalPostDate}>작성 일자 : {currentData.posted_date}</Text>
                                 <Text style={styles.modalfeedback}>{currentData.feedback}</Text>
@@ -134,57 +134,37 @@ export default function MyReview({ navigation, route }) {
                             </Modal>
                         </Portal>
 
-                        <View style={styles.reviewDesign}>
-                            <View style={styles.reviewTitle}>
-                                <TouchableOpacity 
-                                    style={styles.reviewCenter}
-                                    onPress={() => setModaldata(review)}>
-                                    <Text 
-                                        style={{ 
-                                            textAlign: "left", 
-                                            fontSize: 17, 
+                        <TouchableOpacity
+                            onPress={() => setModaldata(review)}>
+                            <View style={styles.reviewDesign}>
+                                <View style={styles.reviewTitle}>
+                                    <Text
+                                        style={{
+                                            textAlign: "left",
+                                            fontSize: 17,
                                             fontFamily: 'NanumSquare_0',
                                             color: '#4e4e4e'
                                         }}>
                                         {review.center_name}
                                     </Text>
-                                </TouchableOpacity>
-                                <View style={styles.reviewRate}>
-                                    <Text
-                                        style={{ 
-                                            fontSize: 17, 
-                                            color: '#fff',
-                                            bottom : 3
-                                        }}>
-                                        {stars[review.rate-1]}
+                                    <View style={styles.reviewRate}>
+                                        <Text
+                                            style={{
+                                                fontSize: 17,
+                                                color: '#fff',
+                                                bottom: 3
+                                            }}>
+                                            {stars[review.rate - 1]}
+                                        </Text>
+                                    </View>
+                                </View>
+                                <View>
+                                    <Text style={styles.reviewFeedback} ellipsizeMode='tail' numberOfLines={1} >
+                                        {currentData.feedback}
                                     </Text>
                                 </View>
                             </View>
-                            <View>
-                                <Text 
-                                    style={{ 
-                                        marginVertical : 3,
-                                        textAlign: "right",
-                                        fontSize: 13, 
-                                        fontFamily: 'NanumSquare_0', 
-                                        color: '#525252'
-                                    }}>
-                                    이용 일자 : {review.used_date}
-                                </Text>
-                            </View>
-                            <View>
-                                <Text 
-                                    style={{ 
-                                        marginVertical : 3,
-                                        textAlign: "right", 
-                                        fontSize: 13, 
-                                        fontFamily: 'NanumSquare_0', 
-                                        color: '#525252' 
-                                    }}>
-                                    작성 일자 : {review.posted_date}
-                                </Text>
-                            </View>
-                        </View>
+                        </TouchableOpacity>
                     </View>
                 )} />
             ))
@@ -196,7 +176,7 @@ export default function MyReview({ navigation, route }) {
             <View style={styles.title}>
                 <Text style={styles.title_font}>내가 쓴 후기</Text>
             </View>
-            {                
+            {
                 (myReviews.length > 0) ? (
                     <View style={styles.listDesign}>
                         <ScrollView showsVerticalScrollIndicator={false}>
@@ -222,97 +202,108 @@ export default function MyReview({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor : '#fff'
+        backgroundColor: '#fff'
     },
     title: {
-        height : 40,
+        height: 40,
         marginVertical: 17,
         marginTop: 20,
-        marginHorizontal : 3,
-        borderBottomColor : '#d2d2d2',
-        borderBottomWidth : 2
+        marginHorizontal: 3,
+        borderBottomColor: '#d2d2d2',
+        borderBottomWidth: 2
     },
     title_font: {
-        fontFamily: 'NanumSquare_0', 
-        fontSize: 20, 
-        marginLeft : 15,
-        color: '#4e4e4e', 
+        fontFamily: 'NanumSquare_0',
+        fontSize: 20,
+        marginLeft: 15,
+        color: '#4e4e4e',
     },
     listDesign: {
         // backgroundColor : 'red',
-        marginTop : -10,
+        marginTop: -10,
     },
-    listSection : {
+    listSection: {
         // backgroundColor : 'blue',
-        width : '100%',
+        width: '100%',
     },
     textDesign: {
         marginBottom: 0,
         fontFamily: 'NanumSquare_0',
-        fontSize : 17,
+        fontSize: 17,
         color: 'gray'
     },
     //listview
     reviewDesign: {
         // backgroundColor: "red",
         borderBottomWidth: 0.8,
-        borderBottomColor : '#d2d2d2',
-        marginLeft : -8,
-        marginTop : -10,
-        paddingBottom : 7,
-        paddingHorizontal : 6,
-        justifyContent : 'space-evenly'
+        borderBottomColor: '#d2d2d2',
+        marginLeft: -8,
+        marginTop: -10,
+        paddingBottom: 7,
+        paddingHorizontal: 6,
+        justifyContent: 'space-evenly'
     },
-    reviewTitle : {
-        flexDirection :'row', 
-        justifyContent : 'space-between',
-        marginBottom : 10
+    reviewTitle: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 10
     },
+
+    reviewFeedback: {
+        fontFamily: 'NanumSquare_0',
+        backgroundColor: '#f0f0f0',
+        borderRadius: 7,
+        paddingVertical: 10,
+        paddingHorizontal: 7,
+        marginVertical: 5,
+        color: '#555'
+    }, 
+
     //modal
     modalDesign: {
         backgroundColor: "white",
         marginHorizontal: 45,
-        paddingTop : 20,
-        paddingBottom : 10,
-        paddingHorizontal : 17,
+        paddingTop: 20,
+        paddingBottom: 10,
+        paddingHorizontal: 17,
         justifyContent: 'center',
-        borderRadius : 13,
+        borderRadius: 13,
     },
-    modalCentername : {
-        fontFamily : 'NanumSquare',
-        fontSize : 20,
-        color : '#555'
+    modalCentername: {
+        fontFamily: 'NanumSquare',
+        fontSize: 20,
+        color: '#555'
     },
-    modalstar : {
-        fontFamily : 'NanumSquare_0',
-        fontSize : 15,
-        marginTop : 20,
-        marginBottom : 3,
-        textAlign : 'right',
-        color : '#666'
+    modalstar: {
+        fontFamily: 'NanumSquare_0',
+        fontSize: 15,
+        marginTop: 20,
+        marginBottom: 3,
+        textAlign: 'right',
+        color: '#666'
     },
-    modalUsedDate : {
-        fontFamily : 'NanumSquare_0',
-        fontSize : 15,
-        marginVertical : 3,
-        textAlign : 'right',
-        color : '#666'
+    modalUsedDate: {
+        fontFamily: 'NanumSquare_0',
+        fontSize: 15,
+        marginVertical: 3,
+        textAlign: 'right',
+        color: '#666'
     },
-    modalPostDate : {
-        fontFamily : 'NanumSquare_0',
-        fontSize : 15,
-        marginVertical : 3,
-        textAlign : 'right',
-        color : '#666'
+    modalPostDate: {
+        fontFamily: 'NanumSquare_0',
+        fontSize: 15,
+        marginVertical: 3,
+        textAlign: 'right',
+        color: '#666'
     },
-    modalfeedback : {
-        fontFamily : 'NanumSquare_0',
-        backgroundColor : '#f0f0f0',
-        borderRadius : 7,
-        paddingVertical : 10,
-        paddingHorizontal : 7,
-        marginVertical : 15,
-        color : '#555'
+    modalfeedback: {
+        fontFamily: 'NanumSquare_0',
+        backgroundColor: '#f0f0f0',
+        borderRadius: 7,
+        paddingVertical: 10,
+        paddingHorizontal: 7,
+        marginVertical: 15,
+        color: '#555'
     },
 
 

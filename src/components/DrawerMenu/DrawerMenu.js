@@ -60,7 +60,7 @@ function DrawerMenu({navigation}) {
             useLegacyImplementation
             drawerContent={(props) => <CustomDrawerContent {...props} isloggedIn = {loggedIn} />}
             screenOptions={{
-                headerTitle: '아 울 러',
+                headerTitle: '',
                 headerTitleAlign : 'center',
                 headerTintColor : '#FFB236',
                 headerTitleStyle: {
@@ -93,7 +93,7 @@ function DrawerMenu({navigation}) {
                     drawerActiveBackgroundColor : '#f5f5f5',
                 }}
             />
-            <Drawer.Screen 
+            {/* <Drawer.Screen 
                 name='Mypage'
                 component={StackNav2}
                 options ={{
@@ -103,7 +103,7 @@ function DrawerMenu({navigation}) {
                     drawerActiveTintColor :'#FFB236',
                     drawerActiveBackgroundColor : '#f5f5f5',
                 }}
-            />
+            /> */}
             {loggedIn ? (<></>) : (
                 <Drawer.Screen 
                 name='Login' 

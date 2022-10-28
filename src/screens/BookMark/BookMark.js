@@ -30,7 +30,7 @@ export default function BookMark({ navigation, route }) {
     }
     
     const getBookmarks = async () => {
-        console.log('getBookmarks');
+        // console.log('getBookmarks');
         await firestore().collection('Users').doc(user_id).get()
         .then(async (doc) => {
             if (doc.exists) {

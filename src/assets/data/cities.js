@@ -1,15 +1,19 @@
 export const cityData = [
-    [{ label: '양양군', value: '양양군' },
-    { label: '정선군', value: '정선군' },
-    { label: '춘천시', value: '춘천시' },
-    { label: '고성군', value: '고성군' },
-    { label: '강릉시', value: '강릉시' },
-    { label: '동해시', value: '동해시' },
-    { label: '양구군', value: '양구군' },
-    { label: '홍천군', value: '홍천군' },
-    { label: '영월군', value: '영월군' },
-    { label: '평창군', value: '평창군' },],
-    [{ label: '성남시', value: '성남시' },
+    [{ label: '성동구', value: '성동구' },],    // 서울특별시
+
+    [{ label: '미추홀구', value: '미추홀구' },],    // 인천광역시
+
+    [{ label: '중구', value: '중구' },], // 대전광역시
+
+    [{ label: '달서구', value: '달서구' },], // 대구광역시
+
+    [{ label: '북구', value: '북구' },],    // 광주광역시
+
+    [{ label: '중구', value: '중구' },],    // 울산광역시
+
+    [{ label: '연서면', value: '연서면' },], // 세종자치시
+
+    [{ label: '성남시', value: '성남시' }, // 경기도
     { label: '파주시', value: '파주시' },
     { label: '하남시', value: '하남시' },
     { label: '화성시', value: '화성시' },
@@ -38,14 +42,19 @@ export const cityData = [
     { label: '의왕시', value: '의왕시' },
     { label: '의정부시', value: '의정부시' },
     { label: '동두천시', value: '동두천시' },],
-    [{ label: '성동구', value: '성동구' },],
-    [{ label: '미추홀구', value: '미추홀구' },],
-    [{ label: '달서구', value: '달서구' },],
-    [{ label: '중구', value: '중구' },],
-    [{ label: '북구', value: '북구' },],
-    [{ label: '중구', value: '중구' },],
-    [{ label: '연서면', value: '연서면' },],
-    [{ label: '청주시', value: '청주시' },
+
+    [{ label: '양양군', value: '양양군' },  // 강원도
+    { label: '정선군', value: '정선군' },
+    { label: '춘천시', value: '춘천시' },
+    { label: '고성군', value: '고성군' },
+    { label: '강릉시', value: '강릉시' },
+    { label: '동해시', value: '동해시' },
+    { label: '양구군', value: '양구군' },
+    { label: '홍천군', value: '홍천군' },
+    { label: '영월군', value: '영월군' },
+    { label: '평창군', value: '평창군' },],
+
+    [{ label: '청주시', value: '청주시' },  // 충청북도
     { label: '괴산군', value: '괴산군' },
     { label: '옥천군', value: '옥천군' },
     { label: '단양군', value: '단양군' },
@@ -54,7 +63,8 @@ export const cityData = [
     { label: '제천시', value: '제천시' },
     { label: '충주시', value: '충주시' },
     { label: '영동군', value: '영동군' },],
-    [{ label: '서천군', value: '서천군' },
+
+    [{ label: '서천군', value: '서천군' },  // 충청남도
     { label: '금산군', value: '금산군' },
     { label: '예산군', value: '예산군' },
     { label: '부여군', value: '부여군' },
@@ -68,7 +78,8 @@ export const cityData = [
     { label: '청양군', value: '청양군' },
     { label: '서산시', value: '서산시' },
     { label: '공주시', value: '공주시' },],
-    [{ label: '봉화군', value: '봉화군' },
+
+    [{ label: '봉화군', value: '봉화군' },  // 경상북도
     { label: '의성군', value: '의성군' },
     { label: '영주시', value: '영주시' },
     { label: '영양군', value: '영양군' },
@@ -87,7 +98,8 @@ export const cityData = [
     { label: '영천시', value: '영천시' },
     { label: '칠곡군', value: '칠곡군' },
     { label: '영덕군', value: '영덕군' },],
-    [{ label: '밀양시', value: '밀양시' },
+
+    [{ label: '밀양시', value: '밀양시' },  // 경상남도
     { label: '진주시', value: '진주시' },
     { label: '사천시', value: '사천시' },
     { label: '창원시', value: '창원시' },
@@ -100,7 +112,8 @@ export const cityData = [
     { label: '남해군', value: '남해군' },
     { label: '의령군', value: '의령군' },
     { label: '합천군', value: '합천군' },],
-    [{ label: '진안군', value: '진안군' },
+
+    [{ label: '진안군', value: '진안군' },  // 전라북도
     { label: '군산시', value: '군산시' },
     { label: '무주군', value: '무주군' },
     { label: '정읍시', value: '정읍시' },
@@ -113,7 +126,8 @@ export const cityData = [
     { label: '완주군', value: '완주군' },
     { label: '전주시', value: '전주시' },
     { label: '익산시', value: '익산시' },],
-    [{ label: '담양군', value: '담양군' },
+
+    [{ label: '담양군', value: '담양군' },  // 전라남도
     { label: '무안군', value: '무안군' },
     { label: '영광군', value: '영광군' },
     { label: '장성군', value: '장성군' },
@@ -133,5 +147,6 @@ export const cityData = [
     { label: '구례군', value: '구례군' },
     { label: '완도군', value: '완도군' },
     { label: '해남군', value: '해남군' },],
-    [{ label: '제주시', value: '제주시' },]
+
+    [{ label: '제주시', value: '제주시' },] // 제주도
 ]
