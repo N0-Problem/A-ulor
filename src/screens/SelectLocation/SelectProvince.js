@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import React from 'react'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
 import { Button } from 'react-native-paper';
 
 // 행정구역 도 && 시
@@ -24,18 +24,7 @@ const provinceData = [
 
 const tempbox06 = [0, 1, 2, 3, 4, 5, 6, 7]
 
-let province = ""
-
 function SelectProvince({navigation}) {
-
-    useEffect(() => {
-
-    }, [])
-
-    function updateProvince(num) {
-        province = provinceData[num].value
-    }
-
     return (
         <ScrollView>
             <View style={styles.container}>
@@ -46,11 +35,11 @@ function SelectProvince({navigation}) {
                     {tempbox06.map((item, index) => {
                         return (
                             <View key={index} style={{ flexDirection: 'row' }}>
-                                <Button style={styles.btnDesign} labelStyle={{ width: 100, paddingTop: 7, paddingBottom: 7 }} mode="contained" onPress={() => updateProvince(2 * index)} onTouchEnd={() => navigation.navigate('SelectCenter', {selectedProvince: province, provinceIndex : 2*index})}>
-                                    <Text style={{fontFamily:'NanumSquare_0'}}>{provinceData[2 * index].value}</Text>
+                                <Button style={styles.btnDesign} labelStyle={{ width: 100, paddingTop: 7, paddingBottom: 7 }} mode="contained" onPress={() => navigation.navigate('SelectCity', { selectedProvince: provinceData[2 * index].value, provinceIndex: 2 * index })}>
+                                    <Text style={{ fontFamily: 'NanumSquare_0' }}>{provinceData[2 * index].value}</Text>
                                 </Button>
-                                <Button style={styles.btnDesign} labelStyle={{ width: 100, paddingTop: 7, paddingBottom: 7 }} mode="contained" onPress={() => updateProvince(2 * index + 1)} onTouchEnd={() => navigation.navigate('SelectCenter', {selectedProvince: province, provinceIndex : 2*index+1})}>
-                                    <Text style={{fontFamily:'NanumSquare_0',}}>{provinceData[2 * index + 1].value}</Text>
+                                <Button style={styles.btnDesign} labelStyle={{ width: 100, paddingTop: 7, paddingBottom: 7 }} mode="contained" onPress={() => navigation.navigate('SelectCity', { selectedProvince: provinceData[2 * index + 1].value, provinceIndex: 2 * index + 1 })}>
+                                    <Text style={{ fontFamily: 'NanumSquare_0', }}>{provinceData[2 * index + 1].value}</Text>
                                 </Button>
                             </View>
 
