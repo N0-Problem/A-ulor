@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import { Button, List, Modal, Portal} from 'react-native-paper';
 import storage from '@react-native-firebase/storage';
 import DocumentPicker from 'react-native-document-picker';
@@ -13,7 +13,6 @@ export default function Mydocuments({ navigation, route }) {
     const [loading, setLoading] = useState(true);
     const [fileList, setFileList] = useState([]);
     const [newFileList, setNewFileList] = useState([]);
-    const [deletedFileList, setDeleteFileList] = useState([]);
 
     const selectDocuments = useCallback(async() => {
         try {
@@ -21,9 +20,11 @@ export default function Mydocuments({ navigation, route }) {
                 presentationStyle: 'fullScreen',
                 copyTo: 'documentDirectory'
             });
-            response.forEach((file) => {
+            response.forEach(async (file) => {
                 setFileList(fileList => [...fileList, file]);
                 setNewFileList(newFileList => [...newFileList, file]);
+                let reference = storage().ref(`${userId}/${file.name}`);
+                await reference.putFile(file.fileCopyUri);
             })
             console.log(fileList);
         } catch (err) {
@@ -31,13 +32,14 @@ export default function Mydocuments({ navigation, route }) {
         }
     }, []);
 
-    const deleteDocument = (current_file) => {
+    const deleteDocument = async (current_file) => {
         setFileList(fileList.filter(file => file.name !== current_file.name));  // 보여지는 파일 리스트에서 삭제
 
         if (newFileList.includes(current_file)) {
-            setNewFileList(newFileList.filter(file => file.name !== current_file.name));    // 서버에 추가할 파일 리스트에서 삭제
+            setNewFileList(newFileList.filter(file => file.name !== current_file.name));  
         } else {
-            setDeleteFileList([...deletedFileList, current_file]);  // 서버에서 삭제할 파일 리스트에 추가
+            let reference = storage().ref(`${userId}/${current_file.name}`);
+            await reference.delete();
         }
     }
 
@@ -58,13 +60,13 @@ export default function Mydocuments({ navigation, route }) {
             let reference = storage().ref(`${userId}/${file_name}`);
             await reference.putFile(file.fileCopyUri);
         })
-        // 서버에 있던 파일 중 이번에 삭제한 파일 삭제
-        deletedFileList.forEach(async (file) => {
-            let file_name = file.name;
-            let reference = storage().ref(`${userId}/${file_name}`);
-            await reference.delete();
-        })
-        navigation.navigate('MyPage');
+        // // 서버에 있던 파일 중 이번에 삭제한 파일 삭제
+        // deletedFileList.forEach(async (file) => {
+        //     let file_name = file.name;
+        //     let reference = storage().ref(`${userId}/${file_name}`);
+        //     await reference.delete();
+        // })
+        // navigation.navigate('MyPage');
     }
 
     const downloadToDevice = async (file) => {
@@ -103,36 +105,75 @@ export default function Mydocuments({ navigation, route }) {
             <View style={styles.title}>
                 <Text style={styles.titleText}>증빙 서류 관리</Text>
             </View>
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity 
+                        style={styles.button1}
+                        onPress={() => selectDocuments()}
+                >
+                    <Text style={styles.buttonText}>
+                        파일 추가하기
+                    </Text>
+                </TouchableOpacity>
+            </View>
             <View style={styles.fileContainer}>
                 { fileList.length ? (
-                        <View>
+                        <ScrollView>
                         {fileList.map((file, index) => (
                             <List.Item key={index} title={() => (
                                 <View style={styles.listDesign}>
-                                    <Text
-                                        style={styles.fileText}
-                                        numberOfLines={1}
-                                        ellipsizeMode='tail'
-                                        onPress={() => {downloadToDevice(file, index)}}
-                                    >
-                                        {file.name}
-                                    </Text>
-                                    <View style={{ alignItems: 'center' }}>
-                                        <TouchableOpacity style={{
-                                            marginBottom: 10,
-                                            backgroundColor: '#f1f1f1',
-                                            borderRadius: 5,
-                                            alignSelf: 'center'
-                                        }}
-                                        onPress={() => deleteDocument(file)}>
-                                            <Text style={{
-                                                color : 'black',
-                                                fontFamily : 'NanumSquare_0',
-                                                fontSize : 20, 
-                                                textAlign : 'center',
-                                                padding: 5,
-                                                margin: 3,
-                                            }}>
+                                    <View style={{
+                                        paddingRight: 10
+                                    }}>
+                                        <Text
+                                            style={styles.fileText}
+                                            numberOfLines={1}
+                                            ellipsizeMode='tail'
+                                        >
+                                            {file.name}
+                                        </Text>
+                                    </View>
+                                    <View style={{
+                                        flexDirection: 'row', 
+                                        justifyContent: 'flex-end',
+                                        marginTop: 5,
+                                    }}>
+                                        <TouchableOpacity 
+                                            style={styles.fileButton}
+                                            onPress={() =>  
+                                                Alert.alert(
+                                                '해당 서류를 다운로드 하시겠습니까?',
+                                                '',
+                                                [{
+                                                    text: '다운로드',
+                                                    onPress: () => downloadToDevice(file),
+                                                },
+                                                {
+                                                    text: '취소',
+                                                    style: 'cancel',
+                                                },
+                                                ],
+                                        )}>
+                                            <Text style={styles.fileButtonText}>
+                                                다운로드
+                                            </Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity 
+                                            style={styles.fileButton}
+                                            onPress={() =>  
+                                                Alert.alert(
+                                                '해당 서류를 정말 삭제하시겠습니까?',
+                                                '',
+                                                [{
+                                                    text: '삭제',
+                                                    onPress: () => deleteDocument(file),
+                                                },
+                                                {
+                                                    text: '취소',
+                                                    style: 'cancel',
+                                                },
+                                                ],
+                                        )}>
+                                            <Text style={styles.fileButtonText}>
                                                 삭제하기
                                             </Text>
                                         </TouchableOpacity>
@@ -140,7 +181,7 @@ export default function Mydocuments({ navigation, route }) {
                                 </View>                                   
                             )}/>
                         ))}
-                        </View>
+                        </ScrollView>
                     ) : (
                         <Text style={{
                             color : 'black',
@@ -154,26 +195,16 @@ export default function Mydocuments({ navigation, route }) {
                     )
                 }
             </View>
-            <View style={styles.buttonContainer}>
-                    <TouchableOpacity 
-                        style={styles.button}
-                        onPress={() => selectDocuments()}
-                    >
-                        <Text style={styles.buttonText}>
-                            파일 선택하기
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-            <View>
-            <TouchableOpacity 
-                        style={styles.button}
+            {/* <View>
+                <TouchableOpacity 
+                        style={styles.button2}
                         onPress={() => saveDocuments()}
                     >
                         <Text style={styles.buttonText}>
-                            서류 저장하기
+                            수정 완료하기
                         </Text>
                     </TouchableOpacity>
-            </View>
+            </View> */}
         </View>
     )
 }
@@ -200,20 +231,21 @@ const styles = StyleSheet.create({
     },
 
     fileContainer: {
-        justifyContent: 'center',
-        marginLeft: -5
+        flex: 1,
     },
 
     fileText: {
         color: 'black', 
-        fontSize: 25,
+        fontSize: 23,
         marginBottom: 10,
+        paddingRight: 10
     },
 
     listDesign: {
         borderBottomColor: 'gray',
         borderBottomWidth: 0.5,
-        marginBottom: -15
+        marginBottom: 5,
+        marginTop: -20
     },
 
     textDesign: {
@@ -235,18 +267,42 @@ const styles = StyleSheet.create({
     },
 
     buttonContainer: {
-        flex: 1,
-        marginHorizontal: 10,
-        alignItems: 'center'
+        marginHorizontal: 5,
+        marginBottom : 20,
+        justifyContent : 'center'
     },
 
-    button: {
+    fileButton: {
+        marginBottom: 10,
+        marginRight: 10,
+        backgroundColor: '#d9d9d9',
+        borderRadius: 5,
+        alignSelf: 'center'
+    },
+
+    fileButtonText: {
+        color : 'black',
+        fontFamily : 'NanumSquare_0',
+        fontSize : 18,
+        textAlign : 'center',
+        padding: 10,
+        margin: 3,
+    },
+
+    button1: {
         alignSelf : 'stretch',
         backgroundColor: '#FFDA36',
         height : 50,
-        marginTop : 20,
-        paddingLeft: 9, 
+        marginTop : 10,
         borderRadius : 7,
+        justifyContent : 'center'
+    },
+
+    button2: {
+        alignSelf : 'stretch',
+        backgroundColor: '#FFDA36',
+        height : 50,
+        marginTop : 0,
         justifyContent : 'center'
     },
 
@@ -255,5 +311,5 @@ const styles = StyleSheet.create({
         fontFamily : 'NanumSquare_0',
         fontSize : 25, 
         textAlign : 'center'
-    }
+    },
 });
