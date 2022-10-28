@@ -108,11 +108,11 @@ export default function UserInfo({navigation, route}) {
                 type2 = doc.data().type2;
                 type3 = doc.data().type3;
                 bookmarks = doc.data().bookmarks;
-                setSexChecked = doc.data().sexChecked;
-                setPhoneNumber = doc.data().phoneNumber;
-                setWheelchair = doc.data().wheelchair;
-                setProtector = doc.data().protector;
-                setCommunication = doc.data().communication;
+                setSexChecked(doc.data().sexChecked);
+                setPhoneNumber(doc.data().phoneNumber);
+                setWheelchair(doc.data().wheelchair);
+                setProtector(doc.data().protector);
+                setCommunication(doc.data().communication);
                 
                 console.log(doc.data());
             }
@@ -130,27 +130,30 @@ export default function UserInfo({navigation, route}) {
             setdropValue3(type3);
             setLoading(false);
         }, 800);
-    }, [extra]);
+    }, []);
 
     function setUserinfo() {
         let type = '';
         type = dropvalue;
+        type2 = dropvalue2;
+        type3 = dropvalue3;
         
         const userinfo = {
-        user_id: userId,
-        name: userName,
-        birthdate: date_to_string(date),
-        bookmarks: bookmarks,
-        type: type,
-        type2 : type2,
-        type3 : type3,
-        sexChecked : sexChecked,
-        phoneNumber : phoneNumber,
-        wheelchair : wheelchair,
-        protector : protector,
-        communication : communication,
+            user_id: userId,
+            name: userName,
+            birthdate: date_to_string(date),
+            bookmarks: bookmarks,
+            type: type,
+            type2 : type2,
+            type3 : type3,
+            sexChecked : sexChecked,
+            phoneNumber : phoneNumber,
+            wheelchair : wheelchair,
+            protector : protector,
+            communication : communication,
         };
 
+        console.log(userinfo);
         firestore().collection('Users').doc(userId).set(userinfo);
         navigation.navigate('MyPage');
     }
@@ -167,15 +170,14 @@ export default function UserInfo({navigation, route}) {
 
         setTimeout(() => {
             string_to_date(birthdate);
-
-            if (type[0] === '기타') {
-                setdropValue(type[0]);
+            setdropValue(type);
+            setdropValue2(type2);
+            setdropValue3(type3);
+            if (type === '장애인') {
                 setExtra(true);
-                setExtraInput(type[1]);
             } else {
-                setdropValue(type[0]);
+                setExtra(false);
             }
-
             setLoading(false);
         }, 800);
     }, []);
@@ -252,7 +254,11 @@ export default function UserInfo({navigation, route}) {
             <View style={styles.input_container}>
                 <Text style={styles.text_title}>전화번호</Text>
                 <TextInput
-                placeholder="전화번호"
+                placeholder="전화번호를 입력해주세요"
+                placeholderStyle={{
+                    color: 'grey',
+                    
+                }}
                 style={styles.textInput_input}
                 onChangeText={phoneNumber => setPhoneNumberformat(phoneNumber)}
                 maxLength={13}
@@ -420,10 +426,11 @@ export default function UserInfo({navigation, route}) {
             </View>
             </ScrollView>
             <Button
-            style={styles.button}
-            color={'#2d2d2d'}
-            onPress={() => setUserinfo()}>
-            저장
+                style={styles.button}
+                labelStyle={{fontSize: 25, fontFamily: 'NanumSquare_0'}}
+                color={'#2d2d2d'}
+                onPress={() => setUserinfo()}>
+                저장하기
             </Button>
         </View>
         );
@@ -439,7 +446,7 @@ const styles = StyleSheet.create({
   input_container: {
     justifyContent: 'center',
     paddingLeft: 13,
-    paddingVertical : 12,
+    paddingVertical : 10,
     backgroundColor: '#fff',
     borderBottomColor: '#dcdcdc',
     borderBottomWidth: 1,
@@ -449,6 +456,7 @@ const styles = StyleSheet.create({
     fontFamily: 'NanumSquare_0',
     fontSize: 22,
     top: -3,
+    marginVertical: 5
   },
   text_input: {
     backgroundColor: '#f1f1f1',
@@ -531,15 +539,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFDA36',
     width: '100%',
     bottom: 0,
+    fontSize: 20
   },
 
   radio_container : {
     flexDirection : 'row',
+    marginTop: 5,
+    marginBottom: -7
   },
   radio_element: {
     flexDirection : 'row',
   },
   radio_title : {
     fontSize: 25,
+    color: '#4E4E4E',
   }
 });
