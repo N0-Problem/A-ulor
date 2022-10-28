@@ -13,18 +13,14 @@ import {
     Dimensions,
     Alert
 } from 'react-native';
-import { Button, List, Title, Modal, Portal } from 'react-native-paper';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import { Modal, Portal } from 'react-native-paper';
 import Geolocation from 'react-native-geolocation-service';
 import firestore, { firebase } from '@react-native-firebase/firestore';
 import { config } from '../../../apikey';
-import { Scope } from '@babel/traverse';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import StackNav4 from '../../components/StackNav/StackNav4'
 import auth from '@react-native-firebase/auth';
-import { Item } from 'react-native-paper/lib/typescript/components/List/List';
 
-// 얘는 메인이나 스플래시 뜰 때 넣어야 할 듯
+
 async function requestPermission() {
     try {
         if (Platform.OS == "android") {
@@ -81,72 +77,7 @@ function CurrentLocation({ navigation }) {
         setVisible(true);
     }
     const hideModal = () => setVisible(false);
-
-    // // 지도에 n개의 Marker 띄우기
-    // const drawMarkers = () => {
-    //     return nearest_n.map(center => (
-    //         <Marker
-    //             key={center.id}
-    //             coordinate={{
-    //                 latitude: center.latitude,
-    //                 longitude: center.longitude,
-    //             }}
-    //             // title={center.name}
-    //             // description='빨간 핀을 누르면 센터 정보로 이동합니다.'
-    //             onPress={() => showCenterInfo(center)}
-    //         >
-    //             <View style={styles.talkBubble}>
-    //                 <View style={styles.talkBubbleSquare}>
-    //                     <Text style={{ fontFamily: 'NanumSquare_0', textAlign: 'center', color: 'gray', fontSize: 14, marginTop: 5 }}>{center.name}</Text>
-    //                     <Text style={{ fontFamily: 'NanumSquare_0', textAlign: 'center', color: '#4E4E4E', fontSize: 16, margin: 2 }}>눌러서 센터 정보 보기</Text>
-    //                 </View>
-    //                 <View style={styles.talkBubbleTriangle} />
-    //             </View>
-    //         </Marker>
-    //     ));
-    // }
-
-    // const showCenterInfo = (center) => {
-    //     navigation.navigate('StackNav3', { screen: 'CenterInfo', params: { selectedCenter: center } });
-    //     console.log(center);
-    // }
-
-    // const animateMap = (latitude, longitude) => {
-    //     let r = {
-    //         latitude: latitude,
-    //         longitude: longitude,
-    //         latitudeDelta: 0.005,
-    //         longitudeDelta: 0.005,
-    //     };
-    //     this.mapView.animateToRegion(r, 1000);
-    // }
-
-    // const listCenters = () => {
-    //     return (
-    //         <View style={{
-    //             marginTop: 10,
-    //         }}>
-    //             {nearest_n.map((center, id) => (
-    //                 <List.Item
-    //                     style={{
-    //                         borderBottomColor: '#999999',
-    //                         borderBottomWidth: 0.5,
-    //                         marginRight: 10,
-    //                         marginLeft: -5,
-    //                     }}
-    //                     key={id}
-    //                     title={center.name}
-    //                     description={
-    //                         <Text styles={{ fontFamily: 'NanumSquare_0' }}>
-    //                             {center.address}
-    //                         </Text>
-    //                     }
-    //                     onPress={() => animateMap(center.latitude, center.longitude)} />
-    //             ))}
-    //         </View>
-    //     );
-    // }
-
+    
     const reverseGeocoding = (lat, log) => {
         const google_map_api_key = config.apikey;
         // console.log(lat, log)
@@ -213,13 +144,6 @@ function CurrentLocation({ navigation }) {
             nearest_n[i] = nearest_n[i - 1];
         }
         nearest_n[0] = local_center;
-        // for (var i = 0; i < nearest_n.length; i++) {
-        //     let city = nearest_n[i].address.split(' ')[0];
-        //     if (city.slice(-1) === '도') {
-        //         city = nearest_n[i].address.split(' ')[1];
-        //     }
-        //     nearest_n[i].name = city;
-        // }
         setLoading(false);
     }
 
@@ -298,7 +222,7 @@ function CurrentLocation({ navigation }) {
                     {nearest_n && 
                     nearest_n.map((item, idx) => {
                         return (
-                            <View key={idx} style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: width}}>
+                            <View key={idx} style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: width }}>
                                 <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', borderRadius: 15, elevation: 10, paddingTop: 20, paddingLeft: 30, paddingBottom: 20, paddingRight: 30 }}>
                                     <View style={{ justifyContent: 'center', alignItems: 'center', }}>
                                         <Text style={{ fontFamily: 'NanumSquare', fontSize: 22, color: "#4E4E4E", marginBottom: 10 }}>
@@ -354,7 +278,7 @@ function CurrentLocation({ navigation }) {
                                         }
                                     </View>
                                     <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 10 }}>
-                                        <TouchableOpacity onPress={() => navigation.navigate('StackNav4', { screen: 'CenterInfo', params: { selectedCenter: nearest_n[idx] }})} style={{ marginRight: 5 }}>
+                                        <TouchableOpacity onPress={() => navigation.navigate('StackNav4', { screen: 'CenterInfo', params: { selectedCenter: nearest_n[idx] } })} style={{ marginRight: 5 }}>
                                             <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', borderRadius: 20, justifyContent: 'center', alignItems: 'center', width: 115, height: 115, elevation: 10 }}>
                                                 <Image style={styles.imageDesign} source={require('../../assets/images/center.png')} />
                                                 <Text style={styles.buttonTextDesign}>자세한 정보</Text>
@@ -399,7 +323,7 @@ function CurrentLocation({ navigation }) {
                                         </Modal>
                                     </Portal>
                                 </View>
-                                <Text style={{color:'black'}}>
+                                <Text style={{ color: 'black' }}>
                                     넘겨서 다음 센터 보기
                                 </Text>
                             </View>
@@ -422,17 +346,6 @@ function CurrentLocation({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    text: {
-        color: '#fff',
-        fontSize: 30,
-        fontWeight: 'bold'
-    },
-    slide: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#9DD6EB'
-    },
 
     container: {
         flexDirection: 'column',
@@ -440,50 +353,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'white'
     },
-    mapDesign: {
-        height: 400,
-        flex: 1,
-    },
 
-    listDesign: {
-        flex: 1,
-    },
-
-    title: {
-        marginTop: 20,
-        marginBottom: 0,
-        backgroundColor: 'white'
-    },
-
-    title_font: {
-        fontFamily: 'NanumSquare',
-        fontSize: 20,
-        marginLeft: 5,
-        color: '#4e4e4e',
-    },
-
-    talkBubble: {
-        backgroundColor: "transparent",
-    },
-    talkBubbleSquare: {
-        width: 150,
-        height: 40,
-        backgroundColor: "#FFDA36",
-        borderRadius: 10,
-    },
-    talkBubbleTriangle: {
-        width: 0,
-        height: 0,
-        marginTop: -5,
-        marginLeft: 60,
-        backgroundColor: "transparent",
-        borderTopColor: "#FFDA36",
-        borderTopWidth: 15,
-        borderRightColor: 'transparent',
-        borderRightWidth: 15,
-        borderLeftColor: 'transparent',
-        borderLeftWidth: 15,
-    },
     textDesign: {
         color: "#4E4E4E",
         fontFamily: 'NanumSquare_0',
