@@ -1,9 +1,13 @@
-import React, { useState } from 'react'
-import { View, Text, StyleSheet, Linking, Dimensions, TouchableOpacity, Image, ScrollView } from 'react-native';
-import firestore from '@react-native-firebase/firestore';
+import React, { useEffect, useState } from 'react'
+import { View, Text, StyleSheet, Linking, Dimensions, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
+import { Modal, Portal, Button } from 'react-native-paper';
+import firestore, { firebase } from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 let centers = [];
+let selected_center = [];
+let userinfo;
 
 function SelectedCenters({ navigation, route }) {
 
@@ -11,14 +15,68 @@ function SelectedCenters({ navigation, route }) {
     const width = Dimensions.get('window').width;
 
     const [pickCenters, setPickCenters] = useState();       // 사용자가 고른 지역의 센터들
+    
+    // modal 관련 코드
+    const [visible, setVisible] = useState(false);
+    const showModal = (item) =>{
+        console.log(item);
+        selected_center = item;
+        setVisible(true);
+    }
+    const hideModal = () => setVisible(false);
 
-    firestore().collection('Centers').get()
+    const addBookmark = (item) => {
+        let bookmarks = [];
+        console.log(userinfo);
+        if (userinfo) {
+            const docRef = firestore().collection('Users').doc(userinfo.uid)
+            docRef.get()
+            .then(doc => {
+                if (doc.exists) {
+                    bookmarks = doc.data().bookmarks;
+                    if (bookmarks.includes(item.id)) {
+                        Alert.alert('이미 즐겨찾기 추가된 센터입니다!');
+                    } else {
+                        const FieldValue = firebase.firestore.FieldValue;
+                        docRef.update({bookmarks: FieldValue.arrayUnion(item.id)});
+                    }   
+                }
+            });
+        } else {
+            Alert.alert(
+                '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
+                '',
+                [{
+                    text: '확인',
+                    onPress: () => navigation.navigate('Login'),
+                },
+                {
+                    text: '취소',
+                    //onPress: () => navigation.navigate('Main'),
+                    style: 'cancel',
+                },
+                ],
+            )
+        }
+    }
+
+    useEffect(() => {
+        auth().onAuthStateChanged((user) => {
+            if (user) {
+                userinfo = user;
+                console.log(userinfo);
+            }
+        });
+
+        firestore().collection('Centers').get()
         .then(querySnapshot => {
             centers = querySnapshot.docs.map(doc => doc.data());
             let addressStr = userRegion.selectedProvince + ' ' + userRegion.selectedCity;
             centers = centers.filter((centers) => centers.address.toLowerCase().includes(addressStr));  // 세부 행정구역과 도시로 사용자가 고른 지역의 센터들을 필터링함
             setPickCenters(centers);
         });
+    }, [])
+    
 
     return (
         <View style={{ flex: 1 }}>
@@ -88,8 +146,36 @@ function SelectedCenters({ navigation, route }) {
                                             <Text style={styles.buttonTextDesign}>보러가기</Text>
                                         </View>
                                     </TouchableOpacity>
-                                    {/* 아래의 TouchableOpacity에 onPress로 즐겨찾기에 추가하는 백엔드 작업 만들어주세요! */}
-                                    <TouchableOpacity style={{ marginLeft: 5 }}>
+                                    <Portal style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                        <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalDesign}>
+                                            <Text style={{ fontFamily: 'NanumSquare_0', color:'black' }}>선택하신 이동지원센터를 즐겨찾기에 추가하시겠습니까?</Text>
+                                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                                <Text style={{ marginTop: 10 }}>
+                                                    <Button
+                                                        mode="text"
+                                                        color="#FFB236"
+                                                        onPress={() => {
+                                                            addBookmark(selected_center);
+                                                            setVisible(false);
+                                                        }}
+                                                    >
+                                                        <Text style={{ fontFamily: 'NanumSquare_0' }}>
+                                                            예
+                                                        </Text>
+                                                    </Button>
+                                                    <Button
+                                                        mode="text"
+                                                        color="#FFB236"
+                                                        onPress={() => setVisible(false)}>
+                                                        <Text style={{ fontFamily: 'NanumSquare_0' }}>
+                                                            아니오
+                                                        </Text>
+                                                    </Button>
+                                                </Text>
+                                            </View>
+                                        </Modal>
+                                    </Portal>
+                                    <TouchableOpacity style={{ marginLeft: 5 }} onPress={() => showModal(item)}>
                                         <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', borderRadius: 20, justifyContent: 'center', alignItems: 'center', width: 115, height: 115, elevation: 10 }}>
                                             <Ionicons name="ios-bookmarks" color='black' size={30} style={{ marginBottom: 10 }} />
                                             <Text style={styles.buttonTextDesign}>즐겨찾기에</Text>
@@ -136,13 +222,25 @@ const styles = StyleSheet.create({
     buttonTextDesign: {
         fontWeight: 'bold',
         color: 'black',
-        fontSize: 20
+        fontSize: 18
     },
 
     unableButtonTextDesign: {
         fontWeight: 'bold',
         color: '#C79726',
-        fontSize: 20
+        fontSize: 18
+    },
+
+    modalDesign: {
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingBottom: 10,
+        width: 375,
+        marginLeft: 9
     }
 });
 

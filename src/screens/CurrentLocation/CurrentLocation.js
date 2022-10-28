@@ -382,13 +382,13 @@ const styles = StyleSheet.create({
     buttonTextDesign: {
         fontWeight: 'bold',
         color: 'black',
-        fontSize: 20
+        fontSize: 18
     },
 
     unableButtonTextDesign: {
         fontWeight: 'bold',
         color: '#C79726',
-        fontSize: 20
+        fontSize: 18
     },
 
     modalDesign: {
