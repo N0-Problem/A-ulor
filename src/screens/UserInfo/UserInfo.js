@@ -301,6 +301,8 @@ export default function UserInfo({navigation, route}) {
                         setExtra(true);
                     }else {
                         setExtra(false);
+                        setdropValue2('');
+                        setdropValue3('');
                     }}}
                 />
             </View>
