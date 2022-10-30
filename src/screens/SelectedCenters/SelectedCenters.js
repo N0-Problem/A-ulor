@@ -139,7 +139,7 @@ function SelectedCenters({ navigation, route }) {
                                     }
                                 </View>
                                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 10 }}>
-                                    <TouchableOpacity onPress={() => navigation.navigate('StackNav4', { screen: 'CenterInfo', params: { selectedCenter: pickCenters[index] } })} style={{ marginRight: 5 }}>
+                                    <TouchableOpacity onPress={() => navigation.navigate('CenterInfo2', { selectedCenter: pickCenters[index] })}  style={{ marginRight: 5 }}>
                                         <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', borderRadius: 20, justifyContent: 'center', alignItems: 'center', width: 115, height: 115, elevation: 10 }}>
                                             <Image style={styles.imageDesign} source={require('../../assets/images/center.png')} />
                                             <Text style={styles.buttonTextDesign}>자세한 정보</Text>
