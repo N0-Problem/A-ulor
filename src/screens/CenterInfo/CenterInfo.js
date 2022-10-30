@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, ScrollView, Pressable, TouchableOpacity, Image, Linking, Alert, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Pressable, TouchableOpacity, Image, Linking, Alert } from 'react-native';
 import { Button, Card, Title, Modal, Portal } from 'react-native-paper';
-import Fontisto from 'react-native-vector-icons/Fontisto';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import { useIsFocused } from '@react-navigation/native';
@@ -124,7 +123,7 @@ function CenterInfo({ navigation, route }) {
                         <View>
                             <View style={styles.paragraphDesign}>
                                 <Text style={styles.textDesign}>주소</Text>
-                                <Text style={{color: "black", fontFamily: 'NanumSquare_0', fontSize: 22}}>{userCenter.address}</Text>
+                                <Text style={{ color: "black", fontFamily: 'NanumSquare_0', fontSize: 22 }}>{userCenter.address}</Text>
                             </View>
                             <View style={styles.paragraphDesign}>
                                 <Text style={styles.textDesign}>전화번호</Text>
@@ -143,7 +142,7 @@ function CenterInfo({ navigation, route }) {
                                                     )}
                                                 </Pressable>
                                             </Text>
-                                            <Text style={{ color: 'black', fontFamily: 'NanumSquare_0', fontSize: 20, marginLeft: 5, marginTop: 1}}>(광역)</Text>
+                                            <Text style={{ color: 'black', fontFamily: 'NanumSquare_0', fontSize: 20, marginLeft: 5, marginTop: 1 }}>(광역)</Text>
                                         </View>
                                         <View style={{ flexDirection: 'row' }}>
                                             <Text>
@@ -167,7 +166,7 @@ function CenterInfo({ navigation, route }) {
                                     <Text>
                                         <Pressable>
                                             {({ pressed }) => (
-                                                <Text style={{ color: 'black', fontFamily: 'NanumSquare_0', fontSize: 22 , borderBottomColor:'#999999', borderBottomWidth:1}}
+                                                <Text style={{ color: 'black', fontFamily: 'NanumSquare_0', fontSize: 22, borderBottomColor: '#999999', borderBottomWidth: 1 }}
                                                     onPress={() =>
                                                         Linking.openURL(`tel:${userCenter.phone_number}`)
                                                     }>
@@ -179,28 +178,28 @@ function CenterInfo({ navigation, route }) {
                             </View>
                             <View style={{ marginTop: 40, justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
                                 <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-                                    <TouchableOpacity style={{marginRight: 5}} onPress={showRegion}>
+                                    <TouchableOpacity style={{ marginRight: 5 }} onPress={showRegion}>
                                         <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', padding: 20, borderRadius: 20, justifyContent: 'center', alignItems: 'center', width: 160, height: 160, elevation: 10, marginBottom: 10 }}>
                                             <Image style={styles.imageDesign} source={require('../../assets/images/region.png')} />
-                                            <Text style = {styles.buttonTextDesign}>운행지역</Text>
-                                            <Text style = {styles.buttonTextDesign}>확인하기</Text>
+                                            <Text style={styles.buttonTextDesign}>운행지역</Text>
+                                            <Text style={styles.buttonTextDesign}>확인하기</Text>
                                         </View>
                                         <Portal>
                                             <Modal visible={visibleRegion} onDismiss={hideRegion} contentContainerStyle={styles.moreInfoModalDesign}>
                                                 <View style={{ flexDirection: 'row' }}>
-                                                    <View style={{ flex: 1, flexDirection: 'column', marginLeft: 20, justifyContent: 'center', alignItems: 'center', borderRightWidth: 1, borderRightColor: 'black' }}>
-                                                        <Text style={{ fontFamily: 'NanumSquare', color: '#FFC021', marginBottom: 20 }}>관내 지역</Text>
+                                                    <View style={{ flex: 1, flexDirection: 'column', marginLeft: 20, paddingRight: 10, justifyContent: 'center', alignItems: 'center', borderRightWidth: 1, borderRightColor: 'black' }}>
+                                                        <Text style={{ fontFamily: 'NanumSquare', color: '#FFC021', marginBottom: 20, fontSize: 22 }}>관내 지역</Text>
                                                         {regions && regions.inner_regions.map((item, idx) => {
                                                             return (
-                                                                <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 10 }}>{item}</Text>
+                                                                <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 10, fontSize: 22 }}>{item}</Text>
                                                             )
                                                         })}
                                                     </View>
                                                     <View style={{ flex: 1, flexDirection: 'column', marginRight: 20, justifyContent: 'center', alignItems: 'center', borderLeftWidth: 1, borderLeftColor: 'black' }}>
-                                                        <Text style={{ fontFamily: 'NanumSquare', color: '#FFC021', marginBottom: 20 }}>관외 지역</Text>
+                                                        <Text style={{ fontFamily: 'NanumSquare', color: '#FFC021', marginBottom: 20, fontSize: 22 }}>관외 지역</Text>
                                                         {regions && regions.outer_regions.map((item, idx) => {
                                                             return (
-                                                                <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 10 }}>{item}</Text>
+                                                                <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 10, fontSize: 22 }}>{item}</Text>
                                                             )
                                                         })}
                                                     </View>
@@ -208,18 +207,18 @@ function CenterInfo({ navigation, route }) {
                                             </Modal>
                                         </Portal>
                                     </TouchableOpacity>
-                                    <TouchableOpacity style={{marginLeft: 5}} onPress={showCompliance}>
+                                    <TouchableOpacity style={{ marginLeft: 5 }} onPress={showCompliance}>
                                         <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', padding: 20, borderRadius: 20, justifyContent: 'center', alignItems: 'center', width: 160, height: 160, elevation: 10, marginBottom: 10 }}>
                                             <Image style={styles.imageDesign} source={require('../../assets/images/rule.png')} />
-                                            <Text style = {styles.buttonTextDesign}>준수사항</Text>
-                                            <Text style = {styles.buttonTextDesign}>확인하기</Text>
+                                            <Text style={styles.buttonTextDesign}>준수사항</Text>
+                                            <Text style={styles.buttonTextDesign}>확인하기</Text>
                                         </View>
                                         <Portal>
                                             <Modal visible={visibleCompliance} onDismiss={hideCompliance} contentContainerStyle={styles.moreInfoModalDesign}>
                                                 <View style={{ flexDirection: 'column' }}>
                                                     {userCenter.rules.map((item, idx) => {
                                                         return (
-                                                            <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 15, marginLeft: 10, marginRight: 10 }}>{idx + 1}. {item}</Text>
+                                                            <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 15, marginLeft: 10, marginRight: 10, fontSize: 20 }}>{item}</Text>
                                                         )
                                                     })}
                                                 </View>
@@ -228,7 +227,7 @@ function CenterInfo({ navigation, route }) {
                                     </TouchableOpacity>
                                 </View>
                                 <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-                                    <TouchableOpacity style={{marginRight: 5}} onPress={showAvailable}>
+                                    <TouchableOpacity style={{ marginRight: 5 }} onPress={showAvailable}>
                                         <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', padding: 20, borderRadius: 20, justifyContent: 'center', alignItems: 'center', width: 160, height: 160, elevation: 10, marginBottom: 10 }}>
                                             <Image style={styles.imageDesign} source={require('../../assets/images/active_user.png')} />
                                             <Text style={styles.buttonTextDesign}>이용가능대상</Text>
@@ -239,18 +238,19 @@ function CenterInfo({ navigation, route }) {
                                                 <View style={{ flexDirection: 'column' }}>
                                                     {userCenter.targets.map((item, idx) => {
                                                         return (
-                                                            <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 15, marginLeft: 10, marginRight: 10 }}>{idx + 1}. {item}</Text>
+                                                            <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 15, marginLeft: 10, marginRight: 10, fontSize: 20 }}>▶ {item}</Text>
                                                         )
                                                     })}
                                                 </View>
                                             </Modal>
                                         </Portal>
                                     </TouchableOpacity>
-                                    <TouchableOpacity style={{marginLeft: 5}}>
+                                    {/* 신청서류 확인 링크 달아주세요! */}
+                                    <TouchableOpacity style={{ marginLeft: 5 }}>
                                         <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', padding: 20, borderRadius: 20, justifyContent: 'center', alignItems: 'center', width: 160, height: 160, elevation: 10, marginBottom: 10 }}>
                                             <Image style={styles.imageDesign} source={require('../../assets/images/file.png')} />
-                                            <Text style = {styles.buttonTextDesign}>신청서류</Text>
-                                            <Text style = {styles.buttonTextDesign}>확인하기</Text>
+                                            <Text style={styles.buttonTextDesign}>신청서류</Text>
+                                            <Text style={styles.buttonTextDesign}>확인하기</Text>
                                         </View>
                                     </TouchableOpacity>
                                 </View>
@@ -260,10 +260,10 @@ function CenterInfo({ navigation, route }) {
                 </View>
                 {reviewList.length == 0 ? (
                     <View>
-                        <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center'}}>
-                            <Button style={styles.buttonDesign} mode="contained" color="#FFB236" onPress={() => moveToAddReview()}>
-                                <Text style={{ fontFamily: 'NanumSquare', fontSize: 16 }}>후기 작성하러 가기</Text>
-                            </Button>
+                        <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
+                            <TouchableOpacity style={styles.buttonDesign} mode="contained" color="#FFB236" onPress={() => moveToAddReview()}>
+                                <Text style={{ fontFamily: 'NanumSquare', fontSize: 16, color: 'black' }}>후기 작성하러 가기</Text>
+                            </TouchableOpacity>
                         </View>
                         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                             <View style={{ marginTop: 35, marginBottom: 45 }}>
@@ -274,14 +274,16 @@ function CenterInfo({ navigation, route }) {
 
                 ) : (
                     <>
+                        <View style={{ paddingBottom: 5 }}>
+                            <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
+                                <TouchableOpacity style={styles.buttonDesign} color="#FFB236" onPress={() => moveToAddReview()}>
+                                    <Text style={{ fontFamily: 'NanumSquare', fontSize: 16, color: 'black' }}>후기 작성하러 가기</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
                         {reviewList.map((item, index) => {
                             return (
-                                <View style={{paddingBottom: 10}}>
-                                    <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
-                                        <Button style={styles.buttonDesign} mode="contained" color="#FFB236" onPress={() => moveToAddReview()}>
-                                            <Text style={{ fontFamily: 'NanumSquare', fontSize: 16 }}>후기 작성하러 가기</Text>
-                                        </Button>
-                                    </View>
+                                <View style={{ paddingBottom: 10 }}>
                                     <View style={{ flexDirection: 'column', backgroundColor: 'white' }} key={index}>
                                         <View style={styles.reviewDesign}>
                                             <View style={{ flexDirection: "row", marginBottom: 5, marginTop: 5, justifyContent: 'space-between' }}>
@@ -354,11 +356,13 @@ const styles = StyleSheet.create({
     buttonDesign: {
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: '#FFB236',
+        paddingVertical: 7,
         marginBottom: 10,
         marginLeft: 10,
         marginRight: 10,
         borderRadius: 40,
-        width: 280        
+        width: 280
     },
 
     buttonTextDesign: {
