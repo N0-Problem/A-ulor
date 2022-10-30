@@ -224,6 +224,9 @@ export default function UserInfo({navigation, route}) {
                 mode={'date'}
                 open={open}
                 date={date}
+                title="날짜 선택"
+                confirmText="확인"
+                cancelText="취소"
                 maximumDate={new Date()}
                 onConfirm={date => {
                 setOpen(false);
