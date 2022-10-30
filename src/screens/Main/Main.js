@@ -57,7 +57,7 @@ function Main({navigation}) {
                         <TouchableOpacity 
                             style={styles.box1}
                             activeOpacity={0.7}
-                            onPress={() => navigation.navigate('BottomNav',{screen : 'CurrentLocation'})}>
+                            onPress={() => navigation.navigate('StackNav4',{screen : 'CurrentLocation'})}>
                             <Ionicons name="location" color='#414141' size={70} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
@@ -73,7 +73,7 @@ function Main({navigation}) {
                         <TouchableOpacity 
                             style={styles.box1}
                             activeOpacity={0.7}
-                            onPress={() => navigation.navigate('BottomNav', { screen :'StackNav3'})}>
+                            onPress={() => navigation.navigate('StackNav3', { screen :'SelectProvince'})}>
                             <MaterialCommunityIcons name="table-search" color='#414141' size={70} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
@@ -92,7 +92,7 @@ function Main({navigation}) {
                         <TouchableOpacity 
                             style={styles.box3}
                             activeOpacity={0.7}
-                            onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark', params: {user_id: userId}})}>
+                            onPress={() => navigation.navigate('StackNav2', {screen : 'BookMark', params: {user_id: userId}})}>
                             <Ionicons name="ios-bookmarks" color='#414141' size={65} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
@@ -141,7 +141,7 @@ function Main({navigation}) {
                         <TouchableOpacity 
                             style={styles.box2}
                             activeOpacity={0.7}
-                            onPress={() => navigation.navigate('BottomNav', {screen: 'StackNav2'})}>
+                            onPress={() => navigation.navigate('StackNav2', {screen: 'Mypage'})}>
                             <FontAwesome5 name="user-alt" color='#414141' size={65} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',
@@ -196,7 +196,8 @@ const styles = StyleSheet.create({
         flex : 1
     },
     main_header: {
-        height: '20%',
+        flex : 1,
+        // height: '20%',
         backgroundColor: '#4E4E4E',
         alignItems : 'center'
     },
@@ -236,7 +237,8 @@ const styles = StyleSheet.create({
         marginRight: 15
     },
     boxes :{
-        height : '77%',
+        flex : 3,
+        // height : '77%',
         flexDirection :'column',
     },
     div1 : {
