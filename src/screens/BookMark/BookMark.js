@@ -121,7 +121,7 @@ export default function BookMark({ navigation, route }) {
                             </Modal>
                         </Portal>
                         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingLeft: 30, paddingRight: 30 }}>
-                            <Button style={{ flex: 1, marginRight: 30 }} mode="contained" color="#FFB236" onPress={() => navigation.navigate('StackNav3', {screen: 'CenterInfo', params: {selectedCenter: center}})}>
+                            <Button style={{ flex: 1, marginRight: 30 }} mode="contained" color="#FFB236" onPress={() => navigation.navigate('StackNav3', {screen: 'CenterInfo2', params: {selectedCenter: center}})}>
                                 <Text style={{ fontFamily: 'NanumSquare_0' }}>세부정보 보기</Text>
                             </Button>
                             <Button style={{ flex: 1 }} mode="contained" color="#FFB236" onPress={showModal}>
