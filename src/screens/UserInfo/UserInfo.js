@@ -196,6 +196,9 @@ export default function UserInfo({navigation, route}) {
     } else {
         return (
         <View style={styles.container}>
+            <View style={styles.title}>
+                <Text style={styles.titleText}>개인 정보 수정</Text>
+            </View>
             <ScrollView>
             <View style={styles.input_container}>
                 <Text style={styles.text_title}>이름</Text>
@@ -305,6 +308,11 @@ export default function UserInfo({navigation, route}) {
             <View style={styles.drop_container2}>
                 <Text style={styles.drop_title}>장애 유형</Text>
                 <DropDownPicker
+                contentContainerStyle={{ flexGrow: 1 }}
+                listMode="SCROLLVIEW"
+                scrollViewProps={{
+                nestedScrollEnabled: true,
+                }}
                 dropDownDirection='DOWN'
                 style={styles.dropdown}
                 textStyle={{
@@ -338,6 +346,11 @@ export default function UserInfo({navigation, route}) {
             <View style={styles.drop_container3}>
                 <Text style={styles.drop_title}>장애 정도</Text>
                 <DropDownPicker
+                contentContainerStyle={{ flexGrow: 1 }}
+                listMode="SCROLLVIEW"
+                scrollViewProps={{
+                nestedScrollEnabled: true,
+                }}
                 dropDownDirection='DOWN'
                 style={styles.dropdown}
                 textStyle={{
@@ -451,6 +464,21 @@ const styles = StyleSheet.create({
     borderBottomColor: '#dcdcdc',
     borderBottomWidth: 1,
   },
+  title: {
+    alignSelf: 'stretch',
+    height : 45,
+    marginTop: 30,
+    marginBottom: 15, 
+    borderBottomColor : '#d2d2d2',
+    borderBottomWidth : 1
+    },
+    titleText: {
+        fontFamily: 'NanumSquare_0', 
+        fontSize: 28, 
+        marginLeft : 20,
+        color: '#4e4e4e',
+    },
+
   text_title: {
     color: '#4E4E4E',
     fontFamily: 'NanumSquare_0',
@@ -534,6 +562,7 @@ const styles = StyleSheet.create({
     right: 3,
     marginTop: 4,
     width: '99%',
+    position: 'relative',
   },
   button: {
     backgroundColor: '#FFDA36',
