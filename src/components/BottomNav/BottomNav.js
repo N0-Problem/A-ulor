@@ -20,13 +20,13 @@ function BottomNav({navigation}) {
   const Tab = createBottomTabNavigator();
   const [loggedIn, setLoggedIn] = useState(false);
 
-  const handlePressBack = () => {
-    if(navigation?.canGoBack()) {
-        navigation.goBack()
-        return true;
-    }
-    return false;
-}
+//   const handlePressBack = () => {
+//     if(navigation?.canGoBack()) {
+//         navigation.goBack()
+//         return true;
+//     }
+//     return false;
+// }
 
   useEffect(() => {
     auth().onAuthStateChanged(user => {
@@ -36,11 +36,11 @@ function BottomNav({navigation}) {
         setLoggedIn(false);
         }
     });
-    BackHandler.addEventListener('hardwareBackPress', handlePressBack)
-    return () => {
-        BackHandler.removeEventListener('hardwareBackPress',handlePressBack)
-    }
-}, [handlePressBack]);
+    // BackHandler.addEventListener('hardwareBackPress', handlePressBack)
+    // return () => {
+    //     BackHandler.removeEventListener('hardwareBackPress',handlePressBack)
+    // }
+}, []);
 
   return (
     <Tab.Navigator
@@ -48,8 +48,9 @@ function BottomNav({navigation}) {
         headerShown: false,
         tabBarActiveTintColor: '#FFB236',
         tabBarInactiveTintColor: '#242424',
+        backBehavior : 'history',
       })}>
-      {/* <Tab.Screen
+      <Tab.Screen
         name="Main"
         component={Main}
         options={{
@@ -61,13 +62,13 @@ function BottomNav({navigation}) {
             fontFamily : 'NanumSquare'
           }
         }}
-        listeners={() => ({ //Main에서는 BottomNav를 띄우지 않기 위해
-          tabPress: e => {
-            e.preventDefault(); // Prevent default behavior
-            navigation.navigate('Main');
-          },
-        })}
-      /> */}
+        // listeners={() => ({ //Main에서는 BottomNav를 띄우지 않기 위해
+        //   tabPress: e => {
+        //     e.preventDefault(); // Prevent default behavior
+        //     navigation.navigate('Main');
+        //   },
+        // })}
+      />
       <Tab.Screen
         name="StackNav4"
         component={StackNav4}
@@ -94,7 +95,7 @@ function BottomNav({navigation}) {
           }
         }}
       />
-      {loggedIn ? (
+      {/* {loggedIn ? (
         <Tab.Screen
         name="BookMark"
         component={BookMark}
@@ -141,7 +142,7 @@ function BottomNav({navigation}) {
           }
         }}
         />
-      )}
+      )} */}
       {loggedIn ? (
         <Tab.Screen
         name="StackNav2"
@@ -155,12 +156,6 @@ function BottomNav({navigation}) {
             fontFamily : 'NanumSquare'
           }
         }}
-        listeners={() => ({ //Mypage에서는 BottomNav를 띄우지 않기 위해
-          tabPress: e => {
-            e.preventDefault(); // Prevent default behavior
-            navigation.navigate('BottomNav', {screen: 'StackNav2'});
-          },
-        })}
         />
       ) : (
         <Tab.Screen

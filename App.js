@@ -14,6 +14,8 @@ import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import SplashScreen from 'react-native-splash-screen';
 import DrawerMenu from './src/components/DrawerMenu/DrawerMenu';
 import auth from '@react-native-firebase/auth';
+import BottomNav from './src/components/BottomNav/BottomNav';
+import StackNav from './src/components/StackNav/StackNav';
 
 LogBox.ignoreLogs(['Warning: ...']);
 LogBox.ignoreAllLogs();
@@ -58,7 +60,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <DrawerMenu/>
+        <StackNav/>
       </NavigationContainer>
     </PaperProvider>
   );

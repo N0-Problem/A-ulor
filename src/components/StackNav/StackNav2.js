@@ -5,6 +5,7 @@ import Mypage from '../../screens/Mypage/Mypage';
 import UserInfo from '../../screens/UserInfo/UserInfo';
 import MyReview from '../../screens/MyReview/MyReview';
 import Mydocuments from '../../screens/Mydocuments/Mydocuments';
+import BookMark from '../../screens/BookMark/BookMark';
 
 const StackNav2 = ({navigation}) => {
     const Stack = createNativeStackNavigator();
@@ -19,8 +20,8 @@ const StackNav2 = ({navigation}) => {
                 }}
             />
             <Stack.Screen
-                name="UserInfo"
-                component={UserInfo}
+                name="BookMark"
+                component={BookMark}
                 options={{
                     headerShown:false,
                 }}

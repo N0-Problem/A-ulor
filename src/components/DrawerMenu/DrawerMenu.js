@@ -60,7 +60,7 @@ function DrawerMenu({navigation}) {
             useLegacyImplementation
             drawerContent={(props) => <CustomDrawerContent {...props} isloggedIn = {loggedIn} />}
             screenOptions={{
-                headerTitle: '',
+                headerTitle: '아울러',
                 headerTitleAlign : 'center',
                 headerTintColor : '#FFB236',
                 headerTitleStyle: {

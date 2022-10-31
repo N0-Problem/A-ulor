@@ -61,22 +61,22 @@ export default function Mypage({navigation}) {
             </View>
             <View style={styles.listbox}>
                 {loggedIn ? (
-                    <Text style={styles.list} onPress={() => navigation.navigate('BottomNav',{screen : 'BookMark', params: {user_id: userId}})}>자주 사용하는 센터</Text>
-                ):(
-                    <Text style={styles.list_disable} disabled={true}>자주 사용하는 센터</Text>
-                )}
-                {loggedIn ? (
-                    <Text style={styles.list} onPress={() => navigation.navigate('MyReview', {user_id: userId})}>내가 쓴 후기</Text>
-                ):(
-                    <Text style={styles.list_disable} disabled={true}>내가 쓴 후기</Text>
-                )}
-                {loggedIn ? (
-                    <Text style={styles.list} onPress={() => navigation.navigate('UserInfo', {user_id: userId, user_name: userName})}>개인 정보 수정</Text>
+                    <Text style={styles.list} onPress={() => navigation.navigate('UserInfo', {initial: false, user_id: userId, user_name: userName})}>개인 정보 수정</Text>
                 ):(
                     <Text style={styles.list_disable} disabled={true}>개인 정보 수정</Text>
                 )}
                 {loggedIn ? (
-                    <Text style={styles.list} onPress={() => navigation.navigate('Mydocuments', {user_id: userId})}>증빙 서류 관리</Text>
+                    <Text style={styles.list} onPress={() => navigation.navigate('BookMark',{initial: false, user_id: userId})}>자주 사용하는 센터</Text>
+                ):(
+                    <Text style={styles.list_disable} disabled={true}>자주 사용하는 센터</Text>
+                )}
+                {loggedIn ? (
+                    <Text style={styles.list} onPress={() => navigation.navigate('MyReview', {initial: false,user_id: userId})}>내가 쓴 후기</Text>
+                ):(
+                    <Text style={styles.list_disable} disabled={true}>내가 쓴 후기</Text>
+                )}
+                {loggedIn ? (
+                    <Text style={styles.list} onPress={() => navigation.navigate('Mydocuments', {initial: false,user_id: userId})}>증빙 서류 관리</Text>
                 ):(
                     <Text style={styles.list_disable} disabled={true}>증빙 서류 관리</Text>
                 )}

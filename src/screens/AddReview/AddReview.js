@@ -116,7 +116,7 @@ function AddReview({ navigation, route }) {
 
         firestore().collection('Review').doc(review_id).set(review);
 
-        navigation.navigate('CenterInfo', {selectedCenter : reviewCenter})
+        navigation.navigate('CenterInfo2', {selectedCenter : reviewCenter})
     }
 
     return (
