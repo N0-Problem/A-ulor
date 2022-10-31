@@ -6,6 +6,8 @@ import firestore, {firebase} from '@react-native-firebase/firestore';
 import { useIsFocused } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+let selected_center;
+
 export default function BookMark({ navigation, route }) {
     
     const params = route.params;
@@ -74,66 +76,11 @@ export default function BookMark({ navigation, route }) {
     const [visible, setVisible] = React.useState(false);
 
     // modal 관련 코드
-    const showModal = () => setVisible(true);
-    const hideModal = () => setVisible(false);
-
-    function listBookmarks() {
-        return (
-            bookmarks.map((center, id) => (
-                <List.Accordion
-                    style={{ marginLeft: 5 }}
-                    title={center.name}
-                    titleStyle={{ fontFamily: 'NanumSquare_acR' }}
-                    key={id}
-                    onPress={handlePress}
-                >
-                <List.Item title={() => (
-                    <View>
-                        <Portal style={{ justifyContent: 'center', alignItems: 'center' }}>
-                            <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalDesign}>
-                                <Text style={{ fontFamily: 'NanumSquare_0', color:'black' }}>선택하신 이동지원센터를 즐겨찾기에서 삭제하시겠습니까?</Text>
-                                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                    <Text style={{ marginTop: 10 }}>
-                                        <Button
-                                            mode="text"
-                                            color="#FFB236"
-                                            onPress={() => {
-                                                removeBookmark(center.id);
-                                                setVisible(false);
-                                            }}
-                                        >
-                                            <Text style={{ fontFamily: 'NanumSquare_0' }}>
-                                                예
-                                            </Text>
-                                        </Button>
-                                        <Button
-                                            mode="text"
-                                            color="#FFB236"
-                                            onPress={() => setVisible(false)}>
-                                            <Text style={{ fontFamily: 'NanumSquare_0' }}>
-                                                아니오
-                                            </Text>
-
-                                        </Button>
-                                    </Text>
-                                </View>
-
-                            </Modal>
-                        </Portal>
-                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingLeft: 30, paddingRight: 30 }}>
-                            <Button style={{ flex: 1, marginRight: 30 }} mode="contained" color="#FFB236" onPress={() => navigation.navigate('StackNav3', {screen: 'CenterInfo2', params: {selectedCenter: center}})}>
-                                <Text style={{ fontFamily: 'NanumSquare_0' }}>세부정보 보기</Text>
-                            </Button>
-                            <Button style={{ flex: 1 }} mode="contained" color="#FFB236" onPress={showModal}>
-                                <Text style={{ fontFamily: 'NanumSquare_0' }}>즐겨찾기에서 삭제</Text>
-                            </Button>
-                        </View>
-                    </View>
-                )} />
-            </List.Accordion>
-            ))
-        )
+    const showModal = (center) => {
+        selected_center = center;
+        setVisible(true);
     }
+    const hideModal = () => setVisible(false);
 
     useEffect(() => {
         getBookmarks();
@@ -231,14 +178,14 @@ export default function BookMark({ navigation, route }) {
                                     </TouchableOpacity>
                                     <Portal style={{ justifyContent: 'center', alignItems: 'center' }}>
                                         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalDesign}>
-                                            <Text style={{ fontFamily: 'NanumSquare_0', color:'black' }}>선택하신 이동지원센터를 즐겨찾기에 추가하시겠습니까?</Text>
+                                            <Text style={{ fontFamily: 'NanumSquare_0', color:'black' }}>선택하신 이동지원센터를 즐겨찾기에서 삭제하시겠습니까?</Text>
                                             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                                                 <Text style={{ marginTop: 10 }}>
                                                     <Button
                                                         mode="text"
                                                         color="#FFB236"
                                                         onPress={() => {
-                                                            addBookmark(selected_center);
+                                                            removeBookmark(selected_center.id);
                                                             setVisible(false);
                                                         }}
                                                     >
@@ -261,8 +208,8 @@ export default function BookMark({ navigation, route }) {
                                     <TouchableOpacity style={{ marginLeft: 5 }} onPress={() => showModal(item)}>
                                         <View style={{ backgroundColor: "#FFDA36", flexDirection: 'column', borderRadius: 20, justifyContent: 'center', alignItems: 'center', width: 115, height: 115, elevation: 10 }}>
                                             <Ionicons name="ios-bookmarks" color='black' size={30} style={{ marginBottom: 10 }} />
-                                            <Text style={styles.buttonTextDesign}>즐겨찾기에</Text>
-                                            <Text style={styles.buttonTextDesign}>추가</Text>
+                                            <Text style={styles.buttonTextDesign}>즐겨찾기에서</Text>
+                                            <Text style={styles.buttonTextDesign}>삭제</Text>
                                         </View>
                                     </TouchableOpacity>
                                 </View>
