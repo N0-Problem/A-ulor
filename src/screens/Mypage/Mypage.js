@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { Button } from 'react-native-paper';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import auth from '@react-native-firebase/auth';
@@ -11,6 +11,7 @@ export default function Mypage({navigation}) {
     const [loggedIn, setLoggedIn] = useState(false);
     const [userName, setUserName] = useState("");
     const [userId, setUserId] = useState("");
+    const [loading, setLoading] = useState(true);
     const isFocused = useIsFocused();
 
     auth().onAuthStateChanged(user => {
@@ -32,8 +33,23 @@ export default function Mypage({navigation}) {
         })
 
     useEffect(() => {
-
+        setTimeout(() => {
+            setLoading(false);
+        }, 1000);
     }, [isFocused]);
+
+    if (loading) {
+        return (
+            <View
+                style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                }}>
+                <ActivityIndicator size="large" color="#85DEDC" />
+            </View>
+        )
+    }
 
     return (
         <View style={styles.container}>

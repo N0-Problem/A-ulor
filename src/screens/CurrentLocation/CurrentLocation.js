@@ -295,8 +295,8 @@ function CurrentLocation({ navigation }) {
                                     </View>
                                     <Portal style={{ justifyContent: 'center', alignItems: 'center' }}>
                                         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalDesign}>
-                                            <Text style={{ fontFamily: 'NanumSquare_0', color:'#4e4e4e',fontSize: 25, marginBottom: 5 }}>선택하신 이동지원센터를 </Text>
-                                            <Text style={{ fontFamily: 'NanumSquare_0', color:'#4e4e4e',fontSize: 25 }}>즐겨찾기에 추가하시겠습니까?</Text>
+                                            <Text style={{ fontFamily: 'NanumSquare', color:'#4e4e4e',fontSize: 25, marginBottom: 5 }}>선택하신 이동지원센터를 </Text>
+                                            <Text style={{ fontFamily: 'NanumSquare', color:'#4e4e4e',fontSize: 25 }}>즐겨찾기에 추가하시겠습니까?</Text>
                                             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                                                 <Text style={{ marginTop: 20 }}>
                                                     <Button                                                       

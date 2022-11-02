@@ -92,7 +92,10 @@ function Main({navigation}) {
                         <TouchableOpacity 
                             style={styles.box3}
                             activeOpacity={0.7}
-                            onPress={() => navigation.navigate('StackNav2', {screen : 'BookMark', params: {user_id: userId}})}>
+                            onPress={() => {
+                                navigation.push('BottomNav', {screen: 'StackNav2'});
+                                navigation.push('StackNav2', {screen : 'BookMark', params: {user_id: userId}});
+                            }}>
                             <Ionicons name="ios-bookmarks" color='#414141' size={65} />
                             <Text style={{
                                 fontFamily:'NanumSquare_0',

@@ -20,6 +20,8 @@ export default function UserInfo({navigation, route}) {
     const userId = params.user_id;
     //const userName = params.user_name;
 
+    DropDownPicker.setListMode("SCROLLVIEW");
+
     const [date, setDate] = useState(new Date()); // 생년월일
     const [dateStr, setDateStr] = useState('');
     const [open, setOpen] = useState(false);
@@ -40,12 +42,11 @@ export default function UserInfo({navigation, route}) {
         {label: '시각 장애', value: '시각'},
         {label: '청각 장애', value: '청각'},
         {label: '신체적 장애/기타', value: '신체적 장애/기타'},
-        {label: '정신적 장애', value: '정신적 장애'},
+        {label: '지적 장애', value: '지적 장애'},
     ]);
     const [dropopen3, setdropOpen3] = useState(false);
     const [dropvalue3, setdropValue3] = useState();
     const [dropitems3, setdropItems3] = useState([
-        {label: '없음', value: '없음'},
         {label: '중증', value: '중증'},
         {label: '경증', value: '경증'},
         {label: '1급', value: '1급'},
@@ -54,6 +55,7 @@ export default function UserInfo({navigation, route}) {
         {label: '4급', value: '4급'},
         {label: '5급', value: '5급'},
         {label: '6급', value: '6급'},
+        {label: '없음', value: '없음'},
         {label: '기타', value: '기타'},
     ]);
 
@@ -122,17 +124,17 @@ export default function UserInfo({navigation, route}) {
         console.log(birthdate, type);
     };
 
-    useEffect(() => {
-        getUserinfo();
+    // useEffect(() => {
+    //     getUserinfo();
 
-        setTimeout(() => {
-            string_to_date(birthdate);
-            setdropValue(type);
-            setdropValue2(type2);
-            setdropValue3(type3);
-            setLoading(false);
-        }, 800);
-    }, []);
+    //     setTimeout(() => {
+    //         string_to_date(birthdate);
+    //         setdropValue(type);
+    //         setdropValue2(type2);
+    //         setdropValue3(type3);
+    //         setLoading(false);
+    //     }, 800);
+    // }, []);
 
     function setUserinfo() {
         let type = '';
@@ -202,256 +204,256 @@ export default function UserInfo({navigation, route}) {
                 <Text style={styles.titleText}>개인 정보 수정</Text>
             </View>
             <ScrollView>
-            <View style={styles.input_container}>
-                <Text style={styles.text_title}>이름</Text>
-                <TextInput
-                    placeholder={userName}
+                <View style={styles.input_container}>
+                    <Text style={styles.text_title}>이름</Text>
+                    <TextInput
+                        placeholder={userName}
+                        placeholderStyle={{
+                            color: 'grey',
+                        }}
+                        onChangeText={userName => setUserName(userName)}
+                        style={styles.textInput_input}
+                        value={userName}
+                    />
+                </View>
+                <View style={styles.input_container}>
+                    <Text style={styles.text_title}>생년월일</Text>
+                    {dateStr.length > 0 && getDate ? (
+                    <TouchableOpacity onPress={() => setOpen(true)}>
+                        <Text style={styles.text_input}>{date_to_string(date)}</Text>
+                    </TouchableOpacity>
+                    ) : (
+                    <TouchableOpacity onPress={() => setOpen(true)}>
+                        <Text style={styles.before_text_input}>
+                        {' 생년월일을 입력해주세요.'}
+                        </Text>
+                    </TouchableOpacity>
+                    )}
+                </View>
+                <DatePicker
+                    modal
+                    locale="ko"
+                    mode={'date'}
+                    open={open}
+                    date={date}
+                    title="날짜 선택"
+                    confirmText="확인"
+                    cancelText="취소"
+                    maximumDate={new Date()}
+                    onConfirm={date => {
+                        setOpen(false);
+                        setGetDate(true);
+                        setDate(date);
+                        setDateStr(date_to_string(date));
+                    }}
+                    onCancel={() => {
+                        setOpen(false);
+                    }}
+                />
+                <View style={styles.input_container}>
+                    <Text style={styles.text_title}>성별</Text>
+                    <View style={styles.radio_container}>
+                        <View style={styles.radio_element}>
+                            <Text style={styles.radio_title}>남</Text>
+                            <RadioButton
+                                value="남"
+                                status={sexChecked === '남' ? 'checked' : 'unchecked'}
+                                onPress={() => setSexChecked('남')}/>
+                        </View>
+                        <View style={styles.radio_element}>
+                            <Text style={styles.radio_title}>여</Text>
+                            <RadioButton
+                                value="여"
+                                status={sexChecked === '여' ? 'checked' : 'unchecked'}
+                                onPress={() => setSexChecked('여')}/>
+                        </View>
+                    </View>
+                </View>
+                <View style={styles.input_container}>
+                    <Text style={styles.text_title}>전화번호</Text>
+                    <TextInput
+                    placeholder="전화번호를 입력해주세요"
                     placeholderStyle={{
                         color: 'grey',
+                        
                     }}
-                    onChangeText={userName => setUserName(userName)}
                     style={styles.textInput_input}
-                    value={userName}
-                />
-            </View>
-            <View style={styles.input_container}>
-                <Text style={styles.text_title}>생년월일</Text>
-                {dateStr.length > 0 && getDate ? (
-                <TouchableOpacity onPress={() => setOpen(true)}>
-                    <Text style={styles.text_input}>{date_to_string(date)}</Text>
-                </TouchableOpacity>
-                ) : (
-                <TouchableOpacity onPress={() => setOpen(true)}>
-                    <Text style={styles.before_text_input}>
-                    {' 생년월일을 입력해주세요.'}
-                    </Text>
-                </TouchableOpacity>
-                )}
-            </View>
-            <DatePicker
-                modal
-                locale="ko"
-                mode={'date'}
-                open={open}
-                date={date}
-                title="날짜 선택"
-                confirmText="확인"
-                cancelText="취소"
-                maximumDate={new Date()}
-                onConfirm={date => {
-                    setOpen(false);
-                    setGetDate(true);
-                    setDate(date);
-                    setDateStr(date_to_string(date));
-                }}
-                onCancel={() => {
-                    setOpen(false);
-                }}
-            />
-            <View style={styles.input_container}>
-                <Text style={styles.text_title}>성별</Text>
-                <View style={styles.radio_container}>
-                    <View style={styles.radio_element}>
-                        <Text style={styles.radio_title}>남</Text>
-                        <RadioButton
-                            value="남"
-                            status={sexChecked === '남' ? 'checked' : 'unchecked'}
-                            onPress={() => setSexChecked('남')}/>
-                    </View>
-                    <View style={styles.radio_element}>
-                        <Text style={styles.radio_title}>여</Text>
-                        <RadioButton
-                            value="여"
-                            status={sexChecked === '여' ? 'checked' : 'unchecked'}
-                            onPress={() => setSexChecked('여')}/>
-                    </View>
+                    onChangeText={phoneNumber => setPhoneNumberformat(phoneNumber)}
+                    maxLength={13}
+                    value={phoneNumber}
+                    />
                 </View>
-            </View>
-            <View style={styles.input_container}>
-                <Text style={styles.text_title}>전화번호</Text>
-                <TextInput
-                placeholder="전화번호를 입력해주세요"
-                placeholderStyle={{
-                    color: 'grey',
-                    
-                }}
-                style={styles.textInput_input}
-                onChangeText={phoneNumber => setPhoneNumberformat(phoneNumber)}
-                maxLength={13}
-                value={phoneNumber}
-                />
-            </View>
             
-            <View style={styles.drop_container1}>
-                <Text style={styles.drop_title}>교통약자 유형</Text>
-                <DropDownPicker
-                dropDownDirection='DOWN'
-                style={styles.dropdown}
-                textStyle={{
-                    fontSize: 25,
-                    fontFamily: 'NanumSquare_0',
-                    color: '#454545',
-                }}
-                dropDownContainerStyle={{
-                    width: '98%',
-                    right: 9,
-                    borderTopColor: '#fff',
-                    borderColor: '#777',
-                }}
-                placeholder="교통약자 유형을 선택하세요."
-                placeholderStyle={{
-                    color: 'grey',
-                    // paddingVertical : 15,
-                }}
-                open={dropopen}
-                value={dropvalue}
-                items={dropitems}
-                setOpen={setdropOpen}
-                setValue={setdropValue}
-                setItems={setdropItems}
-                onSelectItem={(item) => {
-                    if (item.label === '장애인'){
-                        setExtra(true);
-                    }else {
-                        setExtra(false);
-                        setdropValue2('');
-                        setdropValue3('');
-                    }}}
-                />
-            </View>
-            {extra ? (
-            <View style={styles.drop_container2}>
-                <Text style={styles.drop_title}>장애 유형</Text>
-                <DropDownPicker
-                contentContainerStyle={{ flexGrow: 1 }}
-                listMode="SCROLLVIEW"
-                scrollViewProps={{
-                nestedScrollEnabled: true,
-                }}
-                dropDownDirection='DOWN'
-                style={styles.dropdown}
-                textStyle={{
-                    fontSize: 25,
-                    fontFamily: 'NanumSquare_0',
-                    color: '#454545',
-                }}
-                dropDownContainerStyle={{
-                    width: '98%',
-                    right: 9,
-                    borderTopColor: '#fff',
-                    borderColor: '#777',
-                }}
-                placeholder="장애 유형을 선택하세요."
-                placeholderStyle={{
-                    color: 'grey',
-                    // paddingVertical : 15,
-                }}
-                open={dropopen2}
-                value={dropvalue2}
-                items={dropitems2}
-                setOpen={setdropOpen2}
-                setValue={setdropValue2}
-                setItems={setdropItems2}
-                />
-            </View>
-            ) : (
-                <></>
-                )}
-            {extra ? (    
-            <View style={styles.drop_container3}>
-                <Text style={styles.drop_title}>장애 정도</Text>
-                <DropDownPicker
-                contentContainerStyle={{ flexGrow: 1 }}
-                listMode="SCROLLVIEW"
-                scrollViewProps={{
-                nestedScrollEnabled: true,
-                }}
-                dropDownDirection='DOWN'
-                style={styles.dropdown}
-                textStyle={{
-                    fontSize: 25,
-                    fontFamily: 'NanumSquare_0',
-                    color: '#454545',
-                }}
-                dropDownContainerStyle={{
-                    width: '98%',
-                    right: 9,
-                    borderTopColor: '#fff',
-                    borderColor: '#777',
-                }}
-                placeholder="장애 정도를 선택하세요."
-                placeholderStyle={{
-                    color: 'grey',
-                    // paddingVertical : 15,
-                }}
-                open={dropopen3}
-                value={dropvalue3}
-                items={dropitems3}
-                setOpen={setdropOpen3}
-                setValue={setdropValue3}
-                setItems={setdropItems3}
-                />
-            </View>
-            ) : (
-                <></>
-                )}
-            <View style={styles.input_container}>
-                <Text style={styles.text_title}>휠체어 유무</Text>
-                <View style={styles.radio_container}>
-                    <View style={styles.radio_element}>
-                        <Text style={styles.radio_title}>유</Text>
-                        <RadioButton
-                            value="유"
-                            status={wheelchair === '유' ? 'checked' : 'unchecked'}
-                            onPress={() => setWheelchair('유')}/>
-                    </View>
-                    <View style={styles.radio_element}>
-                        <Text style={styles.radio_title}>무</Text>
-                        <RadioButton
-                            value="무"
-                            status={wheelchair === '무' ? 'checked' : 'unchecked'}
-                            onPress={() => setWheelchair('무')}/>
+                <View style={styles.drop_container1}>
+                    <Text style={styles.drop_title}>교통약자 유형</Text>
+                    <DropDownPicker
+                    dropDownDirection='DOWN'
+                    style={styles.dropdown}
+                    textStyle={{
+                        fontSize: 25,
+                        fontFamily: 'NanumSquare_0',
+                        color: '#454545',
+                    }}
+                    dropDownContainerStyle={{
+                        width: '98%',
+                        right: 9,
+                        borderTopColor: '#fff',
+                        borderColor: '#777',
+                    }}
+                    placeholder="교통약자 유형을 선택하세요."
+                    placeholderStyle={{
+                        color: 'grey',
+                        // paddingVertical : 15,
+                    }}
+                    open={dropopen}
+                    value={dropvalue}
+                    items={dropitems}
+                    setOpen={setdropOpen}
+                    setValue={setdropValue}
+                    setItems={setdropItems}
+                    onSelectItem={(item) => {
+                        if (item.label === '장애인'){
+                            setExtra(true);
+                        }else {
+                            setExtra(false);
+                            setdropValue2('');
+                            setdropValue3('');
+                        }}}
+                    />
+                </View>
+                {extra ? (
+                <View style={styles.drop_container2}>
+                    <Text style={styles.drop_title}>장애 유형</Text>
+                    <DropDownPicker
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    listMode="SCROLLVIEW"
+                    scrollViewProps={{
+                        nestedScrollEnabled: true,
+                    }}
+                    dropDownDirection='DOWN'
+                    style={styles.dropdown}
+                    textStyle={{
+                        fontSize: 25,
+                        fontFamily: 'NanumSquare_0',
+                        color: '#454545',
+                    }}
+                    dropDownContainerStyle={{
+                        width: '98%',
+                        right: 9,
+                        borderTopColor: '#fff',
+                        borderColor: '#777',
+                    }}
+                    placeholder="장애 유형을 선택하세요."
+                    placeholderStyle={{
+                        color: 'grey',
+                        // paddingVertical : 15,
+                    }}
+                    open={dropopen2}
+                    value={dropvalue2}
+                    items={dropitems2}
+                    setOpen={setdropOpen2}
+                    setValue={setdropValue2}
+                    setItems={setdropItems2}
+                    />
+                </View>
+                ) : (
+                    <></>
+                    )}
+                {extra ? (    
+                <View style={styles.drop_container3}>
+                    <Text style={styles.drop_title}>장애 정도</Text>
+                    <DropDownPicker
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    listMode="SCROLLVIEW"
+                    scrollViewProps={{
+                    nestedScrollEnabled: true,
+                    }}
+                    dropDownDirection='DOWN'
+                    style={styles.dropdown}
+                    textStyle={{
+                        fontSize: 25,
+                        fontFamily: 'NanumSquare_0',
+                        color: '#454545',
+                    }}
+                    dropDownContainerStyle={{
+                        width: '98%',
+                        right: 9,
+                        borderTopColor: '#fff',
+                        borderColor: '#777',
+                    }}
+                    placeholder="장애 정도를 선택하세요."
+                    placeholderStyle={{
+                        color: 'grey',
+                        // paddingVertical : 15,
+                    }}
+                    open={dropopen3}
+                    value={dropvalue3}
+                    items={dropitems3}
+                    setOpen={setdropOpen3}
+                    setValue={setdropValue3}
+                    setItems={setdropItems3}
+                    />
+                </View>
+                ) : (
+                    <></>
+                    )}
+                <View style={styles.input_container}>
+                    <Text style={styles.text_title}>휠체어 유무</Text>
+                    <View style={styles.radio_container}>
+                        <View style={styles.radio_element}>
+                            <Text style={styles.radio_title}>유</Text>
+                            <RadioButton
+                                value="유"
+                                status={wheelchair === '유' ? 'checked' : 'unchecked'}
+                                onPress={() => setWheelchair('유')}/>
+                        </View>
+                        <View style={styles.radio_element}>
+                            <Text style={styles.radio_title}>무</Text>
+                            <RadioButton
+                                value="무"
+                                status={wheelchair === '무' ? 'checked' : 'unchecked'}
+                                onPress={() => setWheelchair('무')}/>
+                        </View>
                     </View>
                 </View>
-            </View>
-            <View style={styles.input_container}>
-                <Text style={styles.text_title}>보호자 유무</Text>
-                <View style={styles.radio_container}>
-                    <View style={styles.radio_element}>
-                        <Text style={styles.radio_title}>유</Text>
-                        <RadioButton
-                            value="유"
-                            status={protector === '유' ? 'checked' : 'unchecked'}
-                            onPress={() => setProtector('유')}/>
-                    </View>
-                    <View style={styles.radio_element}>
-                        <Text style={styles.radio_title}>무</Text>
-                        <RadioButton
-                            value="무"
-                            status={protector === '무' ? 'checked' : 'unchecked'}
-                            onPress={() => setProtector('무')}/>
-                    </View>
-                </View>
-            </View>
-            <View style={styles.input_container}>
-                <Text style={styles.text_title}>의사소통 가능여부</Text>
-                <View style={styles.radio_container}>
-                    <View style={styles.radio_element}>
-                        <Text style={styles.radio_title}>가능</Text>
-                        <RadioButton
-                            value="가능"
-                            status={communication === '가능' ? 'checked' : 'unchecked'}
-                            onPress={() => setCommunication('가능')}/>
-                    </View>
-                    <View style={styles.radio_element}>
-                        <Text style={styles.radio_title}>불가능</Text>
-                        <RadioButton
-                            value="불가능"
-                            status={communication === '불가능' ? 'checked' : 'unchecked'}
-                            onPress={() => setCommunication('불가능')}/>
+                <View style={styles.input_container}>
+                    <Text style={styles.text_title}>보호자 유무</Text>
+                    <View style={styles.radio_container}>
+                        <View style={styles.radio_element}>
+                            <Text style={styles.radio_title}>유</Text>
+                            <RadioButton
+                                value="유"
+                                status={protector === '유' ? 'checked' : 'unchecked'}
+                                onPress={() => setProtector('유')}/>
+                        </View>
+                        <View style={styles.radio_element}>
+                            <Text style={styles.radio_title}>무</Text>
+                            <RadioButton
+                                value="무"
+                                status={protector === '무' ? 'checked' : 'unchecked'}
+                                onPress={() => setProtector('무')}/>
+                        </View>
                     </View>
                 </View>
-            </View>
+                <View style={styles.input_container}>
+                    <Text style={styles.text_title}>의사소통 가능여부</Text>
+                    <View style={styles.radio_container}>
+                        <View style={styles.radio_element}>
+                            <Text style={styles.radio_title}>가능</Text>
+                            <RadioButton
+                                value="가능"
+                                status={communication === '가능' ? 'checked' : 'unchecked'}
+                                onPress={() => setCommunication('가능')}/>
+                        </View>
+                        <View style={styles.radio_element}>
+                            <Text style={styles.radio_title}>불가능</Text>
+                            <RadioButton
+                                value="불가능"
+                                status={communication === '불가능' ? 'checked' : 'unchecked'}
+                                onPress={() => setCommunication('불가능')}/>
+                        </View>
+                    </View>
+                </View>
             </ScrollView>
             <Button
                 style={styles.button}

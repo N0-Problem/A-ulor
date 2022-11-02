@@ -23,6 +23,7 @@ function CenterInfo2({ navigation, route }) {
 
     const [reviewList, setReviewList] = useState([]);
     const [regions, setRegions] = useState();
+    const [fileList, setFileList] = useState([]);
     const isFocused = useIsFocused();
 
     let loggedIn = false;
@@ -47,6 +48,45 @@ function CenterInfo2({ navigation, route }) {
             .then(() => {
                 setRegions(tempRegions);
             });
+    }
+
+    const getDocuments = async() => {
+        let province, city;
+        if (parseCity[0].slice(-1) === '시') {
+            city = parseCity[0];
+        } else {
+            province = parseCity[0];
+            city = parseCity[1];
+        }
+
+        try {
+            if (province && province !== '강원도') {
+                const fileList = await storage().ref().child(`${province}/${city}`).listAll();
+                setFileList(fileList.items);
+            } else {
+                const fileList = await storage().ref().child(`${city}`).listAll();
+                setFileList(fileList.items);
+            }
+            console.log(fileList);
+        } catch (err) {
+            console.log('getDocuments: ', err);
+        }
+    }
+
+    const downloadToDevice = async () => {
+        let downloadurl;
+        fileList.forEach (async(file) => {
+            await file.getDownloadURL().then((url) => {
+                downloadurl = url;
+            });
+            await RNFetchBlob.config({
+                addAndroidDownloads: {
+                    useDownloadManager: true,
+                    notification: true,
+                    path: `${RNFetchBlob.fs.dirs.DownloadDir}/${file.name}`,
+                },
+            }).fetch('GET', downloadurl)
+        })
     }
 
     const getMyReviews = async () => {
@@ -90,7 +130,7 @@ function CenterInfo2({ navigation, route }) {
     useEffect(() => {
         getMyReviews();
         getOperatingRegion();
-
+        getDocuments();
         return () => {
 
         }
@@ -111,6 +151,11 @@ function CenterInfo2({ navigation, route }) {
     const [visibleAvailable, setVisibleAvailable] = useState(false);
     const showAvailable = () => setVisibleAvailable(true);
     const hideAvailable = () => setVisibleAvailable(false);
+
+    // 신청서류 Modal 창
+    const [visibleDocuments, setVisibleDocuments] = useState(false);
+    const showDocuments = () => setVisibleDocuments(true);
+    const hideDocuments = () => setVisibleDocuments(false);
 
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -153,7 +198,7 @@ function CenterInfo2({ navigation, route }) {
                                                             onPress={() =>
                                                                 Linking.openURL(`tel:${userCenter.phone_number[1]}`)
                                                             }>
-                                                            {userCenter.phone_number[1]}
+                                                            {userCenter.phone_number[1].slice(1)}
                                                         </Text>
                                                     )}
                                                 </Pressable>
@@ -265,6 +310,49 @@ function CenterInfo2({ navigation, route }) {
                                             <Text style = {styles.buttonTextDesign}>신청서류</Text>
                                             <Text style = {styles.buttonTextDesign}>확인하기</Text>
                                         </View>
+                                        <Portal>
+                                            <Modal visible={visibleDocuments} onDismiss={hideDocuments} contentContainerStyle={styles.moreInfoModalDesign}>
+                                                <View style={{ flexDirection: 'column' }}>
+                                                    {fileList.length > 0 ? (
+                                                        <View>
+                                                            {
+                                                                fileList.map((item, idx) => {
+                                                                    return (
+                                                                        <Text 
+                                                                            key={idx} 
+                                                                            style={{ 
+                                                                                fontSize: 20, 
+                                                                                fontFamily: 'NanumSquare_0', 
+                                                                                color: 'black', 
+                                                                                marginBottom: 25, 
+                                                                                marginLeft: 10, 
+                                                                                marginRight: 10 
+                                                                            }}
+                                                                            numberOfLines={1}
+                                                                            ellipsizeMode='tail'
+                                                                                >
+                                                                            {idx+1}. {item.name}
+                                                                        </Text>
+                                                                    )
+                                                            })
+                                                            }  
+                                                            <TouchableOpacity 
+                                                                style={styles.fileButton}
+                                                                onPress={() => downloadToDevice()}>
+                                                                <Text style={styles.fileButtonText}>
+                                                                    모두 다운로드
+                                                                </Text>
+                                                            </TouchableOpacity>                                                         
+                                                        </View>
+                                                    ) : (
+                                                        <Text style={{ fontSize: 20, fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 15, marginLeft: 10, marginRight: 10 }}>
+                                                            신청 서류가 없습니다.{"\n\n"}
+                                                            신청 서류가 불필요하거나, 홈페이지에서 직접 가입해야 하는 센터일 수 있으니 자세한 정보는 전화나 홈페이지를 통해 확인하세요. 
+                                                        </Text>
+                                                    )}
+                                                </View>
+                                            </Modal>
+                                        </Portal>
                                     </TouchableOpacity>
                                 </View>
                             </View>

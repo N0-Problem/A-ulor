@@ -230,6 +230,7 @@ const styles = StyleSheet.create({
     listSection: {
         // backgroundColor : 'blue',
         width: '100%',
+        marginBottom: 75
     },
     textDesign: {
         fontFamily: 'NanumSquare',

@@ -60,12 +60,17 @@ function CenterInfo({ navigation, route }) {
             city = parseCity[1];
         }
 
+        let fileList;
         try {
             if (province) {
-                const fileList = await storage().ref().child(`${province}/${city}`).listAll();
+                if (province === '강원도') {
+                    fileList = await storage().ref().child(`${province}`).listAll();
+                } else {
+                    fileList = await storage().ref().child(`${province}/${city}`).listAll();
+                }
                 setFileList(fileList.items);
             } else {
-                const fileList = await storage().ref().child(`${city}`).listAll();
+                fileList = await storage().ref().child(`${city}`).listAll();
                 setFileList(fileList.items);
             }
             console.log(fileList);
@@ -199,7 +204,7 @@ function CenterInfo({ navigation, route }) {
                                                             onPress={() =>
                                                                 Linking.openURL(`tel:${userCenter.phone_number[1]}`)
                                                             }>
-                                                            {userCenter.phone_number[1]}
+                                                            {userCenter.phone_number[1].slice(1)}
                                                         </Text>
                                                     )}
                                                 </Pressable>
@@ -388,8 +393,8 @@ function CenterInfo({ navigation, route }) {
                         </View>
                         {reviewList.map((item, index) => {
                             return (
-                                <View style={{ paddingBottom: 10 }}>
-                                    <View style={{ flexDirection: 'column', backgroundColor: 'white' }} key={index}>
+                                <View style={{ paddingBottom: 10 }} key={index}>
+                                    <View style={{ flexDirection: 'column', backgroundColor: 'white' }}>
                                         <View style={styles.reviewDesign}>
                                             <View style={{ flexDirection: "row", marginBottom: 5, marginTop: 5, justifyContent: 'space-between' }}>
                                                 <View style={{ marginLeft: 8 }}>

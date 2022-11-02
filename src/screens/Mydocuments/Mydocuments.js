@@ -14,6 +14,11 @@ export default function Mydocuments({ navigation, route }) {
     const [fileList, setFileList] = useState([]);
     const [newFileList, setNewFileList] = useState([]);
 
+    // 필요서류정보 Modal 창
+    const [visibleInfo, setVisibleInfo] = useState(false);
+    const showInfo = () => setVisibleInfo(true);
+    const hideInfo = () => setVisibleInfo(false);
+
     const selectDocuments = useCallback(async() => {
         try {
             const response = await DocumentPicker.pickMultiple({
@@ -104,6 +109,47 @@ export default function Mydocuments({ navigation, route }) {
         <View style={styles.container}>
             <View style={styles.title}>
                 <Text style={styles.titleText}>증빙 서류 관리</Text>
+                <View style={{flexDirection: 'row', marginLeft: 'auto', justifyContent: 'center'}}>
+                    <TouchableOpacity style={{
+                        alignSelf: 'flex-end', 
+                        marginBottom: 14, 
+                        marginRight: 10, 
+                        backgroundColor: '#dfdfdf',
+                        borderRadius: 5
+                    }}
+                    onPress={showInfo}>
+                        <Text style={{color: '#4e4e4e', fontFamily: 'NanumSquare_0', fontSize: 18, padding: 5}}>필요서류 알아보기</Text>
+                    </TouchableOpacity>
+                    <Portal>
+                        <Modal visible={visibleInfo} onDismiss={hideInfo} contentContainerStyle={styles.moreInfoModalDesign}>
+                            <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flex: 1, flexDirection: 'column', marginLeft: 20, paddingRight: 10, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Text style={{ fontFamily: 'NanumSquare', color: 'black', marginBottom: 20, fontSize: 25 }}>이용대상별 필요서류</Text>
+                                    <View style={{marginLeft: 0}}>
+                                        <Text style={styles.infoTitleText}>[장애인]</Text>
+                                        <Text style={styles.infoText}>장애인증명서 / 복지카드 / 보장구 급여 대상여부 결정 통보서 / 장애정도 결정서 / 추가심사결과 안내문(보행상 장애 유무 확인서류)</Text>
+                                        <Text style={styles.infoTitleText}>[65세 이상 노약자]</Text>
+                                        <Text style={styles.infoText}>장기요양 인정서 / 복지용구 급여 확인서 / 주민등록등본</Text>
+                                        <Text style={styles.infoTitleText}>[임산부]</Text>
+                                        <Text style={styles.infoText}>산모수첩 / 주민등록등본</Text>
+                                        <Text style={styles.infoTitleText}>[그 밖의 이용자]</Text>
+                                        <Text style={styles.infoText}>대중교통수단 이용 제한 여부 (대중교통 이용이 어렵다는 문구)와 이용제약 기간등에 대한 소견이 적힌 진단서 또는 소견서, 주민등록등본</Text>
+                                    </View>
+                                    <View>
+                                    <Text style={{fontFamily: 'NanumSquare', color: 'black', marginTop: 10, marginBottom: 0, fontSize: 20 }}>※ 위는 일반적으로 대부분의 센터에서 요구하는 증빙서류를 대략적으로 정리한 것 자료입니다.</Text>
+                                    <Text style={{fontFamily: 'NanumSquare', color: 'black', marginTop: 10, marginBottom: 0, fontSize: 20 }}>각 지역마다 필요한 증빙 서류 종류에 다소 차이가 있을 수 있으니, 해당 지역 센터 웹사이트 혹은 이용등록 신청서를 추가로 확인하시는 것을 추천드립니다.</Text>
+                                    </View>
+                                    <TouchableOpacity 
+                                        style={{marginTop: 30, marginBottom: -20, backgroundColor: '#d2d2d2', borderRadius: 5}}
+                                        onPress={hideInfo}
+                                    >
+                                        <Text style={{fontFamily: 'NanumSquare', color: 'black', fontSize: 18, paddingVertical: 10, paddingHorizontal: 30}}>닫기</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </Modal>
+                    </Portal>
+                </View>
             </View>
             <View style={styles.buttonContainer}>
                 <TouchableOpacity 
@@ -195,16 +241,6 @@ export default function Mydocuments({ navigation, route }) {
                     )
                 }
             </View>
-            {/* <View>
-                <TouchableOpacity 
-                        style={styles.button2}
-                        onPress={() => saveDocuments()}
-                    >
-                        <Text style={styles.buttonText}>
-                            수정 완료하기
-                        </Text>
-                    </TouchableOpacity>
-            </View> */}
         </View>
     )
 }
@@ -216,11 +252,12 @@ const styles = StyleSheet.create({
     },
 
     title: {
+        flexDirection: 'row',
         alignSelf: 'stretch',
         height : 45,
         marginTop: 30,
         borderBottomColor : '#d2d2d2',
-        borderBottomWidth : 1
+        borderBottomWidth : 1,
     },
 
     titleText: {
@@ -308,8 +345,30 @@ const styles = StyleSheet.create({
 
     buttonText: {
         color : 'black',
-        fontFamily : 'NanumSquare_0',
+        fontFamily : 'NanumSquare',
         fontSize : 25, 
         textAlign : 'center'
     },
+
+    moreInfoModalDesign: {
+        backgroundColor: 'white',
+        paddingTop: 30,
+        paddingBottom: 30,
+        marginLeft: 10,
+        marginRight: 10,
+    },
+
+    infoTitleText: {
+        fontFamily: 'NanumSquare_0', 
+        color: '#4e4e4e', 
+        marginBottom: 10, 
+        fontSize: 20 
+    },
+
+    infoText: {
+        fontFamily: 'NanumSquare_0', 
+        color: '#4e4e4e', 
+        marginBottom: 25, 
+        fontSize: 18 
+    }
 });

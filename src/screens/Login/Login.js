@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet, Alert, Image, TouchableOpacity } from 'react-native';
 import {
     GoogleSignin,
     GoogleSigninButton,
@@ -79,10 +79,31 @@ export default function Login({navigation,route}) {
     return (
         <View style={styles.container}>
             <Image style={styles.logo} source={LogoImg}/>
-            <GoogleSigninButton
-                style={{ width: 192, height: 48 }}
+            {/* <GoogleSigninButton
+                style={{ width: 192, height: 48}}
                 onPress={() => onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}
-            />
+            /> */}
+            <View>
+                <TouchableOpacity 
+                    style={{
+                        backgroundColor: '#4e4e4e',
+                        borderRadius: 10,
+                        shadowColor: 'black',
+                        shadowOffset: {width: 0, height: 3},
+                        shadowOpacity: 0.3,
+                        shadowRadius: 2,
+                        elevation: 8
+                    }}
+                    onPress={() => onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}>
+                    <Text style={{
+                        fontFamily: 'NanumSquare', 
+                        fontSize: 25, 
+                        color: '#FFDA38', 
+                        padding: 15,}}>
+                            구글 계정으로 로그인
+                    </Text>
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }
@@ -95,7 +116,9 @@ const styles = StyleSheet.create({
         backgroundColor : '#FFDA38'
     },
     logo : {
-        width:150,
-        height : 150
+        width: 200,
+        height : 200,
+        marginBottom: 10,
+        marginTop: "-10%"
     },
 });
