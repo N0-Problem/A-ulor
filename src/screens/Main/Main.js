@@ -114,11 +114,11 @@ function Main({navigation}) {
                                 '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
                                 '',
                                 [{
-                                    text: '확인',
+                                    text: '예',
                                     onPress: () => navigation.navigate('Login'),
                                 },
                                 {
-                                    text: '취소',
+                                    text: '아니요',
                                     onPress: () => navigation.navigate('Main'),
                                     style: 'cancel',
                                 },
@@ -163,11 +163,11 @@ function Main({navigation}) {
                                 '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
                                 '',
                                 [{
-                                    text: '확인',
+                                    text: '예',
                                     onPress: () => navigation.navigate('Login'),
                                 },
                                 {
-                                    text: '취소',
+                                    text: '아니요',
                                     onPress: () => navigation.navigate('Main'),
                                     style: 'cancel',
                                 },

@@ -54,7 +54,7 @@ function BottomNav({navigation}) {
         name="Main"
         component={Main}
         options={{
-          tabBarLabel: 'Home',
+          tabBarLabel: '홈',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" color={color} size={size} />
           ),
@@ -168,11 +168,11 @@ function BottomNav({navigation}) {
               '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
               '',
               [{
-                text: '확인',
+                text: '예',
                 onPress: () =>navigation.navigate('Login', {param: 'login',}),
               },
               {
-                text: '취소',
+                text: '아니요',
                 style: 'cancel',
               },
               ],

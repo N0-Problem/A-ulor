@@ -123,8 +123,8 @@ function AddReview({ navigation, route }) {
         <View style={{ backgroundColor: 'white' }}>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 0, paddingTop: 20, paddingBottom: 15, backgroundColor: '#FFDA36' }}>
-                    <Text style={{ fontFamily: 'NanumSquare', fontSize: 20, color: '#4E4E4E', marginBottom: 10 }}>후기 작성</Text>
-                    <Text style={{ fontFamily: 'NanumSquare_0', fontSize: 13, color: '#4E4E4E' }}>{reviewCenter.name}</Text>
+                    <Text style={{ fontFamily: 'NanumSquare', fontSize: 30, color: '#4E4E4E', marginBottom: 10 }}>후기 작성</Text>
+                    <Text style={{ fontFamily: 'NanumSquare_0', fontSize: 20, color: '#4E4E4E' }}>{reviewCenter.name}</Text>
                 </View>
                 <View>
                     <Text style={styles.textDesign}>이용 일자를 입력해주세요.</Text>
@@ -195,12 +195,12 @@ function AddReview({ navigation, route }) {
                 </View>
                 <View style={{ justifyContent: 'center', alignItems: 'center', margin: 20 }}>
                     {text == "" ? (
-                        <Button mode="contained" onPress={() => addReview()} style={{ width: 130, backgroundColor: "#FFDA36" }} disabled={true}>
-                            <Text style={{ fontFamily: 'NanumSquare_0' }}>완료</Text>
+                        <Button mode="contained" onPress={() => addReview()} style={{ width: '80%', backgroundColor: "#FFDA36" }} disabled={true}>
+                            <Text style={{ fontFamily: 'NanumSquare', fontSize: 24 }}>후기 등록하기</Text>
                         </Button>
                     ) : (
-                        <Button mode="contained" onPress={() => addReview()} style={{ width: 130, backgroundColor: "#FFDA36" }}>
-                            <Text style={{ fontFamily: 'NanumSquare_0' }}>완료</Text>
+                        <Button mode="contained" onPress={() => addReview()} style={{ width: '80%', backgroundColor: "#FFDA36" }}>
+                            <Text style={{ fontFamily: 'NanumSquare', fontSize: 24 }}>후기 등록하기</Text>
                         </Button>
                     )}
 
@@ -217,8 +217,9 @@ const styles = StyleSheet.create({
     },
 
     textDesign: {
+        fontSize: 25,
         marginTop: 25,
-        marginLeft: 10,
+        marginLeft: 20,
         marginRight: 10,
         marginBottom: 15,
         paddingBottom: 10,

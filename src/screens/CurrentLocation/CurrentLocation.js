@@ -12,9 +12,8 @@ import {
     Linking,
     Dimensions,
     Alert,
-    Button
 } from 'react-native';
-import { Modal, Portal } from 'react-native-paper';
+import { Modal, Portal, Button } from 'react-native-paper';
 import Geolocation from 'react-native-geolocation-service';
 import firestore, { firebase } from '@react-native-firebase/firestore';
 import { config } from '../../../apikey';
@@ -169,11 +168,11 @@ function CurrentLocation({ navigation }) {
                 '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
                 '',
                 [{
-                    text: '확인',
+                    text: '예',
                     onPress: () => navigation.navigate('Login'),
                 },
                 {
-                    text: '취소',
+                    text: '아니요',
                     //onPress: () => navigation.navigate('Main'),
                     style: 'cancel',
                 },
@@ -296,10 +295,11 @@ function CurrentLocation({ navigation }) {
                                     </View>
                                     <Portal style={{ justifyContent: 'center', alignItems: 'center' }}>
                                         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalDesign}>
-                                            <Text style={{ fontFamily: 'NanumSquare_0', color:'black' }}>선택하신 이동지원센터를 즐겨찾기에 추가하시겠습니까?</Text>
+                                            <Text style={{ fontFamily: 'NanumSquare_0', color:'#4e4e4e',fontSize: 25, marginBottom: 5 }}>선택하신 이동지원센터를 </Text>
+                                            <Text style={{ fontFamily: 'NanumSquare_0', color:'#4e4e4e',fontSize: 25 }}>즐겨찾기에 추가하시겠습니까?</Text>
                                             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                                <Text style={{ marginTop: 10 }}>
-                                                    <Button
+                                                <Text style={{ marginTop: 20 }}>
+                                                    <Button                                                       
                                                         mode="text"
                                                         color="#FFB236"
                                                         onPress={() => {
@@ -307,7 +307,7 @@ function CurrentLocation({ navigation }) {
                                                             setVisible(false);
                                                         }}
                                                     >
-                                                        <Text style={{ fontFamily: 'NanumSquare_0' }}>
+                                                        <Text style={{ fontFamily: 'NanumSquare', fontSize: 20 }}>
                                                             예
                                                         </Text>
                                                     </Button>
@@ -315,7 +315,7 @@ function CurrentLocation({ navigation }) {
                                                         mode="text"
                                                         color="#FFB236"
                                                         onPress={() => setVisible(false)}>
-                                                        <Text style={{ fontFamily: 'NanumSquare_0' }}>
+                                                        <Text style={{ fontFamily: 'NanumSquare', fontSize: 20 }}>
                                                             아니오
                                                         </Text>
                                                     </Button>
@@ -327,7 +327,7 @@ function CurrentLocation({ navigation }) {
                                 {
                                     idx !== nearest_n.length -1 ? (
                                         <Text style={{ 
-                                            color: 'black',
+                                            color: '#4e4e4e',
                                             fontFamily: 'NanumSquare',
                                             fontSize: 20,
                                             margin: 10,
@@ -338,7 +338,7 @@ function CurrentLocation({ navigation }) {
                                         </Text>
                                     ) : (
                                         <Text style={{ 
-                                            color: 'black',
+                                            color: '#4e4e4e',
                                             fontFamily: 'NanumSquare',
                                             fontSize: 20,
                                             margin: 10,
@@ -416,14 +416,13 @@ const styles = StyleSheet.create({
 
     modalDesign: {
         backgroundColor: 'white',
-        justifyContent: 'center',
         alignItems: 'center',
+        alignSelf: 'center',
         paddingTop: 20,
-        paddingLeft: 20,
-        paddingRight: 20,
+        paddingLeft: 10,
+        paddingRight: 10,
         paddingBottom: 10,
         width: 375,
-        marginLeft: 9
     }
 });
 

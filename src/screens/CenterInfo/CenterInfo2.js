@@ -74,11 +74,11 @@ function CenterInfo2({ navigation, route }) {
                 '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
                 '',
                 [{
-                    text: '확인',
+                    text: '예',
                     onPress: () => navigation.navigate('Login'),
                 },
                 {
-                    text: '취소',
+                    text: '아니요',
                     onPress: () => navigation.navigate('Main'),
                     style: 'cancel',
                 },
@@ -217,11 +217,24 @@ function CenterInfo2({ navigation, route }) {
                                         <Portal>
                                             <Modal visible={visibleCompliance} onDismiss={hideCompliance} contentContainerStyle={styles.moreInfoModalDesign}>
                                                 <View style={{ flexDirection: 'column' }}>
-                                                    {userCenter.rules.map((item, idx) => {
-                                                        return (
-                                                            <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 15, marginLeft: 10, marginRight: 10 }}>{idx + 1}. {item}</Text>
+                                                    {userCenter.rules.length > 0 ? (
+                                                        userCenter.rules.length === 1 ? (
+                                                            userCenter.rules.map((item, idx) => {
+                                                                return (
+                                                                    <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 15, marginLeft: 10, marginRight: 10, fontSize: 20 }}>{item}</Text>
+                                                                )
+                                                            })
+                                                        ) : (
+                                                            <Text 
+                                                                style={{ fontFamily: 'NanumSquare_0', color: 'black', marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, fontSize: 20 }}
+                                                                onPress={() => Linking.openURL(userCenter.rules[1])}
+                                                            >
+                                                                홈페이지에서 보기
+                                                            </Text>
+                                                        )) : (
+                                                            <Text style={{ fontFamily: 'NanumSquare_0', color: 'black', marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, fontSize: 20 }}>준수사항이 없습니다.</Text>
                                                         )
-                                                    })}
+                                                    }
                                                 </View>
                                             </Modal>
                                         </Portal>
@@ -262,12 +275,12 @@ function CenterInfo2({ navigation, route }) {
                     <View>
                         <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center'}}>
                             <Button style={styles.buttonDesign} mode="contained" color="#FFB236" onPress={() => moveToAddReview()}>
-                                <Text style={{ fontFamily: 'NanumSquare', fontSize: 16 }}>후기 작성하러 가기</Text>
+                                <Text style={{ fontFamily: 'NanumSquare', fontSize: 20 }}>후기 작성하러 가기</Text>
                             </Button>
                         </View>
                         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                             <View style={{ marginTop: 35, marginBottom: 45 }}>
-                                <Text style={{ fontFamily: 'NanumSquare', fontSize: 15, color: "#4E4E4E" }}>아직 후기가 올라오지 않았어요!</Text>
+                                <Text style={{ fontFamily: 'NanumSquare', fontSize: 20, color: "#4E4E4E" }}>아직 후기가 올라오지 않았어요!</Text>
                             </View>
                         </View>
                     </View>
@@ -279,7 +292,7 @@ function CenterInfo2({ navigation, route }) {
                                 <View style={{paddingBottom: 10}}>
                                     <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
                                         <Button style={styles.buttonDesign} mode="contained" color="#FFB236" onPress={() => moveToAddReview()}>
-                                            <Text style={{ fontFamily: 'NanumSquare', fontSize: 16 }}>후기 작성하러 가기</Text>
+                                            <Text style={{ fontFamily: 'NanumSquare', fontSize: 20 }}>후기 작성하러 가기</Text>
                                         </Button>
                                     </View>
                                     <View style={{ flexDirection: 'column', backgroundColor: 'white' }} key={index}>
@@ -364,7 +377,7 @@ const styles = StyleSheet.create({
     buttonTextDesign: {
         fontWeight: 'bold',
         color: 'black',
-        fontSize: 18
+        fontSize: 25
     },
 
     imageDesign: {

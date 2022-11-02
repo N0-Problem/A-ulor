@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import {Provider, Menu, Modal, Text, Portal, Alert} from 'react-native-paper';
-import {View} from 'react-native';
+import {Provider, Menu, Modal, Text, Portal} from 'react-native-paper';
+import {View, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import auth from '@react-native-firebase/auth';
@@ -13,6 +13,11 @@ function Header() {
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
+
+  const pressLogin = () => {
+    closeMenu();
+    navigation.navigate('Login');
+  }
 
 
   useEffect(() => {
@@ -44,10 +49,11 @@ function Header() {
         <Menu.Item
           onPress={() => loggedIn ? 
             auth().signOut().then(() => {
-            Alert.alert('로그아웃 되었습니다.');
-            navigation.navigate('Main');
+                closeMenu();
+                Alert.alert('로그아웃 되었습니다.');
+                navigation.navigate('Main');
             }) 
-            : navigation.navigate('Login')}
+            : (pressLogin())}
           title={loggedIn ? '로그아웃' : '로그인'}
           titleStyle={{fontSize: 15}}
         />

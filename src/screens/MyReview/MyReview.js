@@ -190,8 +190,8 @@ export default function MyReview({ navigation, route }) {
                 ) : (
                     <View
                         style={{
-                            flex: 1,
-                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginTop: '50%'
                         }}>
                         <Text style={styles.textDesign}>작성한 후기가 없습니다.</Text>
                     </View>
@@ -232,10 +232,10 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     textDesign: {
-        marginBottom: 0,
-        fontFamily: 'NanumSquare_0',
-        fontSize: 17,
-        color: 'gray'
+        fontFamily: 'NanumSquare',
+        fontSize: 30,
+        color: '#4e4e4e',
+        textAlign: 'center'
     },
     //listview
     reviewDesign: {

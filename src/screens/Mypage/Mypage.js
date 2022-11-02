@@ -4,25 +4,36 @@ import { Button } from 'react-native-paper';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import auth from '@react-native-firebase/auth';
 import Profile from '../../assets/images/mypage_profile.png';
+import firestore from '@react-native-firebase/firestore';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function Mypage({navigation}) {
     const [loggedIn, setLoggedIn] = useState(false);
     const [userName, setUserName] = useState("");
     const [userId, setUserId] = useState("");
+    const isFocused = useIsFocused();
 
     auth().onAuthStateChanged(user => {
         if (user) {
             setLoggedIn(true);
-            setUserName(user.displayName);
+            //setUserName(user.displayName);
             setUserId(user.uid);
         } else {
             setLoggedIn(false);
         }
     })
 
+    firestore().collection('Users').doc(userId).get()
+        .then((doc) => {
+            if (doc.exists) { 
+                // DB에서 데이터 가져와서 set하기
+                setUserName(doc.data().name);
+            }
+        })
+
     useEffect(() => {
 
-    }, []);
+    }, [isFocused]);
 
     return (
         <View style={styles.container}>

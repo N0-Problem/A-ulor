@@ -28,6 +28,7 @@ function SelectCity({ navigation, route }) {
     let tempArr = new Array();
     function make2DArr() {
         if (cityData[userProvince.provinceIndex].length == 1) {
+            navigation.pop();
             navigation.navigate('SelectedCenters', { selectedProvince: userProvince.selectedProvince, selectedCity: cityData[userProvince.provinceIndex][0].value })
         }
         else {

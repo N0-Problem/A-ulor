@@ -184,11 +184,11 @@ export default function Mydocuments({ navigation, route }) {
                         </ScrollView>
                     ) : (
                         <Text style={{
-                            color : 'black',
+                            color : '#4e4e4e',
                             fontFamily : 'NanumSquare',
-                            fontSize : 25, 
+                            fontSize : 30, 
                             textAlign : 'center',
-                            marginTop: 25
+                            marginTop: '50%'
                         }}>
                             등록된 서류가 없습니다!
                         </Text>

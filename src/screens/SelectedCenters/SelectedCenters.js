@@ -47,11 +47,11 @@ function SelectedCenters({ navigation, route }) {
                 '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
                 '',
                 [{
-                    text: '확인',
+                    text: '예',
                     onPress: () => navigation.navigate('Login'),
                 },
                 {
-                    text: '취소',
+                    text: '아니요',
                     //onPress: () => navigation.navigate('Main'),
                     style: 'cancel',
                 },
@@ -148,7 +148,8 @@ function SelectedCenters({ navigation, route }) {
                                     </TouchableOpacity>
                                     <Portal style={{ justifyContent: 'center', alignItems: 'center' }}>
                                         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalDesign}>
-                                            <Text style={{ fontFamily: 'NanumSquare_0', color:'black' }}>선택하신 이동지원센터를 즐겨찾기에 추가하시겠습니까?</Text>
+                                        <Text style={{ fontFamily: 'NanumSquare_0', color:'#4e4e4e',fontSize: 25, marginBottom: 5 }}>선택하신 이동지원센터를 </Text>
+                                            <Text style={{ fontFamily: 'NanumSquare_0', color:'#4e4e4e',fontSize: 25 }}>즐겨찾기에 추가하시겠습니까?</Text>
                                             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                                                 <Text style={{ marginTop: 10 }}>
                                                     <Button
@@ -159,7 +160,7 @@ function SelectedCenters({ navigation, route }) {
                                                             setVisible(false);
                                                         }}
                                                     >
-                                                        <Text style={{ fontFamily: 'NanumSquare_0' }}>
+                                                        <Text style={{ fontFamily: 'NanumSquare', fontSize: 20 }}>
                                                             예
                                                         </Text>
                                                     </Button>
@@ -167,7 +168,7 @@ function SelectedCenters({ navigation, route }) {
                                                         mode="text"
                                                         color="#FFB236"
                                                         onPress={() => setVisible(false)}>
-                                                        <Text style={{ fontFamily: 'NanumSquare_0' }}>
+                                                        <Text style={{ fontFamily: 'NanumSquare', fontSize: 20 }}>
                                                             아니오
                                                         </Text>
                                                     </Button>
@@ -233,14 +234,13 @@ const styles = StyleSheet.create({
 
     modalDesign: {
         backgroundColor: 'white',
-        justifyContent: 'center',
         alignItems: 'center',
+        alignSelf: 'center',
         paddingTop: 20,
         paddingLeft: 20,
         paddingRight: 20,
         paddingBottom: 10,
         width: 375,
-        marginLeft: 9
     }
 });
 

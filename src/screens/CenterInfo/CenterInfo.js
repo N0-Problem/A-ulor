@@ -115,11 +115,11 @@ function CenterInfo({ navigation, route }) {
                 '로그인 후 이용가능합니다.\n로그인 페이지로 이동하시겠습니까?',
                 '',
                 [{
-                    text: '확인',
+                    text: '예',
                     onPress: () => navigation.navigate('Login'),
                 },
                 {
-                    text: '취소',
+                    text: '아니요',
                     onPress: () => navigation.navigate('Main'),
                     style: 'cancel',
                 },
@@ -246,7 +246,10 @@ function CenterInfo({ navigation, route }) {
                                                         <Text style={{ fontFamily: 'NanumSquare', color: '#FFC021', marginBottom: 20, fontSize: 22 }}>관외 지역</Text>
                                                         {regions && regions.outer_regions.map((item, idx) => {
                                                             return (
-                                                                <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 10, fontSize: 22 }}>{item}</Text>
+                                                                <View style={{paddingLeft: 10}}>
+                                                                    <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 10, fontSize: 22 }}>{item}</Text>
+                                                                </View>
+                                                                
                                                             )
                                                         })}
                                                     </View>
@@ -263,11 +266,24 @@ function CenterInfo({ navigation, route }) {
                                         <Portal>
                                             <Modal visible={visibleCompliance} onDismiss={hideCompliance} contentContainerStyle={styles.moreInfoModalDesign}>
                                                 <View style={{ flexDirection: 'column' }}>
-                                                    {userCenter.rules.map((item, idx) => {
-                                                        return (
-                                                            <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 15, marginLeft: 10, marginRight: 10, fontSize: 20 }}>{item}</Text>
+                                                    {userCenter.rules.length > 0 ? (
+                                                        userCenter.rules.length === 1 ? (
+                                                            userCenter.rules.map((item, idx) => {
+                                                                return (
+                                                                    <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 15, marginLeft: 10, marginRight: 10, fontSize: 20 }}>{item}</Text>
+                                                                )
+                                                            })
+                                                        ) : (
+                                                            <Text 
+                                                                style={{ fontFamily: 'NanumSquare_0', color: 'black', marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, fontSize: 20 }}
+                                                                onPress={() => Linking.openURL(userCenter.rules[1])}
+                                                            >
+                                                                홈페이지에서 보기
+                                                            </Text>
+                                                        )) : (
+                                                            <Text style={{ fontFamily: 'NanumSquare_0', color: 'black', marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, fontSize: 20 }}>준수사항이 없습니다.</Text>
                                                         )
-                                                    })}
+                                                    }
                                                 </View>
                                             </Modal>
                                         </Portal>
@@ -351,12 +367,12 @@ function CenterInfo({ navigation, route }) {
                     <View>
                         <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
                             <TouchableOpacity style={styles.buttonDesign} mode="contained" color="#FFB236" onPress={() => moveToAddReview()}>
-                                <Text style={{ fontFamily: 'NanumSquare', fontSize: 16, color: 'black' }}>후기 작성하러 가기</Text>
+                                <Text style={{ fontFamily: 'NanumSquare', fontSize: 20, color: 'black' }}>후기 작성하러 가기</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                             <View style={{ marginTop: 35, marginBottom: 45 }}>
-                                <Text style={{ fontFamily: 'NanumSquare', fontSize: 15, color: "#4E4E4E" }}>아직 후기가 올라오지 않았어요!</Text>
+                                <Text style={{ fontFamily: 'NanumSquare', fontSize: 20, color: "#4E4E4E" }}>아직 후기가 올라오지 않았어요!</Text>
                             </View>
                         </View>
                     </View>
@@ -366,7 +382,7 @@ function CenterInfo({ navigation, route }) {
                         <View style={{ paddingBottom: 5 }}>
                             <View style={{ flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
                                 <TouchableOpacity style={styles.buttonDesign} color="#FFB236" onPress={() => moveToAddReview()}>
-                                    <Text style={{ fontFamily: 'NanumSquare', fontSize: 16, color: 'black' }}>후기 작성하러 가기</Text>
+                                    <Text style={{ fontFamily: 'NanumSquare', fontSize: 20, color: 'black' }}>후기 작성하러 가기</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -377,14 +393,14 @@ function CenterInfo({ navigation, route }) {
                                         <View style={styles.reviewDesign}>
                                             <View style={{ flexDirection: "row", marginBottom: 5, marginTop: 5, justifyContent: 'space-between' }}>
                                                 <View style={{ marginLeft: 8 }}>
-                                                    <Text style={{ marginTop: 5, fontSize: 13, fontFamily: 'NanumSquare_0', color: '#4E4E4E' }}>{item.user_name}</Text>
+                                                    <Text style={{ marginTop: 5, fontSize: 18, fontFamily: 'NanumSquare_0', color: '#4E4E4E' }}>{item.user_name}</Text>
                                                 </View>
                                                 <View>
-                                                    <Text style={{ marginTop: 0, marginRight: 5, fontSize: 15, color: "#FFF" }}>{stars[item.rate - 1]}</Text>
+                                                    <Text style={{ marginTop: 0, marginRight: 5, fontSize: 20, color: "#FFF" }}>{stars[item.rate - 1]}</Text>
                                                 </View>
                                             </View>
-                                            <View style={{ marginBottom: 10 }}>
-                                                <Text style={{ marginLeft: 8, fontWeight: "bold", color: "black" }}>
+                                            <View style={{ marginBottom: 10, marginTop: 10 }}>
+                                                <Text style={{ marginLeft: 8, fontSize: 20, fontWeight: "bold", color: "black" }}>
                                                     {item.feedback}
                                                 </Text>
                                             </View>
@@ -457,7 +473,7 @@ const styles = StyleSheet.create({
     buttonTextDesign: {
         fontWeight: 'bold',
         color: 'black',
-        fontSize: 18
+        fontSize: 25
     },
 
     imageDesign: {

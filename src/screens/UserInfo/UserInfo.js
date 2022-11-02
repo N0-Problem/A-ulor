@@ -18,7 +18,7 @@ import firestore from '@react-native-firebase/firestore';
 export default function UserInfo({navigation, route}) {
     const params = route.params;
     const userId = params.user_id;
-    const userName = params.user_name;
+    //const userName = params.user_name;
 
     const [date, setDate] = useState(new Date()); // 생년월일
     const [dateStr, setDateStr] = useState('');
@@ -65,6 +65,7 @@ export default function UserInfo({navigation, route}) {
     const [protector, setProtector] = useState('유'); // 보호자 유무
     const [communication, setCommunication] = useState('가능'); // 의사소통 유무
 
+    const [userName, setUserName] = useState(''); 
     let birthdate = '';
     let type = '';
     let type2 = '';
@@ -103,6 +104,7 @@ export default function UserInfo({navigation, route}) {
         .then((doc) => {
             if (doc.exists) { 
                 // DB에서 데이터 가져와서 set하기
+                setUserName(doc.data().name);
                 birthdate = doc.data().birthdate;
                 type = doc.data().type;
                 type2 = doc.data().type2;
@@ -202,7 +204,15 @@ export default function UserInfo({navigation, route}) {
             <ScrollView>
             <View style={styles.input_container}>
                 <Text style={styles.text_title}>이름</Text>
-                <Text style={styles.text_input}>{userName}</Text>
+                <TextInput
+                    placeholder={userName}
+                    placeholderStyle={{
+                        color: 'grey',
+                    }}
+                    onChangeText={userName => setUserName(userName)}
+                    style={styles.textInput_input}
+                    value={userName}
+                />
             </View>
             <View style={styles.input_container}>
                 <Text style={styles.text_title}>생년월일</Text>
@@ -229,13 +239,13 @@ export default function UserInfo({navigation, route}) {
                 cancelText="취소"
                 maximumDate={new Date()}
                 onConfirm={date => {
-                setOpen(false);
-                setGetDate(true);
-                setDate(date);
-                setDateStr(date_to_string(date));
+                    setOpen(false);
+                    setGetDate(true);
+                    setDate(date);
+                    setDateStr(date_to_string(date));
                 }}
                 onCancel={() => {
-                setOpen(false);
+                    setOpen(false);
                 }}
             />
             <View style={styles.input_container}>
@@ -445,7 +455,7 @@ export default function UserInfo({navigation, route}) {
             </ScrollView>
             <Button
                 style={styles.button}
-                labelStyle={{fontSize: 25, fontFamily: 'NanumSquare_0'}}
+                labelStyle={{fontSize: 25, fontFamily: 'NanumSquare'}}
                 color={'#2d2d2d'}
                 onPress={() => setUserinfo()}>
                 저장하기
