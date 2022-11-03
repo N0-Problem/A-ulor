@@ -271,13 +271,13 @@ function CenterInfo2({ navigation, route }) {
                                                             })
                                                         ) : (
                                                             <Text 
-                                                                style={{ fontFamily: 'NanumSquare_0', color: 'black', marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, fontSize: 20 }}
+                                                                style={{ fontFamily: 'NanumSquare_0', color: 'blue', textDecorationLine: 'underline', marginTop: 10, marginBottom: 10, marginLeft: 20, marginRight: 10, fontSize: 20 }}
                                                                 onPress={() => Linking.openURL(userCenter.rules[1])}
                                                             >
-                                                                홈페이지에서 보기
+                                                                센터 홈페이지에서 보기
                                                             </Text>
                                                         )) : (
-                                                            <Text style={{ fontFamily: 'NanumSquare_0', color: 'black', marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, fontSize: 20 }}>준수사항이 없습니다.</Text>
+                                                            <Text style={{ fontFamily: 'NanumSquare_0', color: 'black', marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, fontSize: 20 }}>준수사항이 없거나 업데이트 예정입니다.</Text>
                                                         )
                                                     }
                                                 </View>

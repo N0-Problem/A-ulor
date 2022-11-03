@@ -193,7 +193,7 @@ export default function MyReview({ navigation, route }) {
                             justifyContent: 'center',
                             marginTop: '50%'
                         }}>
-                        <Text style={styles.textDesign}>작성한 후기가 없습니다.</Text>
+                        <Text style={styles.textDesign}>작성한 후기가 없습니다</Text>
                     </View>
                 )
             }
