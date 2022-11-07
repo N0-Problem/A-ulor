@@ -270,26 +270,28 @@ function CenterInfo({ navigation, route }) {
                                         </View>
                                         <Portal>
                                             <Modal visible={visibleCompliance} onDismiss={hideCompliance} contentContainerStyle={styles.moreInfoModalDesign}>
-                                                <View style={{ flexDirection: 'column' }}>
-                                                    {userCenter.rules.length > 0 ? (
-                                                        userCenter.rules.length === 1 ? (
-                                                            userCenter.rules.map((item, idx) => {
-                                                                return (
-                                                                    <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 15, marginLeft: 10, marginRight: 10, fontSize: 20 }}>{item}</Text>
-                                                                )
-                                                            })
-                                                        ) : (
-                                                            <Text 
-                                                                style={{ fontFamily: 'NanumSquare_0', color: 'blue', textDecorationLine: 'underline', marginTop: 10, marginBottom: 10, marginLeft: 20, marginRight: 10, fontSize: 20 }}
-                                                                onPress={() => Linking.openURL(userCenter.rules[1])}
-                                                            >
-                                                                센터 홈페이지에서 보기
-                                                            </Text>
-                                                        )) : (
-                                                            <Text style={{ fontFamily: 'NanumSquare_0', color: 'black', marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, fontSize: 20 }}>준수사항이 없거나 업데이트 예정입니다.</Text>
-                                                        )
-                                                    }
-                                                </View>
+                                               <ScrollView>                                             
+                                                    <View style={{ flexDirection: 'column' }}>
+                                                        {userCenter.rules.length > 0 ? (
+                                                            userCenter.rules.length === 1 ? (
+                                                                userCenter.rules.map((item, idx) => {
+                                                                    return (
+                                                                        <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 15, marginLeft: 10, marginRight: 10, fontSize: 20 }}>{item}</Text>
+                                                                    )
+                                                                })
+                                                            ) : (
+                                                                <Text 
+                                                                    style={{ fontFamily: 'NanumSquare_0', color: 'blue', textDecorationLine: 'underline', marginTop: 10, marginBottom: 10, marginLeft: 20, marginRight: 10, fontSize: 20 }}
+                                                                    onPress={() => Linking.openURL(userCenter.rules[1])}
+                                                                >
+                                                                    센터 홈페이지에서 보기
+                                                                </Text>
+                                                            )) : (
+                                                                <Text style={{ fontFamily: 'NanumSquare_0', color: 'black', marginTop: 10, marginBottom: 10, marginLeft: 10, marginRight: 10, fontSize: 20 }}>준수사항이 없거나 업데이트 예정입니다.</Text>
+                                                            )
+                                                        }
+                                                    </View>                                                
+                                                </ScrollView>
                                             </Modal>
                                         </Portal>
                                     </TouchableOpacity>
@@ -303,13 +305,15 @@ function CenterInfo({ navigation, route }) {
                                         </View>
                                         <Portal>
                                             <Modal visible={visibleAvailable} onDismiss={hideAvailable} contentContainerStyle={styles.moreInfoModalDesign}>
-                                                <View style={{ flexDirection: 'column' }}>
-                                                    {userCenter.targets.map((item, idx) => {
-                                                        return (
-                                                            <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 15, marginLeft: 10, marginRight: 10, fontSize: 20 }}>▶ {item}</Text>
-                                                        )
-                                                    })}
-                                                </View>
+                                                <ScrollView>
+                                                    <View style={{ flexDirection: 'column' }}>
+                                                        {userCenter.targets.map((item, idx) => {
+                                                            return (
+                                                                <Text key={idx} style={{ fontFamily: 'NanumSquare_0', color: 'black', marginBottom: 15, marginLeft: 10, marginRight: 10, fontSize: 20 }}>▶ {item}</Text>
+                                                            )
+                                                        })}
+                                                    </View>
+                                                </ScrollView>
                                             </Modal>
                                         </Portal>
                                     </TouchableOpacity>

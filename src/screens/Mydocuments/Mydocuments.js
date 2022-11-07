@@ -128,7 +128,7 @@ export default function Mydocuments({ navigation, route }) {
                                     <View style={{marginLeft: 0}}>
                                         <Text style={styles.infoTitleText}>[장애인]</Text>
                                         <Text style={styles.infoText}>장애인증명서 / 복지카드 / 보장구 급여 대상여부 결정 통보서 / 장애정도 결정서 / 추가심사결과 안내문(보행상 장애 유무 확인서류)</Text>
-                                        <Text style={styles.infoTitleText}>[65세 이상 노약자]</Text>
+                                        <Text style={styles.infoTitleText}>[65세 이상 고령자]</Text>
                                         <Text style={styles.infoText}>장기요양 인정서 / 복지용구 급여 확인서 / 주민등록등본</Text>
                                         <Text style={styles.infoTitleText}>[임산부]</Text>
                                         <Text style={styles.infoText}>산모수첩 / 주민등록등본</Text>

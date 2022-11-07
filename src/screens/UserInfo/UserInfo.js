@@ -30,7 +30,7 @@ export default function UserInfo({navigation, route}) {
     const [extra, setExtra] = useState(false);
     const [dropitems, setdropItems] = useState([
         {label: '장애인', value: '장애인'},
-        {label: '노약자', value: '노약자'},
+        {label: '고령자', value: '고령자'},
         {label: '임산부', value: '임산부'},
         {label: '기타(일시적 장애인)', value: '기타(일시적 장애인)'},
     ]);
