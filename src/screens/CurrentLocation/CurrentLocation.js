@@ -110,7 +110,7 @@ function CurrentLocation({ navigation }) {
                 // 내 주소에 해당하는 행정구역의 센터 (물리적 거리와 관계 X)
                 const city = now.address.split(' ');
                 if (address[1] === city[0]) {
-                    if (city.slice(-1) === '도') {
+                    if (city[0].slice(-1) === '도') {
                         if (address[2] === city[1]) {
                             console.log(now.name + '/' + now.address);
                             local_center = now;
