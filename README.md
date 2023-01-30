@@ -37,7 +37,7 @@ $ react-native run-android // another terminal
 ```
 
 ## System Architecture
-<img src="https://user-images.githubusercontent.com/68420044/189953518-a93bcccd-31ee-4da1-afef-da75b1f34301.png" width="70%">
+<img src="https://user-images.githubusercontent.com/71337490/215566751-9b82279d-8353-4ddd-a55a-d884404eece1.png" width="70%">
 
 
 
